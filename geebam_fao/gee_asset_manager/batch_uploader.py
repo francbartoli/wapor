@@ -224,6 +224,7 @@ def __get_upload_url(session):
 
 
 def __upload_file(session, file_path, asset_name, use_multipart, properties=None, nodata=None):
+
     with open(file_path, 'rb') as f:
         upload_url = __get_upload_url(session)
 
@@ -277,7 +278,6 @@ def __check_for_failed_tasks_and_report(tasks, writer):
             logging.error('Ingestion of image %s has failed with message %s', filename, error_message)
 
     tasks.clear()
-
 
 def __get_filename_from_path(path):
     return os.path.splitext(os.path.basename(os.path.normpath(path)))[0]

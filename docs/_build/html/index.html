@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Documentation" href="api.html" /> 
+    <link rel="next" title="API Documentation" href="wpCalc.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -39,7 +39,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="api.html" title="API Documentation"
+          <a href="wpCalc.html" title="API Documentation"
              accesskey="N">next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">WaPOR 1.1 documentation</a> &#187;</li> 
       </ul>
@@ -52,11 +52,14 @@
             
   <div class="section" id="welcome-to-wapor-s-documentation">
 <h1>Welcome to WaPOR&#8217;s documentation!<a class="headerlink" href="#welcome-to-wapor-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>The FAO Water Productivity Open-acces portal uses Remote sensing technologies to monitor and report on
+<p>The FAO Water Productivity Open-access portal uses Remote sensing technologies to monitor and report on
 agriculture water productivity over Africa and the Near East.
-<a class="reference external" href="http://www.fao.org/in-action/remote-sensing-for-water-productivity/en/">WaPOR</a>.
-For more information on how to use the library <a class="reference internal" href="api.html#api"><span class="std std-ref">API Documentation</span></a></p>
-<p>Program Parameters.</p>
+<a class="reference external" href="http://www.fao.org/in-action/remote-sensing-for-water-productivity/en/">WaPOR</a>.</p>
+<p>For more information on how to use the library <a class="reference internal" href="wpCalc.html#wpcalc"><span class="std std-ref">API Documentation</span></a></p>
+<p>For more information on the Water Productivity Data Management module <a class="reference internal" href="DataManagement.html#datamanagement"><span class="std std-ref">API Documentation</span></a></p>
+</div>
+<div class="section" id="program-parameters">
+<h1>Program Parameters<a class="headerlink" href="#program-parameters" title="Permalink to this headline">¶</a></h1>
 <p>usage: wpMain.py <strong>timeframe</strong> [-e {u,d,t}] [-i] [-a [&#8216;agbp&#8217;, &#8216;aet&#8217;, &#8216;t_frac&#8217;, &#8216;wp_gb&#8217;, &#8216;wp_nb&#8217;]] [-s] [-v] [-h]</p>
 <ul class="simple">
 <li><strong>bold</strong> = mandatory</li>
@@ -86,27 +89,54 @@ For more information on how to use the library <a class="reference internal" hre
 <dt>-a, &#8211;aggregation choices=[&#8216;agbp&#8217;, &#8216;aet&#8217;, &#8216;t_frac&#8217;, &#8216;wp_gb&#8217;, &#8216;wp_nb&#8217;],</dt>
 <dd>help=&#8221;which dataset must be calculated between the chosen timeframe&#8221;</dd>
 </dl>
+<p>-u &#8211;upload  help=&#8221;Upload or update data in Google Earth Engine&#8221;</p>
 <p>-v, &#8211;verbose, help=&#8221;Increase output verbosity&#8221;</p>
 <dl class="docutils">
 <dt>-m,&#8211;map, choices=[&#8216;agbp&#8217;, &#8216;aet&#8217;, &#8216;t_frac&#8217;, &#8216;wp_gb&#8217;, &#8216;wp_nb&#8217;]</dt>
 <dd>help=&#8221;Show calculated output overlaid on Google Map&#8221;</dd>
 </dl>
 </div></blockquote>
-<p># Simple Use
-###Example 1
-* Calculate Gross Biomass Water Productivity between 1st of January 2015 and 30th of January 2015
-* Statistics calculated for Benin
-* Generate map ID</p>
+</div>
+<div class="section" id="simple-use">
+<h2>Simple Use<a class="headerlink" href="#simple-use" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example 1</strong>
+- Calculate Gross Biomass Water Productivity between 1st of January 2015 and 30th of January 2015
+- Statistics calculated for Benin
+- Generate map ID</p>
 <blockquote>
-<div>#### wpMain.py 2015-1-1 2015-1-30 -a wp_gb -i -s &#8220;Benin&#8221;</div></blockquote>
-<p>###Example 2
-* Calculate Gross Biomass Water Productivity for 2015 (already stored from 2010-2016)</p>
+<div><em>wpMain.py 2015-1-1 2015-1-30 -a wp_gb -i -s &#8220;Benin&#8221;</em></div></blockquote>
+<p><strong>Example 2</strong>
+- Calculate Gross Biomass Water Productivity for 2015 (already stored from 2010-2016)</p>
 <blockquote>
 <div>Will be possible to calculate new dataset only from 2017 onwards</div></blockquote>
 <ul>
 <li><p class="first">Generate map ID</p>
 <blockquote>
-<div><p>#### wpMain.py 2015 -a wp_gb -i</p>
+<div><p><em>wpMain.py 2015 -a wp_gb -i</em></p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Example 3</strong>
+- Calculate Gross Biomass Water Productivity between first and 31st of January 2012</p>
+<blockquote>
+<div>(Note the position of the parameter -i &lt;b&gt;BEFORE&lt;/b&gt; -s)</div></blockquote>
+<ul>
+<li><p class="first">Generate map ID</p>
+</li>
+<li><p class="first">Calculate statistics for watershed named &#8216;Rift Valley&#8217;</p>
+<blockquote>
+<div><ul class="simple">
+<li>wpMain.py 2012-01-01 2012-01-31 -a wp_gb -i -s w &#8216;Rift Valley&#8217; *</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Example 4</strong>
+Uploading or updating data in GEE. Valid credentials (a gmail account) must be provided.</p>
+<ul>
+<li><p class="first">Using wpDataManagement. Preferred method.</p>
+<blockquote>
+<div><p><em>wpDataManagement.py ../snippets/real_image/L1_AET_1525.tif</em></p>
 </div></blockquote>
 </li>
 </ul>
@@ -117,9 +147,13 @@ For more information on how to use the library <a class="reference internal" hre
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#the-water-productivity-class">The Water Productivity class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#constants">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wpCalc.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wpCalc.html#the-water-productivity-calculation-class">The Water Productivity Calculation class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wpCalc.html#constants">Constants</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DataManagement.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DataManagement.html#the-data-management-for-water-productivity-class">The Data Management for Water Productivity class</a></li>
 </ul>
 </li>
 </ul>
@@ -142,8 +176,10 @@ For more information on how to use the library <a class="reference internal" hre
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to WaPOR&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Welcome to WaPOR&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#program-parameters">Program Parameters</a><ul>
 <li><a class="reference internal" href="#arguments">Arguments:</a></li>
+<li><a class="reference internal" href="#simple-use">Simple Use</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#contents">Contents</a></li>
@@ -151,7 +187,7 @@ For more information on how to use the library <a class="reference internal" hre
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="api.html"
+  <p class="topless"><a href="wpCalc.html"
                         title="next chapter">API Documentation</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -184,7 +220,7 @@ For more information on how to use the library <a class="reference internal" hre
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="api.html" title="API Documentation"
+          <a href="wpCalc.html" title="API Documentation"
              >next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">WaPOR 1.1 documentation</a> &#187;</li> 
       </ul>

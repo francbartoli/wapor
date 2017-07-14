@@ -6,10 +6,9 @@ import argparse
 import logging
 import sys
 import os
-import getpass
 
 from wpCalc import L1WaterProductivity
-import wpDataManagement as dm
+from wpDataManagement import DataManagement as dm
 
 def setup(args=None, parser=None):
 
@@ -20,8 +19,8 @@ def setup(args=None, parser=None):
                         help="Calculate Water Productivity Annually for the chosen period"
                         )
 
-    parser.add_argument('-x', '--export', choices=['u', 'd', 't'],
-                        help="Choose export to url(-u), drive (-d) or asset (-t)")
+    parser.add_argument('-x', '--export', choices=['drive', 'asset'],
+                        help="Choose export to Google Drive or GEE FAO asset space.")
 
     parser.add_argument('-i', '--map_id',
                         help="Generate map id for generating tiles",
@@ -49,12 +48,6 @@ def setup(args=None, parser=None):
                         help="Show calculated output overlaid on Google Map"
                         )
 
-    parser.add_argument ( "-u" ,
-                          "--upload" ,
-                          type=str,
-                          help="Upload or update data in Google Earth Engine"
-                          )
-
     parser.add_argument("-v", "--verbose",
                         help="Increase output verbosity",
                         action="store_true")
@@ -63,30 +56,26 @@ def setup(args=None, parser=None):
 
 def run(results):
 
-    logger = logging.getLogger("wpWin")
-    logger.setLevel(level=logging.DEBUG)
+    main_logger = logging.getLogger("wpWin")
+    main_logger.setLevel(level=logging.DEBUG)
 
     formatter = logging.Formatter("%(levelname) -4s %(asctime)s %(module)s:%(lineno)s %(funcName)s %(message)s")
 
-    fh = logging.FileHandler('wapor.log')
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+    fh = logging.FileHandler(os.path.join(__location__, 'log_files/wapor.log'))
     fh.setLevel(logging.ERROR)
     fh.setFormatter(formatter)
-    logger.addHandler(fh)
+    main_logger.addHandler(fh)
 
     ch = logging.StreamHandler(sys.stdout)
     ch.setLevel(logging.DEBUG)
     ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
-    args_list = {k: v for k, v in vars(results).items() if v is not None}
-    #logger.debug(len(args_list['timeframe']))
+    main_logger.addHandler(ch)
 
     # def methods(**kwargs):
     #     print kwargs
     # methods(**vars(results))
-
-    # Static method many will be similar to reduce the verbosity of the code
-    # print L1WaterProductivity.water_productivity_net_biomass_pre_calculated_annual_values(2010)
 
     analysis_level_1 = L1WaterProductivity()
 
@@ -102,27 +91,39 @@ def run(results):
         pass
 
     selection_params = {'date_start': date_start, 'date_end': date_end}
-    logger.debug(selection_params)
+    main_logger.debug(selection_params)
     analysis_level_1.date_selection(**selection_params)
     analysis_level_1.image_selection()
 
     if results.aggregation:
+
         if isinstance(results.aggregation, list):
             selection_aggregation = results.aggregation[0]
         else:
             selection_aggregation = results.aggregation
-        logger.debug("Working on %s " % selection_aggregation)
+
+        main_logger.debug("Working on %s " % selection_aggregation)
+
         if selection_aggregation == 'aet':
             eta = analysis_level_1.aet_aggregated()
         if selection_aggregation == 'agbp':
             agbp = analysis_level_1.agbp_aggregated()
         if selection_aggregation == 'wp_gb':
             agbp, eta, wp_gb = analysis_level_1.water_productivity_gross_biomass()
+        if selection_aggregation == 'wp_nb':
+            #This is the water productivity NET calcualted between any two dates
+            #wp_nb = analysis_level_1.water_productivity_net_biomass_dates()
+
+            # This is the water productivity NET calculated on a yearly basis which has been implemented
+            # in code editor in Javascript for the first release of the project
+            wp_nb = analysis_level_1.water_productivity_net_biomass_pre_calculated_annual_values(input_year)
+
         if selection_aggregation == 't_frac':
             eta = analysis_level_1.aet_aggregated()
             t_frac = analysis_level_1.transpiration()
 
     if results.map:
+
         if results.map == 'aet':
             analysis_level_1.image_visualization(results.map, eta)
         if results.map == 'agbp':
@@ -133,79 +134,62 @@ def run(results):
             analysis_level_1.image_visualization(results.map, t_frac)
 
     if results.arealstat is not None:
+
+        tasks = dm.get_tasks()
+        num_task_running,name_tasks_running = dm.running_tasks(tasks)
+
+        if len ( num_task_running ) == 0:
+            main_logger.debug("No files are being uploaded at the moment")
+        else:
+            main_logger.debug("Tasks running at the moment %d" % len ( num_task_running ))
+            pass
+
         if isinstance(results.arealstat, list) :
             try:
                 area_stats = analysis_level_1.generate_areal_stats(results.arealstat[0], results.arealstat[1], wp_gb)
-                logger.debug("RESPONSE=%s" % area_stats)
+                main_logger.debug("RESPONSE=%s" % area_stats)
             except Exception as e:
                 if isinstance(e, UnboundLocalError):
-                    logger.debug("WP_GP aggregation Error")
-                    logger.error(e)
+                    main_logger.debug("WP_GP aggregation Error")
+                    main_logger.error(e)
                 elif results.arealstat[0] == 'c':
-                    logger.debug("Country Error")
-                    logger.error("No country named {} in db".format(results.arealstat[1]))
+                    main_logger.debug("Country Error")
+                    main_logger.error("No country named {}".format(results.arealstat[1]))
                 elif results.arealstat[0] == 'w':
-                    logger.debug("Watershed Error")
-                    logger.error("No watershed named {} in db".format(results.arealstat[1]))
+                    main_logger.debug("Watershed Error")
+                    main_logger.error("No watershed named {}".format(results.arealstat[1]))
                 elif results.arealstat[0] == 'g':
-                    logger.debug("User Defined Area format Error")
-                    logger.error("Invalid GeoJson {} to parse".format(results.arealstat[1]))
+                    main_logger.debug("User Defined Area format Error")
+                    main_logger.error("Invalid GeoJson {} to parse".format(results.arealstat[1]))
         else:
-            logger.debug("Invalid arealstat arguments format")
+            main_logger.debug("Invalid arealstat arguments format")
     else:
         pass
 
     if results.map_id:
-        map_ids = {'agbp': agbp, 'eta': eta, 'wp_gross': wp_gb}
-        logger.debug("RESULT=%s" % analysis_level_1.map_id_getter(**map_ids))
 
-    if results.upload:
-        properties = None
-        no_data = None
+        if results.aggregation is None:
+            main_logger.error ( "RESULT=%s" % "Water Productivity Gross Biomass has not been calcualted" )
+        else:
+            map_ids = {'agbp': agbp, 'eta': eta, 'wp_gross': wp_gb}
+            main_logger.debug("RESULT=%s" % analysis_level_1.map_id_getter(**map_ids))
 
-        username_gee = raw_input('Please enter a valid GEE User Name: ')
-        password_gee = getpass.getpass('Please Enter a valid GEE Password: ')
-        data_management_session = dm.DataManagement(username_gee, password_gee)
-        active_session = data_management_session.create_google_session()
-        upload_url = data_management_session.get_upload_url(active_session)
+    if results.export:
 
-        files_repo = str(results.upload)
-        try:
-            logger.debug("File %s found" % files_repo)
-            if os.path.isfile(files_repo):
-                gee_asset = '_'.join(files_repo.split('/')[-1].split("_")[0:2])
-                # gee_file = files_repo.split ( '/' )[-1].split ( "." )[0]
-                present_assets = data_management_session.get_assets_info(gee_asset)
-                data_management_session.data_management(active_session,
-                                                        upload_url,
-                                                        present_assets,
-                                                        files_repo,
-                                                        properties,
-                                                        no_data)
-            elif os.path.isdir(files_repo):
-                new_files = []
-                root_dir = None
-                for (dirpath, dirnames, filenames) in os.walk(files_repo):
-                    new_files.extend(filenames)
-                    root_dir = dirpath
-                    break
-
-                for each_file in new_files:
-                    file_temp = root_dir + "/" + each_file
-                    gee_asset = '_'.join(each_file.split("_")[0:2])
-                    # gee_file = each_file.split ( "." )[0]
-                    present_assets = data_management_session.get_assets_info(gee_asset)
-                    data_management_session.data_management(active_session,
-                                                            upload_url,
-                                                            present_assets,
-                                                            file_temp,
-                                                            properties,
-                                                            no_data)
-        except:
-            logger.error("File %s not found" % files_repo)
+        if results.aggregation is None :
+            main_logger.error ("Only an aggregated dataset can be exported choose -a and the required aggregation level" )
+        else:
+            main_logger.info ( "Exporting %s to %s" % (results.aggregation, results.export) )
+            if results.aggregation == 'wp_gb':
+                dm.image_export(results.export, wp_gb, "wp_gb", date_start, date_end)
+            elif results.aggregation == 'wp_nb':
+                dm.image_export ( results.export,wp_nb)
+            else:
+                main_logger.error ("That dataset cannot be exported")
+                pass
 
     args = {k: v for k, v in vars(results).items() if v is not None}
-    logger.debug("Final Check %s" % args)
+    main_logger.debug("Final Check %s" % args)
 
     # analysis_level_1.image_export(results.export, wp_gb)
 

@@ -11,13 +11,13 @@ For normal use, all you will have to do to get started is::
 
 This will import the following:
 
-* The class :L1WaterProductivity:`run` and its subclasses
+* The class :L1WaterProductivity:`L1WaterProductivity` and its subclasses
 * Several `constants`_ representing the datasets available in Google Earth Engine and the visualization parameters.
 
 The Water Productivity class
 -----------------------------
 
-.. autoclass:: analysis_level_1
+.. autoclass:: L1WaterProductivity
     :members:
 
 

@@ -1,0 +1,134 @@
+2017-06-08 16:08:50,928 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-08 16:08:50,931 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-08 16:09:05,514 :: root :: INFO :: Collection users/fabiolananotizie/L1_AET removed
+2017-06-08 16:09:11,059 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-08 16:09:11,060 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-08 16:09:26,848 :: root :: INFO :: Collection users/fabiolananotizie/L1_NPP removed
+2017-06-08 16:35:31,864 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-08 16:35:31,865 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-08 16:35:43,206 :: root :: INFO :: Collection users/fabiolananotizie/L1_PCP removed
+2017-06-08 16:35:49,542 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-08 16:35:49,543 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-08 16:35:59,515 :: root :: INFO :: Collection users/fabiolananotizie/L1_RET removed
+2017-06-08 16:36:08,361 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-08 16:36:08,362 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-08 16:36:23,365 :: root :: INFO :: Collection users/fabiolananotizie/L1_TFRAC removed
+2017-06-09 12:27:08,753 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-09 12:27:08,768 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-09 12:29:03,498 :: root :: INFO :: Collection projects/fao-wapor/L1_AGBP250 removed
+2017-06-14 10:07:58,588 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:07:58,599 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:09:12,374 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:09:12,375 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:17:31,029 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:17:31,030 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:20:47,317 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:20:47,318 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:21:13,463 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:21:13,464 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:41:10,469 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:41:10,470 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:46:51,464 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:46:51,465 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 10:53:03,906 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 10:53:03,907 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:00:02,860 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:00:02,861 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:03:02,031 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:03:02,031 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:03:49,501 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:03:49,502 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:11:54,144 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:11:54,146 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:12:11,734 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:12:11,735 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 11:12:42,250 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 11:12:42,251 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:12:39,453 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:12:39,454 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:33:42,581 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:33:42,582 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:36:10,098 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:36:10,099 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:36:44,813 :: root :: INFO :: []
+2017-06-14 12:37:08,955 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:37:08,956 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:37:17,792 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:37:17,793 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:37:38,789 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:37:38,791 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:41:21,366 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:41:21,368 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:41:29,925 :: root :: ERROR :: NO GALX COOKIE
+2017-06-14 12:41:59,265 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 12:41:59,266 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 12:42:11,775 :: root :: ERROR :: NO GALX COOKIE
+2017-06-14 13:57:07,499 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-14 13:57:07,501 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-14 13:57:16,422 :: root :: ERROR :: NO "GALX" COOKIE
+2017-06-15 09:24:17,135 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-15 09:24:17,138 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-15 09:24:48,619 :: root :: INFO :: New collection users/fabiolananotizie/mycollection created
+2017-06-15 09:24:55,740 :: root :: INFO :: Processing image 1 out of 4: ../snippets/images/230.tif
+2017-06-15 09:25:07,967 :: root :: ERROR :: Pagina Redirecting credentials.
+2017-06-15 09:25:18,596 :: root :: INFO :: Processing image 2 out of 4: ../snippets/images/263.tif
+2017-06-15 09:25:30,888 :: root :: INFO :: Processing image 3 out of 4: ../snippets/images/4.tif
+2017-06-15 09:25:40,270 :: root :: INFO :: Processing image 4 out of 4: ../snippets/images/6.tif
+2017-06-15 09:26:55,398 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-15 09:26:55,398 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-15 09:27:08,202 :: root :: INFO :: Collection users/fabiolananotizie/mycollection removed
+2017-06-20 11:29:56,293 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-20 11:29:56,303 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-20 16:14:21,740 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-20 16:14:21,755 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-20 16:27:46,869 :: root :: INFO :: New collection users/fabiolananotizie/imgscoll created
+2017-06-20 16:35:03,066 :: root :: INFO :: Processing image 1 out of 4: ../snippets/images/230.tif
+2017-06-22 16:02:43,947 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-22 16:02:43,958 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-22 16:03:21,912 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-22 16:03:21,914 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-22 16:04:02,313 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-22 16:04:02,315 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-22 16:04:25,616 :: root :: INFO :: New collection users/fabiolananotizie/imgscoll created
+2017-06-22 16:04:27,311 :: root :: INFO :: Processing image 1 out of 4: ../snippets/images/230.tif
+2017-06-22 16:04:40,282 :: root :: ERROR :: Pagina Redirecting credentials.
+2017-06-22 16:05:03,161 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-22 16:05:03,162 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-22 16:05:12,531 :: root :: WARNING :: Collection users/fabiolananotizie/imgscoll already exists
+2017-06-22 16:05:14,173 :: root :: INFO :: Collection already exists. 3 assets left for upload to users/fabiolananotizie/imgscoll.
+2017-06-22 16:05:14,174 :: root :: INFO :: Processing image 1 out of 3: ../snippets/images/263.tif
+2017-06-22 16:05:19,906 :: root :: ERROR :: Pagina Redirecting credentials.
+2017-06-22 16:05:34,266 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-06-22 16:05:34,268 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-06-22 16:05:45,087 :: root :: WARNING :: Collection users/fabiolananotizie/imgscoll already exists
+2017-06-22 16:05:46,791 :: root :: INFO :: Collection already exists. 2 assets left for upload to users/fabiolananotizie/imgscoll.
+2017-06-22 16:05:46,792 :: root :: INFO :: Processing image 1 out of 2: ../snippets/images/4.tif
+2017-06-22 16:06:06,889 :: root :: ERROR :: Pagina Redirecting credentials.
+2017-06-22 16:06:41,237 :: root :: INFO :: Processing image 2 out of 2: ../snippets/images/6.tif
+2017-07-07 14:19:55,031 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-07 14:19:55,049 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-07 14:20:00,309 :: root :: INFO :: Collection users/fabiolananotizie/L1_AET removed
+2017-07-11 10:37:02,206 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:37:02,222 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:37:08,837 :: root :: INFO :: Collection users/fabiolananotizie/L1_AET removed
+2017-07-11 10:54:26,151 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:54:26,156 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:54:31,599 :: root :: INFO :: Collection users/fabiolananotizie/L1_NPP removed
+2017-07-11 10:54:37,413 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:54:37,414 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:54:42,664 :: root :: INFO :: Collection users/fabiolananotizie/L1_RET removed
+2017-07-11 10:54:48,264 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:54:48,268 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:54:53,562 :: root :: INFO :: Collection users/fabiolananotizie/L1_PCP removed
+2017-07-11 10:55:08,408 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:55:08,409 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:55:14,226 :: root :: INFO :: Collection users/fabiolananotizie/L1_TFRAC removed
+2017-07-11 10:55:53,226 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:55:53,226 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:55:59,277 :: root :: INFO :: Collection users/fabiolananotizie/L2_EANE_PHE removed
+2017-07-11 10:56:12,947 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:56:12,948 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:56:18,145 :: root :: INFO :: Collection users/fabiolananotizie/L2_WANE_AET removed
+2017-07-11 10:56:37,844 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-07-11 10:56:37,845 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-07-11 10:56:42,658 :: root :: INFO :: Collection users/fabiolananotizie/L2_WANE_NPP removed

@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Documentation &#8212; WaPOR 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="API Documentation" href="wpCalc.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="wpCalc.html" title="API Documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WaPOR 1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-wapor_algorithms">
+<span id="api-documentation"></span><span id="datamanagement"></span><h1>API Documentation<a class="headerlink" href="#module-wapor_algorithms" title="Permalink to this headline">¶</a></h1>
+<p>For normal use, all you will have to do to get started is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wpDataManagement</span> <span class="k">import</span> <span class="n">DataManagement</span>
+</pre></div>
+</div>
+<p>This will import the following:</p>
+<ul class="simple">
+<li>The class <a href="#id1"><span class="problematic" id="id2">:DataManagement:`DataManagement`</span></a> and its subclasses</li>
+</ul>
+<div class="section" id="the-data-management-for-water-productivity-class">
+<h2>The Data Management for Water Productivity class<a class="headerlink" href="#the-data-management-for-water-productivity-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wapor_algorithms.DataManagement">
+<em class="property">class </em><code class="descclassname">wapor_algorithms.</code><code class="descname">DataManagement</code><span class="sig-paren">(</span><em>usr</em>, <em>pwd</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm for managing Water Productivity assets in GEE</p>
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.cancel_task">
+<code class="descname">cancel_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.cancel_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method can stop any active uploading not used but useful</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.completed_cancelled_tasks">
+<code class="descname">completed_cancelled_tasks</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.completed_cancelled_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tasks completed or cancelled by the user not used but useful</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.create_google_session">
+<code class="descname">create_google_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.create_google_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a session using the credentials provided. The session is used throughout the code for a
+number of different purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the active session for a specific user with specific credentials</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.data_management">
+<code class="descname">data_management</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.data_management" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>active_session</strong> &#8211; session created using the credentials</li>
+<li><strong>upload_url</strong> &#8211; url used for uploading the raster</li>
+<li><strong>images_already_in_asset</strong> &#8211; if the file is already stored in the GEE asset</li>
+<li><strong>file_to_be_loaded</strong> &#8211; file name of the file to be loaded</li>
+<li><strong>name_image_to_load_in_asset</strong> &#8211; name once the file is stored in asset</li>
+<li><strong>metadata</strong> &#8211; metadata of the file calculated automatically from file name</li>
+<li><strong>no_data</strong> &#8211; no data either -9999 or 255 depending on the dataset</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nothing</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.failed_tasks">
+<code class="descname">failed_tasks</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.failed_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tasks failed not used but useful</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.get_assets_info">
+<code class="descname">get_assets_info</code><span class="sig-paren">(</span><em>id_name</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_assets_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for getting information from existing GEE assets for assessing the need to delete
+existing data before uploading a new one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.get_days_in_dekad">
+<em class="property">static </em><code class="descname">get_days_in_dekad</code><span class="sig-paren">(</span><em>year</em>, <em>dekad</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_days_in_dekad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting the number of days contained in a certain dekad</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>year</strong> &#8211; year contained in the file name</li>
+<li><strong>dekad</strong> &#8211; number of the dekad 1 to 36</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">number of days</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.get_month_of_dekad">
+<em class="property">static </em><code class="descname">get_month_of_dekad</code><span class="sig-paren">(</span><em>dekad</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_month_of_dekad" title="Permalink to this definition">¶</a></dt>
+<dd><p>the month in which the dekad is contained</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dekad</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">month as integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.get_starting_day_of_dekad">
+<em class="property">static </em><code class="descname">get_starting_day_of_dekad</code><span class="sig-paren">(</span><em>year</em>, <em>month</em>, <em>dekad</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_starting_day_of_dekad" title="Permalink to this definition">¶</a></dt>
+<dd><p>The starting date of a dekad</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>year</strong> &#8211; </li>
+<li><strong>month</strong> &#8211; </li>
+<li><strong>dekad</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Date as string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.get_tasks">
+<em class="property">static </em><code class="descname">get_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if any file is being uploaded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tasks</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.get_tasks_list">
+<em class="property">static </em><code class="descname">get_tasks_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_tasks_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if any file is being uploaded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tasks</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.get_upload_url">
+<code class="descname">get_upload_url</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.get_upload_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Session is used for POSTing a new file to the right assets.Using a corporate account
+will likely change this part of the code</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="wapor_algorithms.DataManagement.image_export">
+<em class="property">classmethod </em><code class="descname">image_export</code><span class="sig-paren">(</span><em>exp_type</em>, <em>aggregated_layer</em>, <em>data_name</em>, <em>date_start</em>, <em>date_end</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.image_export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export of the calculated Water Productivity to Google Drive or GEE Asset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>exp_type</strong> &#8211; </li>
+<li><strong>aggregated_layer</strong> &#8211; </li>
+<li><strong>data_name</strong> &#8211; </li>
+<li><strong>date_start</strong> &#8211; </li>
+<li><strong>date_end</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.metadata_generator">
+<em class="property">static </em><code class="descname">metadata_generator</code><span class="sig-paren">(</span><em>gee_file</em>, <em>level</em>, <em>seasonal=False</em>, <em>area='AfNE'</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.metadata_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generated the metadata for a file using the file name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>gee_file</strong> &#8211; file to be uploaded to GEE</li>
+<li><strong>level</strong> &#8211; level 1,2 or 3</li>
+<li><strong>seasonal</strong> &#8211; in case the filename contains a season</li>
+<li><strong>area</strong> &#8211; all of Africa or just east and west africa</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary containing the metadata</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.no_data_assessment">
+<em class="property">static </em><code class="descname">no_data_assessment</code><span class="sig-paren">(</span><em>data_component_code</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.no_data_assessment" title="Permalink to this definition">¶</a></dt>
+<dd><p>The data to be nullified during the upload to GEE</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_component_code</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">either -9999 or 255</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.DataManagement.retry_if_ee_error">
+<code class="descname">retry_if_ee_error</code><span class="sig-paren">(</span><em>exception</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.retry_if_ee_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrying in case the first attempt do upload has failed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.DataManagement.running_tasks">
+<em class="property">static </em><code class="descname">running_tasks</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.DataManagement.running_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of tasks running at the moment of the request</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">tasks active and what is being uploaded</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Documentation</a><ul>
+<li><a class="reference internal" href="#the-data-management-for-water-productivity-class">The Data Management for Water Productivity class</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wpCalc.html"
+                        title="previous chapter">API Documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/DataManagement.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="wpCalc.html" title="API Documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WaPOR 1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, fabio.lana@fao.org.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

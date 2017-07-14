@@ -7,35 +7,34 @@
     2 - generate a chart for each component used for calculating water productivity
     3 - generation of areal statistics (e.g. mean, max,etc...) for a country or river basin
     4 - generation of time-series for a specific collection of data stored in Google Earth Engine
-    5 - export the calculated dataset in GDrive, GEE Asset, geoserver, etc...
+    5 - export the calculated dataset in GDrive or GEE Asset
 
 """
 
-import ee
-import time
-from ee import mapclient
-import sys
-import os
-import glob
-# import datetime
-# import pandas as pd
 import logging
+import ee
+from ee import mapclient
 from geojson import FeatureCollection
-import json
-from osgeo import ogr
+import os
 
+# Importing the credentials provided as JSON but ignored in code commits
+import credentials as cr
 
 class WaterProductivityCalc(object):
 
-    ee.Initialize()
+    #ee.Initialize()
+
+    """Constructor for wpDataManagement"""
+    EE_CREDENTIALS = ee.ServiceAccountCredentials(cr.EE_ACCOUNT, cr.EE_PRIVATE_KEY_FILE ,
+                                                  cr.GOOGLE_SERVICE_ACCOUNT_SCOPES )
+    ee.Initialize(EE_CREDENTIALS)
 
     _REGION = [[-25.0, -37.0], [60.0, -41.0], [58.0, 39.0], [-31.0, 38.0], [-25.0, -37.0]]
-    _COUNTRIES = ee.FeatureCollection('ft:1ZDEMjtnWm_smu7l_z3fx91BbxyCRzP2A3cEMrEiP')
-    _WSHEDS = ee.FeatureCollection('ft:1ewaO3u2S8XPYkCLNX7zsWVqKx0n11BxdjPS-G0Kz')
+    _WSHEDS = ee.FeatureCollection('projects/fao-wapor/vectors/wapor_basins')
+    _COUNTRIES = ee.FeatureCollection('projects/fao-wapor/vectors/wapor_countries')
 
     def __init__(self):
         pass
-
 
 class L1WaterProductivity(WaterProductivityCalc):
 
@@ -62,19 +61,24 @@ class L1WaterProductivity(WaterProductivityCalc):
     def __init__(self):
 
         """ Constructor for date and dataset for WPgb"""
+        super(L1WaterProductivity, self).__init__()
 
         self.L1_logger = logging.getLogger("wpWin.wpCalc")
         self.L1_AET_calc = self._L1_AET_DEKADAL
         self.L1_AGBP_calc = self._L1_NPP_DEKADAL
 
-        AET_component_3dekad = ee.Image("projects/fao-wapor/L1_TFRAC/L1_TFRAC_1003")
+        image_for_scale_calculation = ee.Image("projects/fao-wapor/L1_TFRAC/L1_TFRAC_1003")
         # Get scale (in meters) information from first image
-        self.scale_calc = AET_component_3dekad.projection().nominalScale().getInfo()
+        self.scale_calc = image_for_scale_calculation.projection().nominalScale().getInfo()
         self.L1_logger.debug('Scale used for Level 1 calculation %f ' % self.scale_calc)
 
     def date_selection(self, **kwargs):
+        '''
+         Modify date for selecting datasets to be used for WPgm
 
-        """ Modify date for selecting datasets to be used for WPgm"""
+        :param kwargs: date_start and date_end
+        :return:
+        '''
 
         self._date_start = str(kwargs.get('date_start'))
         self._date_end = str(kwargs.get('date_end'))
@@ -104,8 +108,12 @@ class L1WaterProductivity(WaterProductivityCalc):
 
     @property
     def multiply_npp(self, filtering_values):
+        '''
+        Sets the dataset to be used in conjunction with Actual Evapotranspiration for WPgb
 
-        """ Sets the dataset to be used in conjunction with Actual Evapotranspiration for WPgb"""
+        :param filtering_values: parameters used to filter the whole collection of images in this case only dates
+        :return: AGBP filtered for WP calculation
+        '''
 
         coll_npp_filtered = self._L1_NPP_DEKADAL.filterDate(
             self._date_start,
@@ -118,7 +126,10 @@ class L1WaterProductivity(WaterProductivityCalc):
 
     def agbp_aggregated(self):
 
-        """Aggregate above ground biomass productivity for annual calculation or water productivity"""
+        '''
+        Aggregate above ground biomass productivity for annual calculation or water productivity
+        :return:  aggregated data selected for WP calculation
+        '''
 
         # the image.multiply(0.01444) multiplies all bands by 0.01444, including the days in dekad.
         # That is why the final WP values were so low...we should first multiply, then, in the same function, add the extra band
@@ -127,7 +138,7 @@ class L1WaterProductivity(WaterProductivityCalc):
             return img_multi
         agbp_npp_multiplied = self.L1_AGBP_calc.map(agbp_multiplication)
 
-        # get AGBP value, divide by 10 (as per FRAME spec) to get daily value, and multiply by number of days in dekad
+        # Get AGBP value, divide by 10 (as per FRAME spec) to get daily value, and multiply by number of days in dekad
         # we don't need to divide by 10 now: it was previously valid on sample data, and we don't use AGBP as input anyway.
         def npp_add_dk(image):
             mmdk = image.select('b1').multiply(image.select('days_in_dk'))
@@ -149,7 +160,7 @@ class L1WaterProductivity(WaterProductivityCalc):
 
     def transpiration(self):
 
-        """Aggregate transpiration using acttual evapotranspiration,above ground biomas productivity and t_fraction"""
+        """Aggregate transpiration using actual evapotranspiration,above ground biomass productivity and t_fraction"""
 
         # This is calculated at class level for WPgb, WPnb
         # collAETFiltered = _L1_AET_DEKADAL.filterDate(start, end).sort('system:time_start', True)
@@ -185,7 +196,7 @@ class L1WaterProductivity(WaterProductivityCalc):
         """wp_gross_biomass calculation returns all intermediate results besides the final wp_gross_biomass"""
 
         # Multiplied for generating AGBP from NPP using the costant 0.144  CHANGED 0.0144 for Release 1
-        npp_multiplied = self.L1_AGBP_calc.map(lambda lista: lista.multiply(0.01444).addBands(lista.metadata('days_in_dk')))
+        npp_multiplied = self.L1_AGBP_calc.map(lambda list_agbp: list_agbp.multiply(0.01444).addBands(list_agbp.metadata('days_in_dk')))
 
         # .multiply(10); the multiplier will need to be
         # applied on net FRAME delivery, not on sample dataset
@@ -212,8 +223,12 @@ class L1WaterProductivity(WaterProductivityCalc):
 
     @staticmethod
     def water_productivity_net_biomass_pre_calculated_annual_values(year):
+        '''
+        wp_net_biomass calculation simplified method using pre-calculated annual value fot AGBP and T
 
-        """wp_net_biomass calculation simplified method using precalculated annual value fot AGBP and T"""
+        :param year: year the wp will be calcualted
+        :return:
+        '''
 
         agbp_y = ee.Image("projects/fao-wapor/AGBP_Annual/AGBP-" + str(year))
         t_y = ee.Image("projects/fao-wapor/T_Annual/T_Annual-" + str(year))
@@ -227,17 +242,19 @@ class L1WaterProductivity(WaterProductivityCalc):
 
         return wp_nb_precalc
 
-    def water_productivity_net_biomass(self):
+    def water_productivity_net_biomass_dates(self):
 
-        """wp_net_biomass calculation returns all intermediate results besides the final wp_gross_biomass"""
+        """wp_net_biomass calculation returns all intermediate results besides the final wp_gross_biomass."""
 
-        # TODO: metodo da cambiare e verificare
         # Or, as you will already have calculated AET annual and AGBP annual:
         # AGBPy/(AETy*10) where *10 is to convert mm into m³/ha
         # var WPnb = AGBPy.divide(Ty.multiply(10));
         def T_moreThan100(image):
             return image.mask(image.select('b1_sum').gte(100))
         t_year_coll_mt100 = self._L1_T_ANNUAL.map(T_moreThan100)
+
+        # agbp_num = collection_agbp_filtered.size ().getInfo ()
+        # self.L1_logger.debug ( "AGBP selected %d" % agbp_num )
 
         # # JOINING and Merging Final Method
         # JOINING agbp and t annual - Start
@@ -251,8 +268,7 @@ class L1WaterProductivity(WaterProductivityCalc):
             Join.apply(self._L1_AGBP_ANNUAL,
                        t_year_coll_mt100,
                        FilterOnStartTime))
-        self.L1_logger.debug("Joined collections", AGBP_T_collection_Join)
-
+        self.L1_logger.debug( AGBP_T_collection_Join.size ().getInfo ()) #"Joined collections",
         # JOINING TWO Collections - End
 
         # MERGING JOINED agbp and t annual - Start
@@ -261,9 +277,6 @@ class L1WaterProductivity(WaterProductivityCalc):
 
         agbp_t_coll_merged = AGBP_T_collection_Join.map(MergeBands)
         self.L1_logger.debug("Merged Joined collections", agbp_t_coll_merged)
-        print("Merged Joined collections", agbp_t_coll_merged)
-
-
         # MERGING JOINED TWO Collections - End
 
         # /********* WPnb ****************/
@@ -272,8 +285,8 @@ class L1WaterProductivity(WaterProductivityCalc):
             return ee.Image(wp_nb)
 
         WPnb_coll = agbp_t_coll_merged.map(AGBP_T)
-        self.L1_logger.debug("WPnb_coll", WPnb_coll)
-        print("WPnb_coll", WPnb_coll)
+
+        #self.L1_logger.debug("WPnb_coll" % WPnb_coll)
 
     def map_id_getter(self,**outputs_id):
 
@@ -306,7 +319,7 @@ class L1WaterProductivity(WaterProductivityCalc):
                         "max": 800, "palette": "fffcdb,b4ffa6,3eba70,195766",
                         "region": WaterProductivityCalc._REGION}
 
-        VisPar_WPgb = {"opacity": 0.85, "bands": "b1", "max": 2000,
+        VisPar_WPgb = {"opacity": 0.85, "bands": "b1", "max": 1.2,
                       "palette": "bc170f,e97a1a,fff83a,9bff40,5cb326",
                       "region": WaterProductivityCalc._REGION}
 
@@ -330,38 +343,26 @@ class L1WaterProductivity(WaterProductivityCalc):
         num_areas = 0
         if areal_option == 'c':
             try:
-                calculation_area = WaterProductivityCalc._COUNTRIES.filter(ee.Filter.eq('name', query_object))
+                calculation_area = WaterProductivityCalc._COUNTRIES.filter(ee.Filter.eq('iso3', query_object))
                 num_areas = calculation_area.size().getInfo()
                 cut_poly = calculation_area.geometry()
-            finally:
+            except:
                 error = Exception('no country')
         elif areal_option == 'w':
             try:
-                calculation_area = WaterProductivityCalc._WSHEDS.filter(ee.Filter.eq('MAJ_NAME', query_object))
+                calculation_area = WaterProductivityCalc._WSHEDS.filter( ee.Filter.eq('maj_name',query_object))
                 num_areas = calculation_area.size().getInfo()
                 cut_poly = calculation_area.geometry()
-            finally:
+            except:
                 error = Exception('no watershed')
         elif areal_option == 'g':
             try:
-                geojson_raw = {"type": "FeatureCollection",
-                                "crs": {"type": "name" , "properties": {"name": "urn:ogc:def:crs:OGC:1.3:CRS84"}} ,
-                                "features": [{"type": "Feature",
-                                              "properties": {"area": "user_defined"},
-                                              "geometry": {"type": "Polygon",
-                                                           "coordinates": [[[8.72 , 12.28],
-                                                                            [29.34 , 0.92],
-                                                                            [20.63 , -6.24],
-                                                                            [8.72 , 12.28]]]}
-                                              }
-                                            ]
-                                }
                 data = FeatureCollection ( query_object )
                 cut_poly = data['features']['features'][0]['geometry']
                 if len(cut_poly)>0:
                     num_areas = 1
-            finally:
-                error = Exception('User defined area seems empty')
+            except:
+                error = Exception('Empty user defined area')
 
         if num_areas > 0:
             means = wbpm_calc.reduceRegion(
@@ -393,8 +394,8 @@ class L1WaterProductivity(WaterProductivityCalc):
                 statistics_for_chosen_area['response']['iso3'] = calculation_area.getInfo()['features'][0]['properties']['iso3']
                 statistics_for_chosen_area['response']['gaul_code'] = calculation_area.getInfo()['features'][0]['properties']['gaul_code']
             elif areal_option == 'w':
-                statistics_for_chosen_area['response']['wshed_code'] = int(calculation_area.getInfo()['features'][0]['properties']['MAJ_BAS'])
-                statistics_for_chosen_area['response']['wapor_code'] = calculation_area.getInfo()['features'][0]['properties']['WaPOR_bas']
+                statistics_for_chosen_area['response']['wshed_code'] = int(calculation_area.getInfo()['features'][0]['properties']['maj_bas'])
+                statistics_for_chosen_area['response']['wapor_code'] = calculation_area.getInfo()['features'][0]['properties']['wapor_bas']
             statistics_for_chosen_area['response']['stats'] = {}
             statistics_for_chosen_area['response']['stats']['min'] = min_max_sum.pop('b1_min')
             statistics_for_chosen_area['response']['stats']['sum'] = min_max_sum.pop('b1_sum')
@@ -405,104 +406,18 @@ class L1WaterProductivity(WaterProductivityCalc):
             self.L1_logger.error("Error: %s named %s" % (error, query_object))
             return error
 
-    def generate_tiles(self):
+class L2WaterProductivity(WaterProductivityCalc):
 
-        """INCOMPLETE  Split the calculated WPbm in 100 tiles facilitating the export"""
+    """
+        Create Water Productivity raster file for annual and dekadal timeframes for Level 2
+    """
+    _L2_EANE_AET_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_EANE_AET")
+    _L2_EANE_PHE_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_EANE_PHE")
+    _L2_WANE_AET_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_WANE_AET")
+    _L2_WANE_NPP_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_WANE_NPP")
+    _L2_EANE_TFRAC_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_EANE_TFRAC")
 
-        driver = ogr.GetDriverByName('ESRI Shapefile')
-        dir_shps = "tiles"
-        os.chdir(dir_shps)
-        file_shps = glob.glob("*.shp")
+    def __init__(self):
 
-        allExportWPbm = []
-        file_names = []
-
-        for file_shp in file_shps:
-
-            dataSource = driver.Open(file_shp, 0)
-
-            if dataSource is None:
-                sys.exit(('Could not open {0}.'.format(file_shp)))
-            else:
-                layer = dataSource.GetLayer(0)
-                extent = layer.GetExtent()
-                active_file = "tile_" + str(file_shp.split('.')[0]).split("_")[3]
-                file_names.append(active_file)
-                low_sx = extent[0], extent[3]
-                up_sx = extent[0], extent[2]
-                up_dx = extent[1], extent[2]
-                low_dx = extent[1], extent[3]
-
-                cut = [list(low_sx), list(up_sx), list(up_dx), list(low_dx)]
-
-                Export_WPbm = {
-                    "crs": "EPSG:4326",
-                    "scale": 250,
-                    'region': cut}
-                allExportWPbm.append(Export_WPbm)
-
-        return allExportWPbm, file_names
-
-    def image_export(self, exp_type, wpgb):
-
-        """ INCOMPLETE Export the 72 of the calculated wpgb to Google Drive,
-        GEE Asset or generating a url for each tile"""
-
-        driver = ogr.GetDriverByName('ESRI Shapefile')
-        dir_shps = "tiles"
-        os.chdir(dir_shps)
-        list_shps = glob.glob("*.shp")
-
-        for file_shp in list_shps:
-            dataSource = driver.Open(file_shp, 0)
-            if dataSource is None:
-                sys.exit(('Could not open {0}.'.format(file_shp)))
-            else:
-                layer = dataSource.GetLayer(0)
-                extent = layer.GetExtent()
-                active_file = str(file_shp.split('.')[0])
-                low_sx = extent[0], extent[3]
-                up_sx = extent[0], extent[2]
-                up_dx = extent[1], extent[2]
-                low_dx = extent[1], extent[3]
-
-                # cut = []
-                cut = [list(low_sx), list(up_sx), list(up_dx), list(low_dx)]
-
-                Export_WPbm = {
-                    "crs": "EPSG:4326",
-                    "scale": 250,
-                    'region': cut}
-
-                if exp_type == 'u':
-                    list_of_downloading_urls = []
-                    try:
-                        url_WPbm = wpgb.getDownloadUrl(Export_WPbm)
-                        list_of_downloading_urls.append(url_WPbm)
-                    except:
-                        self.L1_logger.error("Unexpected error:", sys.exc_info()[0])
-                        raise
-                elif exp_type == 'd':
-                    task = ee.batch.Export.image(wpgb,
-                                                 active_file,
-                                                 Export_WPbm)
-                    task.start()
-                    while task.status()['state'] == 'RUNNING':
-                        # Perhaps task.cancel() at some point.
-                        time.sleep(1)
-                    self.L1_logger.info('Done.', task.status())
-
-                elif exp_type == 'a':
-                    active_file = "tile_" + str(file_shp.split('.')[0]).split("_")[3]
-                    asset_temp = "projects/fao-wapor/testExpPython/JanMar2015/" + active_file
-                    ee.batch.Export.image.toAsset(
-                        image=wpgb,
-                        description=active_file,
-                        assetId=asset_temp,
-                        crs="EPSG:4326",
-                        scale= 250,
-                        region=cut
-                        ).start()
-                elif exp_type == 'n':
-                    print("Nothing yet")
-                    pass
+        """ Calculations for Level 2"""
+        super(L2WaterProductivity, self).__init__()

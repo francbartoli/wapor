@@ -58,13 +58,11 @@
 </div>
 <p>This will import the following:</p>
 <ul class="simple">
-<li>The class <a href="#id1"><span class="problematic" id="id2">:L1WaterProductivity:`run`</span></a> and its subclasses</li>
+<li>The class <a href="#id1"><span class="problematic" id="id2">:L1WaterProductivity:`L1WaterProductivity`</span></a> and its subclasses</li>
 <li>Several <a class="reference internal" href="#id3">constants</a> representing the datasets available in Google Earth Engine and the visualization parameters.</li>
 </ul>
 <div class="section" id="the-water-productivity-class">
 <h2>The Water Productivity class<a class="headerlink" href="#the-water-productivity-class" title="Permalink to this headline">¶</a></h2>
-<<<<<<< Updated upstream
-||||||| merged common ancestors
 <dl class="class">
 <dt id="wapor_algorithms.L1WaterProductivity">
 <em class="property">class </em><code class="descclassname">wapor_algorithms.</code><code class="descname">L1WaterProductivity</code><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity" title="Permalink to this definition">¶</a></dt>
@@ -127,99 +125,6 @@ every componenet of the caluclation is plotted</p>
 
 </dd></dl>
 
-=======
-<dl class="class">
-<dt id="wapor_algorithms.L1WaterProductivity">
-<em class="property">class </em><code class="descclassname">wapor_algorithms.</code><code class="descname">L1WaterProductivity</code><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create Water Productivity raster file for annual and dekadal timeframes for Level 1 (Countries and Basins</p>
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.aet_aggregated">
-<code class="descname">aet_aggregated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.aet_aggregated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregate actual evapotranspiration for annual calculation or water productivity</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.agbp_aggregated">
-<code class="descname">agbp_aggregated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.agbp_aggregated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregate above ground biomass productivity for annual calculation or water productivity</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.date_selection">
-<code class="descname">date_selection</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.date_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify date for selecting datasets to be used for WPgm</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.generate_areal_stats_fusion_tables">
-<code class="descname">generate_areal_stats_fusion_tables</code><span class="sig-paren">(</span><em>fusion_table</em>, <em>query_string</em>, <em>wbpm_calc</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.generate_areal_stats_fusion_tables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates several statistics for the Water Productivity calculated raster for a chosen dataset/name</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.generate_tiles">
-<code class="descname">generate_tiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.generate_tiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>INCOMPLETE  Split the calculated WPbm in 100 tiles facilitating the export</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.image_export">
-<code class="descname">image_export</code><span class="sig-paren">(</span><em>exp_type</em>, <em>wpgb</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.image_export" title="Permalink to this definition">¶</a></dt>
-<dd><p>INCOMPLETE Export the 72 of the calculated wpgb to Google Drive,
-GEE Asset or generating a url for each tile</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.image_selection">
-<code class="descname">image_selection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.image_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter datasets selecting only images within the starting end ending date to be used for WPbm</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="wapor_algorithms.L1WaterProductivity.image_visualization">
-<em class="property">static </em><code class="descname">image_visualization</code><span class="sig-paren">(</span><em>raster_name</em>, <em>raster_plot</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.image_visualization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output the calculated raster using a map vizualizer</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.map_id_getter">
-<code class="descname">map_id_getter</code><span class="sig-paren">(</span><em>**outputs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.map_id_getter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a map id and a token for the calcualted WPbm raster file</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="wapor_algorithms.L1WaterProductivity.multiply_npp">
-<code class="descname">multiply_npp</code><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.multiply_npp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the dataset to be used in conjunction with Actual Evapotranspiration for WPgb</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.transpiration">
-<code class="descname">transpiration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.transpiration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregate transpiration using acttual evapotranspiration,above ground biomas productivity and t_fraction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_gross_biomass">
-<code class="descname">water_productivity_gross_biomass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_gross_biomass" title="Permalink to this definition">¶</a></dt>
-<dd><p>wp_gross_biomass calculation returns all intermediate results besides the final wp_gross_biomass</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass">
-<code class="descname">water_productivity_net_biomass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass" title="Permalink to this definition">¶</a></dt>
-<dd><p>wp_net_biomass calculation returns all intermediate results besides the final wp_gross_biomass</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_pre_calculated_annual_values">
-<em class="property">static </em><code class="descname">water_productivity_net_biomass_pre_calculated_annual_values</code><span class="sig-paren">(</span><em>year</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_pre_calculated_annual_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>wp_net_biomass calculation simplified method using precalculated annual value fot AGBP and T</p>
-</dd></dl>
-
-</dd></dl>
-
->>>>>>> Stashed changes
 </div>
 <div class="section" id="constants">
 <h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>

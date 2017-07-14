@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Documentation &#8212; WaPOR 1.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="DataManagement.html" />
+    <link rel="prev" title="Welcome to WaPOR’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataManagement.html" title="API Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to WaPOR’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WaPOR 1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-wapor_algorithms">
+<span id="api-documentation"></span><span id="wpcalc"></span><h1>API Documentation<a class="headerlink" href="#module-wapor_algorithms" title="Permalink to this headline">¶</a></h1>
+<p>For normal use, all you will have to do to get started is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">wpCalc</span> <span class="k">import</span> <span class="n">L1WaterProductivity</span>
+</pre></div>
+</div>
+<p>This will import the following:</p>
+<ul class="simple">
+<li>The class <a href="#id1"><span class="problematic" id="id2">:L1WaterProductivity:`L1WaterProductivity`</span></a> and its subclasses</li>
+<li>Several <a class="reference internal" href="#id3">constants</a> datasets uploaded or calculated in Google Earth Engine for WaPOR</li>
+</ul>
+<div class="section" id="the-water-productivity-calculation-class">
+<h2>The Water Productivity Calculation class<a class="headerlink" href="#the-water-productivity-calculation-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="wapor_algorithms.L1WaterProductivity">
+<em class="property">class </em><code class="descclassname">wapor_algorithms.</code><code class="descname">L1WaterProductivity</code><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Water Productivity raster file for annual and dekadal timeframes for Level 1 (Countries and Basins</p>
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.aet_aggregated">
+<code class="descname">aet_aggregated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.aet_aggregated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate actual evapotranspiration for annual calculation or water productivity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.agbp_aggregated">
+<code class="descname">agbp_aggregated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.agbp_aggregated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate above ground biomass productivity for annual calculation or water productivity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.date_selection">
+<code class="descname">date_selection</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.date_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify date for selecting datasets to be used for WPgm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.generate_areal_stats">
+<code class="descname">generate_areal_stats</code><span class="sig-paren">(</span><em>areal_option</em>, <em>query_object</em>, <em>wbpm_calc</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.generate_areal_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates several statistics for the Water Productivity calculated raster for a chosen dataset / name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.image_selection">
+<code class="descname">image_selection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.image_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter datasets selecting only images within the starting end ending date to be used for WPbm</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.L1WaterProductivity.image_visualization">
+<em class="property">static </em><code class="descname">image_visualization</code><span class="sig-paren">(</span><em>raster_name</em>, <em>raster_plot</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.image_visualization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output the calculated raster using a map vizualizer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.map_id_getter">
+<code class="descname">map_id_getter</code><span class="sig-paren">(</span><em>**outputs_id</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.map_id_getter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a map id and a token for the calculated WPbm raster file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="wapor_algorithms.L1WaterProductivity.multiply_npp">
+<code class="descname">multiply_npp</code><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.multiply_npp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the dataset to be used in conjunction with Actual Evapotranspiration for WPgb</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.transpiration">
+<code class="descname">transpiration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.transpiration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate transpiration using actual evapotranspiration,above ground biomass productivity and t_fraction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_gross_biomass">
+<code class="descname">water_productivity_gross_biomass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_gross_biomass" title="Permalink to this definition">¶</a></dt>
+<dd><p>wp_gross_biomass calculation returns all intermediate results besides the final wp_gross_biomass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_annual">
+<code class="descname">water_productivity_net_biomass_annual</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_annual" title="Permalink to this definition">¶</a></dt>
+<dd><p>wp_net_biomass calculation returns all intermediate results besides the final wp_gross_biomass</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_pre_calculated_annual_values">
+<em class="property">static </em><code class="descname">water_productivity_net_biomass_pre_calculated_annual_values</code><span class="sig-paren">(</span><em>year</em><span class="sig-paren">)</span><a class="headerlink" href="#wapor_algorithms.L1WaterProductivity.water_productivity_net_biomass_pre_calculated_annual_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>wp_net_biomass calculation simplified method using pre-calculated annual value fot AGBP and T</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<blockquote id="id3">
+<div><p><strong>Vector data to be used for exporting and statistics</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_REGION</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">25.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">37.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">60.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">41.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">58.0</span><span class="p">,</span> <span class="mf">39.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">31.0</span><span class="p">,</span> <span class="mf">38.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">25.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">37.0</span><span class="p">]]</span>
+<span class="n">_WSHEDS</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="s1">&#39;projects/fao-wapor/vectors/wapor_basins&#39;</span><span class="p">)</span>
+<span class="n">_COUNTRIES</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">FeatureCollection</span><span class="p">(</span><span class="s1">&#39;projects/fao-wapor/vectors/wapor_countries&#39;</span><span class="p">)::</span>
+</pre></div>
+</div>
+<p><strong>Level 1 Datasets</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_L1_RET_DAILY</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_RET&quot;</span><span class="p">)</span>
+<span class="n">_L1_PCP_DAILY</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_PCP&quot;</span><span class="p">)</span>
+<span class="n">_L1_NPP_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_NPP&quot;</span><span class="p">)</span>
+<span class="n">_L1_AET_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_AET&quot;</span><span class="p">)</span>
+<span class="n">_L1_TFRAC_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_TFRAC&quot;</span><span class="p">)::</span>
+</pre></div>
+</div>
+<p><em>Land Cover for calculation to be changed in future</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_L1_LCC</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_LCC_preliminary&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>PRE-Calculated annual data stored as collections - New Calculation allowed form 2017 onwards</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_L1_AET_ANNUAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_AET_Annual&quot;</span><span class="p">)</span>
+<span class="n">_L1_AGBP_ANNUAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_AGBP_Annual&quot;</span><span class="p">)</span>
+<span class="n">_L1_T_ANNUAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_T_Annual&quot;</span><span class="p">)</span>
+<span class="n">_L1_WPgb_ANNUAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_WPgb_Annual&quot;</span><span class="p">)</span>
+<span class="n">_L1_WPnb_ANNUAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L1_WPnb_Annual&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Level 2 Datasets</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_L2_EANE_AET_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L2_EANE_AET&quot;</span><span class="p">)</span>
+<span class="n">_L2_EANE_PHE_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L2_EANE_PHE&quot;</span><span class="p">)</span>
+<span class="n">_L2_WANE_AET_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L2_WANE_AET&quot;</span><span class="p">)</span>
+<span class="n">_L2_WANE_NPP_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L2_WANE_NPP&quot;</span><span class="p">)</span>
+<span class="n">_L2_EANE_TFRAC_DEKADAL</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;projects/fao-wapor/L2_EANE_TFRAC&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Documentation</a><ul>
+<li><a class="reference internal" href="#the-water-productivity-calculation-class">The Water Productivity Calculation class</a></li>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to WaPOR&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="DataManagement.html"
+                        title="next chapter">API Documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/wpCalc.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DataManagement.html" title="API Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to WaPOR’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WaPOR 1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, fabio.lana@fao.org.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

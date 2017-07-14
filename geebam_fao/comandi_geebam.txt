@@ -1,0 +1,6 @@
+2017-05-30 14:39:52,905 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-05-30 14:39:52,906 :: oauth2client.client :: INFO :: Refreshing access_token
+['../snippets/images/230.tif', '../snippets/images/263.tif', '../snippets/images/4.tif', '../snippets/images/6.tif']
+2017-05-30 14:43:42,747 :: oauth2client.transport :: INFO :: Attempting refresh to obtain initial access_token
+2017-05-30 14:43:42,748 :: oauth2client.client :: INFO :: Refreshing access_token
+2017-05-30 14:43:54,393 :: root :: INFO :: Collection users/fabiolananotizie/imgscollection removed

@@ -1,0 +1,22 @@
+.. _wpDataManagement:
+
+API Documentation
+=================
+
+.. module:: wapor_algorithms
+
+For normal use, all you will have to do to get started is::
+
+    from wpDataManagement import DataManagement
+
+This will import the following:
+
+* The class :wpDataManagement:`wpDataManagement` and its subclasses
+
+The Data MAnagement for Water Productivity class
+-----------------------------
+
+.. autoclass:: wpDataManagement
+    :members:
+
+
