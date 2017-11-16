@@ -1,6 +1,7 @@
 *.pyc
 *.ini
 .idea/
+.env
 
 wapor_algorithms/image_test/
 wapor_algorithms/gee_auth_files/
