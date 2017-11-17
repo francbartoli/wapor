@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "452f0888b7aa3c2dd5c722229802a6dc9a41ede7efb90c41ba3909fb81c92768"
+            "sha256": "8b007c7753b486958cf8078388d7efc1ae91cd1bdff933b27e5b0e27aaed1a7d"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -17,7 +17,9 @@
             "sys_platform": "darwin"
         },
         "pipfile-spec": 6,
-        "requires": {},
+        "requires": {
+            "python_version": "2.7.13"
+        },
         "sources": [
             {
                 "name": "pypi",
@@ -116,9 +118,9 @@
         },
         "earthengine-api": {
             "hashes": [
-                "sha256:b83b082de4b7a2c2727af6506de9074702ab9df909cfd412fec39bc0b65edc17"
+                "sha256:f1aadf700c24b8a0152110a95f1e54244b1af82eed4ce497707ffade3609d554"
             ],
-            "version": "==0.1.128"
+            "version": "==0.1.129"
         },
         "enum34": {
             "hashes": [

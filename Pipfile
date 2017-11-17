@@ -5,9 +5,14 @@ verify_ssl = true
 name = "pypi"
 
 
+[requires]
+
+python_version = '2.7.13'
+
+
 [dev-packages]
 
-sphinx = "*"
+Sphinx = "*"
 ipython = "*"
 ipdb = "*"
 
@@ -15,9 +20,9 @@ ipdb = "*"
 [packages]
 
 earthengine-api = "*"
-service-identity = "*"
+service_identity = "*"
 geojson = "*"
-gdal = "==2.1.3"
+GDAL = "==2.1.3"
 "beautifulsoup4" = "*"
 retrying = "*"
 simplejson = "*"
