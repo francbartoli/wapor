@@ -20,14 +20,11 @@ import os
 # Importing the credentials provided as JSON but ignored in code commits
 import credentials as cr
 
+
 class WaterProductivityCalc(object):
 
-    #ee.Initialize()
-
     """Constructor for wpDataManagement"""
-    EE_CREDENTIALS = ee.ServiceAccountCredentials(cr.EE_ACCOUNT, cr.EE_PRIVATE_KEY_FILE ,
-                                                  cr.GOOGLE_SERVICE_ACCOUNT_SCOPES )
-    ee.Initialize(EE_CREDENTIALS)
+    ee.Initialize(cr.EE_CREDENTIALS)
 
     _REGION = [[-25.0, -37.0], [60.0, -41.0], [58.0, 39.0], [-31.0, 38.0], [-25.0, -37.0]]
     _WSHEDS = ee.FeatureCollection('projects/fao-wapor/vectors/wapor_basins')

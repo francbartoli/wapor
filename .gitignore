@@ -4,7 +4,6 @@
 .env
 
 wapor_algorithms/image_test/
-wapor_algorithms/gee_auth_files/
-wapor_algorithms/log_files/wapor.log
-wapor_algorithms/log_files/wapor_gee_datamanagement.log
+wapor_algorithms/gee_sa_files/
+wapor_algorithms/log_files
 wapor_algorithms/ancillary/wpCalc.uml

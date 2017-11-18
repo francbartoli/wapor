@@ -22,11 +22,10 @@ class DataManagement(object):
 
     """Algorithm for managing Water Productivity assets in GEE"""
 
-    EE_CREDENTIALS = ee.ServiceAccountCredentials ( cr.EE_ACCOUNT , cr.EE_PRIVATE_KEY_FILE , cr.GOOGLE_SERVICE_ACCOUNT_SCOPES )
-    ee.Initialize (EE_CREDENTIALS)
+    ee.Initialize(cr.EE_CREDENTIALS)
 
-    #Initialization with email and password
-    #ee.Initialize()
+    # Initialization with email and password
+    # ee.Initialize()
 
     # Define URLs
     __GOOGLE_ACCOUNT_URL = 'https://accounts.google.com'
