@@ -12,13 +12,13 @@
 """
 
 import logging
-import ee
-from ee import mapclient
-from geojson import FeatureCollection
 import os
 
 # Importing the credentials provided as JSON but ignored in code commits
 import credentials as cr
+import ee
+# from ee import mapclient # FIXME with folium
+from geojson import FeatureCollection
 
 
 class WaterProductivityCalc(object):
@@ -26,12 +26,15 @@ class WaterProductivityCalc(object):
     """Constructor for wpDataManagement"""
     ee.Initialize(cr.EE_CREDENTIALS)
 
-    _REGION = [[-25.0, -37.0], [60.0, -41.0], [58.0, 39.0], [-31.0, 38.0], [-25.0, -37.0]]
+    _REGION = [[-25.0, -37.0], [60.0, -41.0],
+               [58.0, 39.0], [-31.0, 38.0], [-25.0, -37.0]]
     _WSHEDS = ee.FeatureCollection('projects/fao-wapor/vectors/wapor_basins')
-    _COUNTRIES = ee.FeatureCollection('projects/fao-wapor/vectors/wapor_countries')
+    _COUNTRIES = ee.FeatureCollection(
+        'projects/fao-wapor/vectors/wapor_countries')
 
     def __init__(self):
         pass
+
 
 class L1WaterProductivity(WaterProductivityCalc):
 
@@ -56,7 +59,6 @@ class L1WaterProductivity(WaterProductivityCalc):
     _L1_WPnb_ANNUAL = ee.ImageCollection("projects/fao-wapor/L1_WPnb_Annual")
 
     def __init__(self):
-
         """ Constructor for date and dataset for WPgb"""
         super(L1WaterProductivity, self).__init__()
 
@@ -64,10 +66,12 @@ class L1WaterProductivity(WaterProductivityCalc):
         self.L1_AET_calc = self._L1_AET_DEKADAL
         self.L1_AGBP_calc = self._L1_NPP_DEKADAL
 
-        image_for_scale_calculation = ee.Image("projects/fao-wapor/L1_TFRAC/L1_TFRAC_1003")
+        image_for_scale_calculation = ee.Image(
+            "projects/fao-wapor/L1_TFRAC/L1_TFRAC_1003")
         # Get scale (in meters) information from first image
         self.scale_calc = image_for_scale_calculation.projection().nominalScale().getInfo()
-        self.L1_logger.debug('Scale used for Level 1 calculation %f ' % self.scale_calc)
+        self.L1_logger.debug(
+            'Scale used for Level 1 calculation %f ' % self.scale_calc)
 
     def date_selection(self, **kwargs):
         '''
@@ -81,7 +85,6 @@ class L1WaterProductivity(WaterProductivityCalc):
         self._date_end = str(kwargs.get('date_end'))
 
     def image_selection(self):
-
         """ Filter datasets selecting only images within the starting end ending date to be used for WPbm"""
 
         collection_agbp_filtered = L1WaterProductivity._L1_NPP_DEKADAL.filterDate(
@@ -115,14 +118,14 @@ class L1WaterProductivity(WaterProductivityCalc):
         coll_npp_filtered = self._L1_NPP_DEKADAL.filterDate(
             self._date_start,
             self._date_end)
-        coll_npp_multiplied = coll_npp_filtered.map(lambda npp_images: npp_images.multiply(filtering_values[0]))
+        coll_npp_multiplied = coll_npp_filtered.map(
+            lambda npp_images: npp_images.multiply(filtering_values[0]))
 
         self.L1_AGBP_calc = coll_npp_multiplied
 
         return self.L1_AGBP_calc
 
     def agbp_aggregated(self):
-
         '''
         Aggregate above ground biomass productivity for annual calculation or water productivity
         :return:  aggregated data selected for WP calculation
@@ -131,7 +134,8 @@ class L1WaterProductivity(WaterProductivityCalc):
         # the image.multiply(0.01444) multiplies all bands by 0.01444, including the days in dekad.
         # That is why the final WP values were so low...we should first multiply, then, in the same function, add the extra band
         def agbp_multiplication(image):
-            img_multi = image.multiply(0.01444).addBands(image.metadata('days_in_dk'))
+            img_multi = image.multiply(0.01444).addBands(
+                image.metadata('days_in_dk'))
             return img_multi
         agbp_npp_multiplied = self.L1_AGBP_calc.map(agbp_multiplication)
 
@@ -147,7 +151,6 @@ class L1WaterProductivity(WaterProductivityCalc):
         return aggregated_agbp
 
     def aet_aggregated(self):
-
         """Aggregate actual evapotranspiration for annual calculation or water productivity"""
 
         coll_aet_sorted = self.L1_AET_calc.sort('system:time_start', True)
@@ -156,13 +159,12 @@ class L1WaterProductivity(WaterProductivityCalc):
         return aggregated_aet
 
     def transpiration(self):
-
         """Aggregate transpiration using actual evapotranspiration,above ground biomass productivity and t_fraction"""
 
         # This is calculated at class level for WPgb, WPnb
         # collAETFiltered = _L1_AET_DEKADAL.filterDate(start, end).sort('system:time_start', True)
-        L1_TFRAC_calc = L1WaterProductivity._L1_TFRAC_DEKADAL.filterDate(self._date_start, self._date_end).sort('system:time_start', True)
-
+        L1_TFRAC_calc = L1WaterProductivity._L1_TFRAC_DEKADAL.filterDate(
+            self._date_start, self._date_end).sort('system:time_start', True)
 
         # JOINING TWO Collections - Start
         Join = ee.Join.inner()
@@ -174,7 +176,8 @@ class L1WaterProductivity(WaterProductivityCalc):
         TFRAC_AET_collection_Join = ee.ImageCollection(Join.apply(self.L1_AET_calc,
                                                                   L1_TFRAC_calc,
                                                                   FilterOnStartTime))
-        self.L1_logger.debug("Joined collections %s", TFRAC_AET_collection_Join.getInfo())
+        self.L1_logger.debug("Joined collections %s",
+                             TFRAC_AET_collection_Join.getInfo())
         # JOINING TWO Collections - End
 
         def Tfrac_AETdk(image):
@@ -189,11 +192,11 @@ class L1WaterProductivity(WaterProductivityCalc):
         return SUM_TFRAC_annual
 
     def water_productivity_gross_biomass(self):
-
         """wp_gross_biomass calculation returns all intermediate results besides the final wp_gross_biomass"""
 
         # Multiplied for generating AGBP from NPP using the costant 0.144  CHANGED 0.0144 for Release 1
-        npp_multiplied = self.L1_AGBP_calc.map(lambda list_agbp: list_agbp.multiply(0.01444).addBands(list_agbp.metadata('days_in_dk')))
+        npp_multiplied = self.L1_AGBP_calc.map(lambda list_agbp: list_agbp.multiply(
+            0.01444).addBands(list_agbp.metadata('days_in_dk')))
 
         # .multiply(10); the multiplier will need to be
         # applied on net FRAME delivery, not on sample dataset
@@ -201,8 +204,8 @@ class L1WaterProductivity(WaterProductivityCalc):
 
         # add image property (days in dekad) as band
         eta_dekad_added = self.L1_AET_calc.map(lambda imm_eta2: imm_eta2.addBands(
-                                                 imm_eta2.metadata(
-                                                 'days_in_dk')))
+            imm_eta2.metadata(
+                'days_in_dk')))
 
         # get ET value, divide by 10 (as per FRAME spec) to get daily
         # value, and  multiply by number of days in dekad summed annuallyS
@@ -240,7 +243,6 @@ class L1WaterProductivity(WaterProductivityCalc):
         return wp_nb_precalc
 
     def water_productivity_net_biomass_dates(self):
-
         """wp_net_biomass calculation returns all intermediate results besides the final wp_gross_biomass."""
 
         # Or, as you will already have calculated AET annual and AGBP annual:
@@ -265,7 +267,8 @@ class L1WaterProductivity(WaterProductivityCalc):
             Join.apply(self._L1_AGBP_ANNUAL,
                        t_year_coll_mt100,
                        FilterOnStartTime))
-        self.L1_logger.debug( AGBP_T_collection_Join.size ().getInfo ()) #"Joined collections",
+        # "Joined collections",
+        self.L1_logger.debug(AGBP_T_collection_Join.size().getInfo())
         # JOINING TWO Collections - End
 
         # MERGING JOINED agbp and t annual - Start
@@ -278,15 +281,15 @@ class L1WaterProductivity(WaterProductivityCalc):
 
         # /********* WPnb ****************/
         def AGBP_T(image):
-            wp_nb = image.select('b1_sum').divide(image.select('b1_sum_1').multiply(10))
+            wp_nb = image.select('b1_sum').divide(
+                image.select('b1_sum_1').multiply(10))
             return ee.Image(wp_nb)
 
         WPnb_coll = agbp_t_coll_merged.map(AGBP_T)
 
         #self.L1_logger.debug("WPnb_coll" % WPnb_coll)
 
-    def map_id_getter(self,**outputs_id):
-
+    def map_id_getter(self, **outputs_id):
         """Generate a map id and a token for the calculated WPbm raster file"""
 
         map_ids = {}
@@ -301,24 +304,23 @@ class L1WaterProductivity(WaterProductivityCalc):
 
     @staticmethod
     def image_visualization(raster_name, raster_plot):
-
         """Output the calculated raster using a map vizualizer """
 
         VisPar_AGBPy = {"opacity": 0.85, "bands": "b1", "min": 0, "max": 180,
-                       "palette": "f4ffd9,c8ef7e,87b332,566e1b",
-                       "region": WaterProductivityCalc._REGION}
+                        "palette": "f4ffd9,c8ef7e,87b332,566e1b",
+                        "region": WaterProductivityCalc._REGION}
 
         VisPar_ETay = {"opacity": 1, "bands": "b1", "min": 0, "max": 2000,
-                      "palette": "d4ffc6,beffed,79c1ff,3e539f",
-                      "region": WaterProductivityCalc._REGION}
+                       "palette": "d4ffc6,beffed,79c1ff,3e539f",
+                       "region": WaterProductivityCalc._REGION}
 
         VisPar_TFRAC = {"opacity": 1,  "bands": "b1_sum",
                         "max": 800, "palette": "fffcdb,b4ffa6,3eba70,195766",
                         "region": WaterProductivityCalc._REGION}
 
         VisPar_WPgb = {"opacity": 0.85, "bands": "b1", "max": 1.2,
-                      "palette": "bc170f,e97a1a,fff83a,9bff40,5cb326",
-                      "region": WaterProductivityCalc._REGION}
+                       "palette": "bc170f,e97a1a,fff83a,9bff40,5cb326",
+                       "region": WaterProductivityCalc._REGION}
 
         if raster_name == 'aet':
             legend = VisPar_ETay
@@ -331,32 +333,33 @@ class L1WaterProductivity(WaterProductivityCalc):
         elif raster_name == 'wp_nb':
             legend = VisPar_WPgb
 
-        mapclient.addToMap(raster_plot, legend, raster_name)
-        mapclient.centerMap(17.75, 10.14, 4)
+        # mapclient.addToMap(raster_plot, legend, raster_name) # FIXME with folium
+        # mapclient.centerMap(17.75, 10.14, 4) # FIXME with folium
 
     def generate_areal_stats(self, areal_option, query_object, wbpm_calc):
-
         """Calculates several statistics for the Water Productivity calculated raster for a chosen dataset / name"""
         num_areas = 0
         if areal_option == 'c':
             try:
-                calculation_area = WaterProductivityCalc._COUNTRIES.filter(ee.Filter.eq('iso3', query_object))
+                calculation_area = WaterProductivityCalc._COUNTRIES.filter(
+                    ee.Filter.eq('iso3', query_object))
                 num_areas = calculation_area.size().getInfo()
                 cut_poly = calculation_area.geometry()
             except:
                 error = Exception('no country')
         elif areal_option == 'w':
             try:
-                calculation_area = WaterProductivityCalc._WSHEDS.filter( ee.Filter.eq('maj_name',query_object))
+                calculation_area = WaterProductivityCalc._WSHEDS.filter(
+                    ee.Filter.eq('maj_name', query_object))
                 num_areas = calculation_area.size().getInfo()
                 cut_poly = calculation_area.geometry()
             except:
                 error = Exception('no watershed')
         elif areal_option == 'g':
             try:
-                data = FeatureCollection ( query_object )
+                data = FeatureCollection(query_object)
                 cut_poly = data['features']['features'][0]['geometry']
-                if len(cut_poly)>0:
+                if len(cut_poly) > 0:
                     num_areas = 1
             except:
                 error = Exception('Empty user defined area')
@@ -388,20 +391,29 @@ class L1WaterProductivity(WaterProductivityCalc):
             statistics_for_chosen_area['response'] = {}
             statistics_for_chosen_area['response']['name'] = query_object
             if areal_option == 'c':
-                statistics_for_chosen_area['response']['iso3'] = calculation_area.getInfo()['features'][0]['properties']['iso3']
-                statistics_for_chosen_area['response']['gaul_code'] = calculation_area.getInfo()['features'][0]['properties']['gaul_code']
+                statistics_for_chosen_area['response']['iso3'] = calculation_area.getInfo()[
+                    'features'][0]['properties']['iso3']
+                statistics_for_chosen_area['response']['gaul_code'] = calculation_area.getInfo()[
+                    'features'][0]['properties']['gaul_code']
             elif areal_option == 'w':
-                statistics_for_chosen_area['response']['wshed_code'] = int(calculation_area.getInfo()['features'][0]['properties']['maj_bas'])
-                statistics_for_chosen_area['response']['wapor_code'] = calculation_area.getInfo()['features'][0]['properties']['wapor_bas']
+                statistics_for_chosen_area['response']['wshed_code'] = int(
+                    calculation_area.getInfo()['features'][0]['properties']['maj_bas'])
+                statistics_for_chosen_area['response']['wapor_code'] = calculation_area.getInfo()[
+                    'features'][0]['properties']['wapor_bas']
             statistics_for_chosen_area['response']['stats'] = {}
-            statistics_for_chosen_area['response']['stats']['min'] = min_max_sum.pop('b1_min')
-            statistics_for_chosen_area['response']['stats']['sum'] = min_max_sum.pop('b1_sum')
-            statistics_for_chosen_area['response']['stats']['max'] = min_max_sum.pop('b1_max')
-            statistics_for_chosen_area['response']['stats']['mean'] = mean.pop('b1')
+            statistics_for_chosen_area['response']['stats']['min'] = min_max_sum.pop(
+                'b1_min')
+            statistics_for_chosen_area['response']['stats']['sum'] = min_max_sum.pop(
+                'b1_sum')
+            statistics_for_chosen_area['response']['stats']['max'] = min_max_sum.pop(
+                'b1_max')
+            statistics_for_chosen_area['response']['stats']['mean'] = mean.pop(
+                'b1')
             return statistics_for_chosen_area
         else:
             self.L1_logger.error("Error: %s named %s" % (error, query_object))
             return error
+
 
 class L2WaterProductivity(WaterProductivityCalc):
 
@@ -412,9 +424,9 @@ class L2WaterProductivity(WaterProductivityCalc):
     _L2_EANE_PHE_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_EANE_PHE")
     _L2_WANE_AET_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_WANE_AET")
     _L2_WANE_NPP_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_WANE_NPP")
-    _L2_EANE_TFRAC_DEKADAL = ee.ImageCollection("projects/fao-wapor/L2_EANE_TFRAC")
+    _L2_EANE_TFRAC_DEKADAL = ee.ImageCollection(
+        "projects/fao-wapor/L2_EANE_TFRAC")
 
     def __init__(self):
-
         """ Calculations for Level 2"""
         super(L2WaterProductivity, self).__init__()
