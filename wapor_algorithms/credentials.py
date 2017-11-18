@@ -56,8 +56,9 @@ try:
                     keys = sjson.load(json_ee_sa)
                     keys['project_id'] = os.environ['PROJECT_ID']
                     keys['private_key_id'] = os.environ['PRIVATE_KEY_ID']
-                    keys['private_key'] = os.environ['PRIVATE_KEY']
-                    # .replace("\\\\n","\n")
+                    keys['private_key'] = os.environ['PRIVATE_KEY'].replace(
+                        "\\\\n", "\n"
+                    )
                     # hack to fix the presence of special character (\n)
                     # not well managed from .env is to wrap with double quotes
                     keys['client_email'] = os.environ['CLIENT_EMAIL']
