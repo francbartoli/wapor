@@ -20,9 +20,10 @@ ipdb = "*"
 [packages]
 
 earthengine-api = "*"
-service_identity = "*"
+service-identity = "*"
 geojson = "*"
-GDAL = "==2.1.3"
+gdal = "==2.1.3"
 "beautifulsoup4" = "*"
 retrying = "*"
 simplejson = "*"
+scandir = "*"
