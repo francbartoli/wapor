@@ -32,7 +32,32 @@ try:
     if os.path.exists(
         EE_PRIVATE_SERVICEACCOUNT_JSON_FILE
     ):
-        if ((
+        # import ipdb
+        # ipdb.set_trace()
+        jsonfiles = [elem.path for elem in scandir.scandir(
+            EE_PRIVATE_SERVICEACCOUNT_DIR
+        ) if (
+            elem.is_file() and elem.path.endswith(".json") and
+            elem.path not in EE_PRIVATE_SERVICEACCOUNT_JSON_FILE
+        )]
+        if jsonfiles:
+            for fn in jsonfiles:
+                with open(fn) as json_ee_safile:
+                    keys = sjson.load(json_ee_safile)
+                    _sacreds = ServiceAccountCredentials(
+                        keys['client_email'],
+                        fn,
+                        GOOGLE_SERVICE_ACCOUNT_SCOPES
+                    )
+                    if not _sacreds.invalid:
+                        logging.info(
+                            "The Service Account file {} \
+is gone to be used".format(
+                                str(fn))
+                        )
+                        break
+            logging.info("TBD")
+        elif ((
             os.environ.get('PROJECT_ID') is not None
         ) and (
             os.environ.get('PRIVATE_KEY_ID') is not None
@@ -76,30 +101,11 @@ try:
                 GOOGLE_SERVICE_ACCOUNT_SCOPES
             )
         else:
-            for fn in [elem.path for elem in scandir.scandir(
-                EE_PRIVATE_SERVICEACCOUNT_DIR
-            ) if (
-                elem.is_file() and elem.path.endswith(".json") and
-                elem.path not in EE_PRIVATE_SERVICEACCOUNT_JSON_FILE
-            )
-            ]:
-                with open(fn) as json_ee_safile:
-                    keys = sjson.load(json_ee_safile)
-                    _sacreds = ServiceAccountCredentials(
-                        keys['client_email'],
-                        fn,
-                        GOOGLE_SERVICE_ACCOUNT_SCOPES
-                    )
-                    if not _sacreds.invalid:
-                        logging.info(
-                            "The Service Account file {} \
-is gone to be used".format(
-                                str(fn))
-                        )
-                        break
+            raise EnvironmentError(
+                "No way to find a configuration for Service Account")
     else:
         _sacreds = None
-        logging.ERROR("Service Account template has not been configured!")
+        logging.error("Service Account template has not been configured!")
         raise IOError("Starting path not found")
 except Exception as e:
     raise e
