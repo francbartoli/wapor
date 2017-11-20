@@ -4,17 +4,20 @@ import uuid
 
 import scandir
 import simplejson as sjson
-from ee import ServiceAccountCredentials
+from ee import ServiceAccountCredentials, oauth
 from oauth2client.service_account import ServiceAccountCredentials as SACreds
 
 __location__ = os.path.realpath(os.path.join(
     os.getcwd(), os.path.dirname(__file__)))
 
 # EE_ACCOUNT = 'fao-wapor@fao-wapor.iam.gserviceaccount.com'
-GOOGLE_SERVICE_ACCOUNT_SCOPES = [
+GOOGLE_SERVICE_ACCOUNT_SCOPES = oauth.SCOPE.split(' ') + [
     'https://www.googleapis.com/auth/fusiontables',
-    'https://www.googleapis.com/auth/earthengine',
-    'https://www.googleapis.com/auth/drive'
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/plus.login',
+    'https://www.googleapis.com/auth/plus.me',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
 ]
 
 EE_PRIVATE_SERVICEACCOUNT_JSON_TEMPLATE = 'ServiceAccount-template.json'
