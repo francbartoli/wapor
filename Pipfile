@@ -1,24 +1,17 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [requires]
-
 python_version = '2.7.13'
 
-
 [dev-packages]
-
 sphinx = "*"
 ipython = "*"
 ipdb = "*"
 
-
 [packages]
-
 earthengine-api = "*"
 service-identity = "*"
 geojson = "*"
@@ -27,3 +20,7 @@ gdal = "==2.1.3"
 retrying = "*"
 simplejson = "*"
 scandir = "*"
+google-auth = "*"
+requests-oauthlib = "*"
+google-auth-oauthlib = "*"
+click = "*"
