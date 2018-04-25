@@ -9,3 +9,4 @@ wapor_algorithms/gee_sa_files/*.json
 wapor_algorithms/image_test
 wapor_algorithms/log_files
 wapor_algorithms/ancillary/wpCalc.uml
+*.egg-info
