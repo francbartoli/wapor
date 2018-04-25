@@ -9,6 +9,6 @@ setup(
     ],
     entry_points="""
         [console_scripts]
-        wapor=cli:cli
+        wapor=cli.cli:main
     """,
 )
