@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bbf9b630e40812933e4bcc0816d12fdeae473dfa09ec152ab812c2a0c85fb2e9"
+            "sha256": "1e2d5a5c39ec1f2a56e6eca4c2e82f2a4fb8b65a6d40a98223b5588cd803a61a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -122,6 +122,10 @@
                 "sha256:f6c821ac253c19f2ad4c8691633ae1d1a17f120d5b01ea1d256d7b602bc59887"
             ],
             "version": "==2.2.2"
+        },
+        "e1839a8": {
+            "editable": true,
+            "path": "."
         },
         "earthengine-api": {
             "hashes": [
@@ -496,7 +500,7 @@
                 "sha256:8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83",
                 "sha256:d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"
             ],
-            "markers": "python_version in '2.6 2.7 3.2 3.3'",
+            "markers": "python_version == '2.7' or python_version == '3.3'",
             "version": "==2.3.2"
         },
         "pexpect": {
