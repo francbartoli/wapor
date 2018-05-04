@@ -10,6 +10,8 @@ python_version = '2.7.14'
 sphinx = "*"
 ipython = "*"
 ipdb = "*"
+"flake8" = "*"
+"doc8" = "*"
 
 [packages]
 earthengine-api = "*"

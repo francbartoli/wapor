@@ -1,8 +1,10 @@
 *.pyc
 *.ini
 .idea/
+.vscode/
 .env
 .cache
+.pytest_cache/
 
 wapor_algorithms/gee_sa_files/*.json
 !wapor_algorithms/gee_sa_files/ServiceAccount-template.json
