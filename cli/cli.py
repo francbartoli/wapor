@@ -1,6 +1,6 @@
 import click
 import os
-from utils.helpers import Name
+from utils.helpers import Name, TIME_RESOLUTION as tr
 
 
 class Level(click.ParamType):
@@ -46,10 +46,11 @@ def main(ctx, api_key, credential_file, config_file, level):
     if not api_key and os.path.exists(fn_credential):
         with open(fn_credential) as cfg:
             api_key = cfg.read()
-    
+
     fn_config = os.path.expanduser(config_file)
     # TODO
 
+    # TODO from config file
     ee_workspace_base = "projects"
     ee_workspace_wapor = "fao_wapor"
 

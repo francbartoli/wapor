@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 
 class Name(object):
@@ -36,3 +37,14 @@ class Name(object):
                 self.dst_image()
             )
         )
+
+
+class TIME_RESOLUTION(Enum):
+    dekadal = "DEKADAL"
+    short_dekadal = "D"
+    annual = "ANNUAL"
+    short_annual = "A"
+    everyday = "EVERYDAY"
+    short_everyday = "E"
+    seasonal = "SEASONAL"
+    short_seasonal = "S"
