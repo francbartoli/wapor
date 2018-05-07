@@ -30,4 +30,4 @@ click = "*"
 marmee = "*"
 marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true}
 "autopep8" = "*"
-dask = "*"
+dask = {extras = ["complete"]}
