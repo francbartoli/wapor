@@ -72,25 +72,58 @@ def main(ctx, api_key, credential_file, config_file, level):
 @click.argument('input_component')
 @click.pass_context
 def aet(ctx, year, season, temporal_resolution, input_component):
+    """
+        wapor -l L1 aet 2016 1 A AET
+    """
+
+    from algorithms.aet import AET 
+
     kwargs = {
         "year": year,
         "season": season,
         "temporal_resolution": temporal_resolution,
-        "component": input_component
+        "component": input_component #  AET
     }
     context = ctx.obj.copy()
     context.update(kwargs)
 
+    # Use class Name to express wapor name convention over GEE
     src_image_coll = Name(**context).src_collection()
-    print src_image_coll
+    print src_image_coll  # L1_AET
     dst_image_coll = Name(**context).dst_collection()
-    print dst_image_coll
+    print dst_image_coll  # L1_AET_A
     dst_asset_coll = Name(**context).dst_assetcollection_id()
-    print dst_asset_coll
+    print dst_asset_coll  # projects/fao_wapor/L1_AET_A
     dst_asset_image = Name(**context).dst_image()
-    print dst_asset_image
+    print dst_asset_image  # AET_16
     dst_asset_id = Name(**context).dst_asset_id()
-    print dst_asset_id
+    print dst_asset_id  # projects/fao_wapor/L1_AET_A/AET_16
+    if "AET" in src_image_coll:
+        if context["temporal_resolution"] in [
+            tr.annual.value,
+            tr.short_annual.value
+        ]:
+            i = os.path.join(
+                context["EE_WORKSPACE_WAPOR"],
+                src_image_coll.replace("AET", "I")
+            ) + "_" + tr.short_dekadal.value
+            e = os.path.join(
+                context["EE_WORKSPACE_WAPOR"], 
+                src_image_coll.replace("AET", "E")
+            ) + "_" + tr.short_dekadal.value
+            t = os.path.join(
+                context["EE_WORKSPACE_WAPOR"], 
+                src_image_coll.replace("AET", "T")
+            ) + "_" + tr.short_dekadal.value
+        else:
+            raise ValueError("Not implementes yet.")
+    else:
+        raise ValueError("Wrong value for algorithm not being AET")
+    colls = {"collI": i, "collE": e, "collT": t}
+    # Create Marmee object instance with specific inputs for AET and filter
+    aet = AET(**colls)
+    print aet.inputs
+
 
 if __name__ == "__main__":
     main()
