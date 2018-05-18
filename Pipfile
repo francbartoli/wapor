@@ -27,7 +27,7 @@ requests-oauthlib = "*"
 google-auth-oauthlib = "*"
 click = "*"
 "e1839a8" = {path = ".", editable = true}
-marmee = "*"
-marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true}
+marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "1.0.6"}
 "autopep8" = "*"
 dask = {extras = ["complete"]}
+marmee = "*"
