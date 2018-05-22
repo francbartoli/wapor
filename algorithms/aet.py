@@ -83,6 +83,17 @@ class AET(Marmee):
     def _inputColl(collection_id):
         return Input(item=Stac(collection_id).parse(), reducers=[])
 
+    def _inputAnnualTemporalRule(year):
+        fromdate = datetime.date(year, 01, 01)
+        todate = datetime.date(year, 12, 31)
+        annual = Range(from_date=fromdate, to_date=todate)
+        annualrule = TemporalRule(daterange=annual.dict)
+        extentY = ExtentSchema().dump([annualrule], many=True)
+        return Rule(identifier="annual", rule=extentY)
+
+    def _inputTemporalFilter(filtername, trule):
+        return Filter(name=filtername, rules=[trule])
+
     def _n_days(image):
         days = image.addBands(image.metadata('n_days_extent'))
         return days
