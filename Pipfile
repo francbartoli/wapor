@@ -32,3 +32,4 @@ marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-on
 dask = {extras = ["complete"]}
 marmee = "*"
 daiquiri = "*"
+click-configfile = "*"

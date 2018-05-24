@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3fa318c0e67edb07c5e9d04e0cca8e9e3e7292fe836471a1a4c5b3dca24841d3"
+            "sha256": "b9298e18bce10108e4959a422bb8cef74670171ade53f4fe7fb1eb860c4c3103"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -115,6 +115,14 @@
             "index": "pypi",
             "version": "==6.7"
         },
+        "click-configfile": {
+            "hashes": [
+                "sha256:95beec13bee950e98f43c81dcdabef4f644091559ea66298f9dadf59351d90d1",
+                "sha256:af2ae7123af57d850cd18edd915893e655b6b1bc30d1302fd040b1059bec073d"
+            ],
+            "index": "pypi",
+            "version": "==0.2.3"
+        },
         "click-plugins": {
             "hashes": [
                 "sha256:7acc5e7eedd2dfd719714e8d53ae99030b5357aed661d0b06dacd6c2d583d7c5"
@@ -135,6 +143,12 @@
                 "sha256:ac7acd0dcb1c52fa14873f801efe0c53e6457bcc5f01542cb445a6515d9a4b72"
             ],
             "version": "==0.5.3"
+        },
+        "configparser": {
+            "hashes": [
+                "sha256:5308b47021bc2340965c371f0f058cc6971a04502638d4244225c49d80db273a"
+            ],
+            "version": "==3.5.0"
         },
         "cryptography": {
             "hashes": [
@@ -199,7 +213,6 @@
                 "sha256:6bd0f6ad48ec2aa117d3d141940d484deccda84d4fcd884f5c3d93c23ecd8c79",
                 "sha256:8ad8c4783bf61ded74527bffb48ed9b54166685e4230386a9ed9b1279e2df5b1"
             ],
-            "markers": "python_version < '3'",
             "version": "==1.1.6"
         },
         "futures": {
@@ -742,7 +755,6 @@
             "hashes": [
                 "sha256:5308b47021bc2340965c371f0f058cc6971a04502638d4244225c49d80db273a"
             ],
-            "markers": "python_version < '3.2'",
             "version": "==3.5.0"
         },
         "decorator": {
@@ -775,7 +787,6 @@
                 "sha256:6bd0f6ad48ec2aa117d3d141940d484deccda84d4fcd884f5c3d93c23ecd8c79",
                 "sha256:8ad8c4783bf61ded74527bffb48ed9b54166685e4230386a9ed9b1279e2df5b1"
             ],
-            "markers": "python_version < '3'",
             "version": "==1.1.6"
         },
         "flake8": {
@@ -855,7 +866,7 @@
                 "sha256:8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83",
                 "sha256:d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"
             ],
-            "markers": "python_version == '2.7' or python_version == '3.3'",
+            "markers": "python_version in '2.6 2.7 3.2 3.3'",
             "version": "==2.3.2"
         },
         "pbr": {
