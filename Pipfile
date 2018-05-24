@@ -31,3 +31,4 @@ marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-on
 "autopep8" = "*"
 dask = {extras = ["complete"]}
 marmee = "*"
+daiquiri = "*"
