@@ -19,7 +19,19 @@ class ApiKey(click.ParamType):
         pass
 
 
+class Logging(click.ParamType):
+    name = 'verbose'
+
+    def logging(args):
+        pass
+
+
 @click.group()
+@click.option(
+    '--verbose', '-v',
+    type=Logging(),
+    help='Verbosity of logging output',
+)
 @click.option(
     '--api-key', '-a',
     type=ApiKey(),
@@ -33,7 +45,7 @@ class ApiKey(click.ParamType):
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
-    default='config.yaml',
+    default='~/.wapor/config.yaml',
 )
 @click.option(
     '--level', '-l',
