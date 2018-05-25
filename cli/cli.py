@@ -1,8 +1,37 @@
+from click_configfile import ConfigFileReader, Param, SectionSchema
+from click_configfile import matches_section
 import click
 import os
+import json
 import daiquiri
 from utils.logging import Log
 from utils.helpers import Name, TIME_RESOLUTION as tr
+
+
+class ConfigSectionSchema(object):
+    """ Describes all config sections of this configuration file.
+
+        Example:
+        # -- FILE: config.cfg
+        [wapor]
+        gee_workspace_base = projects
+        gee_workspace_project = fao_wapor
+        
+    """
+
+    @matches_section("wapor")
+    class Wapor(SectionSchema):
+        gee_workspace_base = Param(type=str)
+        gee_workspace_project = Param(type=str) 
+        
+
+class ConfigFileProcessor(ConfigFileReader):
+    # @TODO customise filename and searchpath from command option
+    config_files = ["config.ini", "config.cfg"]
+    config_searchpath = [".", os.path.expanduser("~/.wapor")]
+    config_section_schemas = [
+        ConfigSectionSchema.Wapor,     # PRIMARY SCHEMA
+    ]
 
 
 class Level(click.ParamType):
@@ -25,6 +54,8 @@ class Logging(click.ParamType):
     def logging(args):
         pass
 
+
+CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
 
 @click.group()
 @click.option(
@@ -78,10 +109,33 @@ def main(ctx, verbose, api_key, credential_file, config_file, level):
     logger.debug(
         "Configuration file =====> {0}".format(fn_config)
     )
+    if os.path.exists(fn_config):
+        ctx.default_map = CONTEXT_SETTINGS['default_map']
+        logger.debug(
+            "Context with default map =====> {0}".format(
+                json.dumps(ctx.default_map)
+            )
+        )
+    else:
+        logger.critical(
+            "Configuration file {0} is not available!".format(
+                fn_config
+            )
+        )
+        raise click.Abort()
 
-    # TODO from config file
-    ee_workspace_base = "projects"
-    ee_workspace_wapor = "fao_wapor"
+    try:
+        pass
+    except KeyError as e:
+        logger.debug("Error =====> {0}".format(
+            e.message
+        ))
+        raise
+    for wapor_data_key in ctx.default_map.keys():
+        if wapor_data_key == "gee_workspace_base":
+            ee_workspace_base = ctx.default_map[wapor_data_key]
+        if wapor_data_key == "gee_workspace_project":
+            ee_workspace_wapor = ctx.default_map[wapor_data_key]
 
     ctx.obj = {
         'api_key': api_key,
