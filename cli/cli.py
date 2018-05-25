@@ -31,6 +31,7 @@ class Logging(click.ParamType):
     '--verbose', '-v',
     type=Logging(),
     help='Verbosity of logging output',
+    default='INFO',
 )
 @click.option(
     '--api-key', '-a',
@@ -40,12 +41,12 @@ class Logging(click.ParamType):
 @click.option(
     '--credential-file', '-c',
     type=click.Path(),
-    default='~/.serviceaccount.cfg',
+    default='~/.wapor/serviceaccount.json',
 )
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
-    default='~/.wapor/config.yaml',
+    default='~/.wapor/config.cfg',
 )
 @click.option(
     '--level', '-l',
@@ -53,16 +54,30 @@ class Logging(click.ParamType):
     help='Level of the data - Can be L1, L2, L3',
 )
 @click.pass_context
-def main(ctx, api_key, credential_file, config_file, level):
+def main(ctx, verbose, api_key, credential_file, config_file, level):
     """
     """
+
+    Log(verbose).initialize()
+    logger = daiquiri.getLogger(ctx.command.name, subsystem="MAIN")
+    logger.info(
+        "================ {0} =================".format(
+            ctx.command.name
+        )
+    )
+
     fn_credential = os.path.expanduser(credential_file)
+    logger.debug(
+        "Credential file =====> {0}".format(fn_credential)
+    )
     if not api_key and os.path.exists(fn_credential):
-        with open(fn_credential) as cfg:
-            api_key = cfg.read()
+        with open(fn_credential) as crd:
+            api_key = crd.read()
 
     fn_config = os.path.expanduser(config_file)
-    # TODO
+    logger.debug(
+        "Configuration file =====> {0}".format(fn_config)
+    )
 
     # TODO from config file
     ee_workspace_base = "projects"
