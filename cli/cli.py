@@ -4,6 +4,9 @@ import click
 import os
 import json
 import daiquiri
+import oauth2client
+from ee import EEException, Initialize
+from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
 from utils.helpers import Name, TIME_RESOLUTION as tr
 
@@ -44,8 +47,17 @@ class Level(click.ParamType):
 class ApiKey(click.ParamType):
     name = 'api-key'
 
-    def apikey(args):
-        pass
+    def convert(self, value, param, ctx):
+        if value:
+            try:
+                creds = oauth2client.client.OAuth2Credentials(
+                    None, CLIENT_ID, CLIENT_SECRET,
+                    value, None,
+                    'https://accounts.google.com/o/oauth2/token', None
+                )
+                return creds
+            except EEException as eee:
+                raise
 
 
 class Logging(click.ParamType):
@@ -67,7 +79,7 @@ CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
 @click.option(
     '--api-key', '-a',
     type=ApiKey(),
-    help='your API key for Earth Engine API',
+    help='your API authentication token for Earth Engine API',
 )
 @click.option(
     '--credential-file', '-c',
@@ -104,7 +116,9 @@ def main(ctx, verbose, api_key, credential_file, config_file, level):
     if not api_key and os.path.exists(fn_credential):
         with open(fn_credential) as crd:
             api_key = crd.read()
-
+    else:
+        auth = Initialize(api_key)
+    # --config-file
     fn_config = os.path.expanduser(config_file)
     logger.debug(
         "Configuration file =====> {0}".format(fn_config)
@@ -138,8 +152,7 @@ def main(ctx, verbose, api_key, credential_file, config_file, level):
             ee_workspace_wapor = ctx.default_map[wapor_data_key]
 
     ctx.obj = {
-        'api_key': api_key,
-        'credential_file': fn_credential,
+        'auth': auth,
         'EE_WORKSPACE_BASE': ee_workspace_base,
         'EE_WORKSPACE_WAPOR': os.path.join(
             ee_workspace_base,
