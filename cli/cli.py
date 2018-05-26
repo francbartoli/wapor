@@ -5,7 +5,7 @@ import os
 import json
 import daiquiri
 import oauth2client
-from ee import EEException, Initialize
+from ee import EEException, Initialize, ServiceAccountCredentials
 from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
 from utils.helpers import Name, TIME_RESOLUTION as tr
@@ -19,6 +19,10 @@ class ConfigSectionSchema(object):
         [wapor]
         gee_workspace_base = projects
         gee_workspace_project = fao_wapor
+        [google.fusiontables]
+        scope = https://www.googleapis.com/auth/fusiontables
+        [google.earthengine]
+        scope = https://www.googleapis.com/auth/earthengine
         
     """
 
@@ -26,7 +30,11 @@ class ConfigSectionSchema(object):
     class Wapor(SectionSchema):
         gee_workspace_base = Param(type=str)
         gee_workspace_project = Param(type=str) 
-        
+
+    @matches_section("google.*")
+    class Google(SectionSchema):
+        scope = Param(type=str)
+
 
 class ConfigFileProcessor(ConfigFileReader):
     # @TODO customise filename and searchpath from command option
@@ -34,14 +42,59 @@ class ConfigFileProcessor(ConfigFileReader):
     config_searchpath = [".", os.path.expanduser("~/.wapor")]
     config_section_schemas = [
         ConfigSectionSchema.Wapor,     # PRIMARY SCHEMA
+        ConfigSectionSchema.Google,    
     ]
+
+
+class CredentialConfigFile(dict):
+    def __init__(self, credential_file):
+            self.credential_file = credential_file
+
+    def load(self):
+        """load a JSON Service Account file from disk"""
+        with open(self.credential_file) as cf:
+            try:
+                 return json.loads(
+                        cf.read()
+                    )
+            except Exception as e:
+                raise click.Abort()
+
+    def get_sa_credentials(self, scopes):
+        """Authenticate with a Service account.
+        """
+        try:
+            account = self.load()["client_email"]
+            return ServiceAccountCredentials(
+                account,
+                self.credential_file,
+                scopes
+            )
+        except EEException as eee:
+            logger.debug(
+                "Error with GEE authentication ======> {0}".format(
+                    eee.message
+                )
+            )
+            raise click.Abort()
+        except KeyError as e:
+            logger.debug("Service account file doesn't have the key 'client_email'!")
+            raise click.Abort()
+
+
+class CredentialFile(click.ParamType):
+    name = 'credential-file'
+
+    def convert(self, value, param, ctx):
+        if value:
+            return value
 
 
 class Level(click.ParamType):
     name = 'level'
 
-    def level(args):
-        pass
+    def convert(self, value, param, ctx):
+        return value
 
 
 class ApiKey(click.ParamType):
@@ -57,14 +110,20 @@ class ApiKey(click.ParamType):
                 )
                 return creds
             except EEException as eee:
-                raise
+                logger.debug(
+                    "Error with GEE authentication ======> {0}".format(
+                        eee.message
+                    )
+                )
+                raise click.Abort()
 
 
 class Logging(click.ParamType):
     name = 'verbose'
 
-    def logging(args):
-        pass
+    def convert(self, value, param, ctx):
+        # @TODO convert to possible logging values
+        return value
 
 
 CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
@@ -108,16 +167,6 @@ def main(ctx, verbose, api_key, credential_file, config_file, level):
             ctx.command.name
         )
     )
-
-    fn_credential = os.path.expanduser(credential_file)
-    logger.debug(
-        "Credential file =====> {0}".format(fn_credential)
-    )
-    if not api_key and os.path.exists(fn_credential):
-        with open(fn_credential) as crd:
-            api_key = crd.read()
-    else:
-        auth = Initialize(api_key)
     # --config-file
     fn_config = os.path.expanduser(config_file)
     logger.debug(
@@ -145,11 +194,41 @@ def main(ctx, verbose, api_key, credential_file, config_file, level):
             e.message
         ))
         raise
+
+    scopes = []
     for wapor_data_key in ctx.default_map.keys():
+        if wapor_data_key.startswith("google."):
+            scopes.append(ctx.default_map[wapor_data_key]["scope"])
         if wapor_data_key == "gee_workspace_base":
             ee_workspace_base = ctx.default_map[wapor_data_key]
         if wapor_data_key == "gee_workspace_project":
             ee_workspace_wapor = ctx.default_map[wapor_data_key]
+    logger.debug("Scopes =====> {0}".format(scopes))
+    # --credential-file
+    credentials = os.path.expanduser(credential_file)
+    logger.debug(
+        "Credential file =====> {0}".format(credentials)
+    )
+    if os.path.exists(credentials):
+        logger.info(
+            "Authenticate with Service Account {0}".format(credentials)
+        )
+        auth = Initialize(
+            CredentialConfigFile(credentials).get_sa_credentials(scopes)
+        )
+    elif api_key:
+        logger.info(
+            "Authenticate with Api Key {0}".format(api_key)
+        )
+        auth = Initialize(api_key)
+    else:
+        logger.info(
+            "Neither Api Key nor Service Account has been provided!\
+Please check the default Service Account file {0}".format(
+                credentials
+            )
+        )
+        raise click.Abort()
 
     ctx.obj = {
         'auth': auth,
