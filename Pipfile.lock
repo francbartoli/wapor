@@ -201,10 +201,10 @@
         },
         "earthengine-api": {
             "hashes": [
-                "sha256:6fa0e55c8b75fd1409a15c850bcb3d885e92207b996f5523fe2ce8d67363a894"
+                "sha256:ee4438264bef50930eef50bdc31e4d455d33a8765da0a94ef4219dd6a20c46c5"
             ],
             "index": "pypi",
-            "version": "==0.1.138"
+            "version": "==0.1.139"
         },
         "enum34": {
             "hashes": [
@@ -296,10 +296,10 @@
         },
         "marmee": {
             "hashes": [
-                "sha256:6cd4386413f1b97893acebc293733faf46e9535856a7e2668c94c86a02d05d2d"
+                "sha256:51de0eaa08bc5bfc4b33d7fa1257993c691ea3a79bb3d64ce2482460043b3107"
             ],
             "index": "pypi",
-            "version": "==0.1.7"
+            "version": "==0.1.8"
         },
         "marshmallow": {
             "hashes": [
@@ -647,9 +647,9 @@
         },
         "stacpy": {
             "hashes": [
-                "sha256:da3c9941bffe634b24a9fba0f82c80aec4008401170edc5a73df42f9cdd9f18f"
+                "sha256:a266e566f871f284573a04fb747d47b5985cf1af96583d4ee3d6a66b91e68db4"
             ],
-            "version": "==0.1.8"
+            "version": "==0.2.0"
         },
         "tblib": {
             "hashes": [
@@ -866,7 +866,7 @@
                 "sha256:8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83",
                 "sha256:d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"
             ],
-            "markers": "python_version in '2.6 2.7 3.2 3.3'",
+            "markers": "python_version == '2.7' or python_version == '3.3'",
             "version": "==2.3.2"
         },
         "pbr": {
