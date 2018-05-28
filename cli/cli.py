@@ -241,6 +241,81 @@ Please check the default Service Account file {0}".format(
     }
 
 
+@main.command() 
+@click.argument('year') 
+@click.argument('temporal_resolution') 
+@click.argument('input_component') 
+@click.pass_context 
+def common(ctx, year, temporal_resolution, input_component): 
+    """
+        example: wapor -l L1 common 2016 D E
+    """
+
+    Log("DEBUG").initialize()
+    logger = daiquiri.getLogger(ctx.command.name, subsystem="COMMON")
+    logger.info(
+        "================ {0} {1} calculation =================".format(
+            ctx.command.name,
+            temporal_resolution
+        )
+    )
+
+    from algorithms.common import Common
+
+    kwargs = { 
+        "year": year,  
+        "temporal_resolution": temporal_resolution, 
+        "component": input_component 
+    } 
+    context = ctx.obj.copy() 
+    context.update(kwargs) 
+ 
+    # Use class Name to express wapor name convention over GEE
+    src_image_coll = Name(**context).src_collection()
+    # L1_E_D, L1_T_D, L1_I_D
+    logger.debug(
+        "src_image_coll variable =====> {0}".format(src_image_coll)
+    )
+    dst_image_coll = Name(**context).dst_collection()
+    # L1_E_A, L1_T_A, L1_I_A
+    logger.debug(
+        "dst_image_coll variable =====> {0}".format(dst_image_coll)
+    )
+    dst_asset_coll = Name(**context).dst_assetcollection_id()
+    # projects/fao_wapor/L1_E_A
+    logger.debug(
+        "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
+    )
+    dst_asset_image = Name(**context).dst_image()
+    # L1_E_16
+    logger.debug(
+        "dst_asset_image variable =====> {0}".format(dst_asset_image)
+    )
+    dst_asset_id = Name(**context).dst_asset_id()
+    # projects/fao_wapor/L1_E_A/L1_E_16
+    logger.debug(
+        "dst_asset_id variable =====> {0}".format(dst_asset_id)
+    ) 
+
+    kwargs.update(
+        {
+            "src_coll": os.path.join(
+                os.path.join(
+                    context["EE_WORKSPACE_WAPOR"],
+                    context["level"]
+                ),
+                src_image_coll
+            ),
+            "dst_coll": dst_image_coll,
+            "dst_asset_coll": dst_asset_coll,
+            "dst_asset": dst_asset_id
+        }
+    )
+    # create the instance of the common script class
+    proc = Common(**kwargs)
+    # run the process
+    proc.process_annual()
+
 @main.command()
 @click.argument('year')
 @click.argument('season')
