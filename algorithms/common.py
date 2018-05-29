@@ -196,18 +196,38 @@ class Common(Marmee):
             region = ee.Geometry.Polygon(
                 [[[-30, -40],[65, -30],[65, 40],[-30, 40]]]
             ).getInfo()['coordinates']
-            import ipdb ; ipdb.set_trace()
-            # @TODO check if the asset already exists and eventually delete it
-            task = ee.batch.Export.image.toAsset(
-                image=sum_component_annual,
-                description='L1_E_16',
-                assetId='projects/fao-wapor/L1/L1_E_A/L1_E_16',
-                crs='EPSG:4326',
-                scale=scale,
-                region=region,
-                maxPixels=9000000000
-            )
-            task.start()
+
+
+            # check if the asset already exists and eventually delete it
+            if ee.data.getInfo(assetid):
+                try:
+                    ee.data.deleteAsset(assetid)
+                except EEException as eee:
+                    self.logger.debug(
+                        "Trying to delete an assetId {0} \
+which doesn't exist.".format(assetid)
+                    )
+                    raise
+            # launch the task and return taskid
+            try:
+                task = ee.batch.Export.image.toAsset(
+                    image=sum_component_annual,
+                    description='L1_E_16',
+                    assetId=assetid,
+                    crs='EPSG:4326',
+                    scale=scale,
+                    region=region,
+                    maxPixels=9000000000
+                )
+                task.start()
+                return task.id
+            except EEException as eee:
+                self.logger.debug(
+                    "Task export definition has failed."
+                )
+                raise
+            
+
     
         else:
             self.logger.debug("Filtered Collection has size {0}".format(size))
