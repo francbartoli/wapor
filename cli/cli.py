@@ -313,8 +313,11 @@ def common(ctx, year, temporal_resolution, input_component):
     )
     # create the instance of the common script class
     proc = Common(**kwargs)
-    # run the process
-    proc.process_annual()
+    # run the process and return the task id
+    task = {"taskid": proc.process_annual()}
+    click.echo(
+        json.dumps(task)
+    )
 
 @main.command()
 @click.argument('year')
