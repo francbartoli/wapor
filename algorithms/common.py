@@ -8,6 +8,7 @@ from ee import Image as EEImage
 from ee import Date as EEDate, EEException
 import ee
 import dask
+import json
 import daiquiri
 import datetime
 from dask.delayed import delayed
@@ -23,7 +24,7 @@ class Common(Marmee):
         # parallelize items computation for input component
         try:
             self.logger.debug(
-                "Named arguments ===kw====> {0}".format(kw)
+                "Named arguments kw are =====> {0}".format(kw)
             )
             self.logger.info(
                 "==========INIT Common Algorithm for {0}===========".format(
@@ -49,6 +50,11 @@ class Common(Marmee):
         # temporal filter for input component
         try:
             self.year = kw["year"]
+            self.config = dict(
+                export=kw["to_asset"],
+                intermediate=kw["intermediate_outputs"],
+                assetid=kw["dst_asset"]
+            )
         except KeyError as exc:
             self.logger.error(exc.message)
             raise
@@ -60,9 +66,10 @@ class Common(Marmee):
         # initialize outputs
         self._outputs = []
 
-        # Create a dict of EE ImageCollection for input component
+        # Create dicts of EE ImageCollection for input component
         flt_dict = {}
         inpt_dict = {}
+        config_dict = {}
         # import ipdb ; ipdb.set_trace()
         self.logger.debug(
             "Received inputs in STAC format are =====>\n{0}".format(
@@ -105,6 +112,7 @@ class Common(Marmee):
         
         self.coll = inpt_dict
         self.filter = flt_dict
+        self.config.update(config_dict)
 
     def process_annual(self):
         """Calculate Annual image.
@@ -200,6 +208,12 @@ class Common(Marmee):
                 [[[-30, -40],[65, -30],[65, 40],[-30, 40]]]
             ).getInfo()['coordinates']
 
+            self.logger.debug(
+                "Config dictionary =====> {0}".format(
+                    json.dumps(self.config)
+                )
+            )
+            assetid = self.config["assetid"]
 
             # check if the asset already exists and eventually delete it
             if ee.data.getInfo(assetid):
@@ -223,7 +237,11 @@ which doesn't exist.".format(assetid)
                     maxPixels=9000000000
                 )
                 task.start()
-                return task.id
+                return dict(
+                    tasks=dict(taskid=task.id),
+                    outputs=self.outputs,
+                    errors={}
+                )
             except EEException as eee:
                 self.logger.debug(
                     "Task export definition has failed."
