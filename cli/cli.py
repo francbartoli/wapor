@@ -155,8 +155,23 @@ CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
     type=Level(),
     help='Level of the data - Can be L1, L2, L3',
 )
+@click.option(
+    '--export', '-e',
+    type=BOOL,
+    default=True,
+    help='Return intermediate outputs for inputs components (default=False)',
+)
+@click.option(
+    '--outputs', '-o',
+    type=BOOL,
+    default=False,
+    help='Return intermediate outputs for inputs components (default=False)',
+)
 @click.pass_context
-def main(ctx, verbose, api_key, credential_file, config_file, level):
+def main(
+    ctx, verbose, api_key, credential_file,
+    config_file, level, export, outputs
+):
     """
     """
 
@@ -237,7 +252,9 @@ Please check the default Service Account file {0}".format(
             ee_workspace_base,
             ee_workspace_wapor
         ),
-        'level': level
+        'level': level,
+        'export': export,
+        'outputs': outputs
     }
 
 
@@ -308,15 +325,23 @@ def common(ctx, year, temporal_resolution, input_component):
             ),
             "dst_coll": dst_image_coll,
             "dst_asset_coll": dst_asset_coll,
-            "dst_asset": dst_asset_id
+            "dst_asset": dst_asset_id,
+            "to_asset": context["export"],
+            "intermediate_outputs": context["outputs"]
         }
     )
+    logger.debug(
+        "Input kwargs dictionary for Common process is =====> \n{0}".format(
+            json.dumps(kwargs)
+        )
+    )
+
     # create the instance of the common script class
     proc = Common(**kwargs)
     # run the process and return the task id
-    task = {"taskid": proc.process_annual()}
+    result = proc.process_annual()
     click.echo(
-        json.dumps(task)
+        json.dumps(result)
     )
 
 @main.command()
