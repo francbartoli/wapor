@@ -20,7 +20,7 @@ class Common(Marmee):
         logger = daiquiri.getLogger(__name__, subsystem="algorithms")
         self.logger = logger
 
-        # parallelize items computation for E input
+        # parallelize items computation for input component
         try:
             self.logger.debug(
                 "Named arguments ===kw====> {0}".format(kw)
@@ -46,7 +46,7 @@ class Common(Marmee):
                 self.logger.error(exc.message)
             raise
         
-        # temporal filter for E
+        # temporal filter for input component
         try:
             self.year = kw["year"]
         except KeyError as exc:
@@ -57,7 +57,7 @@ class Common(Marmee):
         temporal_filter = self._inputTemporalFilter("temporal", annualrule)
         self._filters = temporal_filter
 
-        # Create a dict of EE ImageCollection for E
+        # Create a dict of EE ImageCollection for input component
         flt_dict = {}
         inpt_dict = {}
         # import ipdb ; ipdb.set_trace()
