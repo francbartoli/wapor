@@ -57,6 +57,9 @@ class Common(Marmee):
         temporal_filter = self._inputTemporalFilter("temporal", annualrule)
         self._filters = temporal_filter
 
+        # initialize outputs
+        self._outputs = []
+
         # Create a dict of EE ImageCollection for input component
         flt_dict = {}
         inpt_dict = {}
