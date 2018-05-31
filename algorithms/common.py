@@ -131,11 +131,11 @@ class Common(Marmee):
 
         # properties
         size = collFiltered.size().getInfo()
-        if size > 0:
             imagecrs = EEImage(collFiltered.first()).projection()
             scale = EEImage(
                 collFiltered.first()
             ).projection().nominalScale().getInfo()
+        if size = 36:
             
 
             componentColl = collFiltered.map(
@@ -251,8 +251,8 @@ which doesn't exist.".format(assetid)
 
     
         else:
-            self.logger.debug("Filtered Collection has size {0}".format(size))
-            raise ValueError("Filtered Collection is empty!")
+            self.logger.error("Filtered Collection has size {0}".format(size))
+            raise click.Abort()
 
     # @delayed
     def _inputColl(self, collection_id):
