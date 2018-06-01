@@ -340,9 +340,17 @@ def common(ctx, year, temporal_resolution, input_component):
     proc = Common(**kwargs)
     # run the process and return the task id
     result = proc.process_annual()
-    click.echo(
-        json.dumps(result)
-    )
+
+    if result["errors"]:
+        raise click.ClickException(
+            "Commad execution has produced:\n{0}".format(
+                json.dumps(result)
+            )
+        )
+    else:
+        click.echo(
+            json.dumps(result)
+        )
 
 @main.command()
 @click.argument('year')

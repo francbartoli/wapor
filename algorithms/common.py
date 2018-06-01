@@ -7,6 +7,7 @@ from ee import ImageCollection as EEImageCollection
 from ee import Image as EEImage
 from ee import Date as EEDate, EEException
 import ee
+import os
 import dask
 import json
 import daiquiri
@@ -65,12 +66,13 @@ class Common(Marmee):
 
         # initialize outputs
         self._outputs = []
+        self.errors = {}
 
         # Create dicts of EE ImageCollection for input component
         flt_dict = {}
         inpt_dict = {}
         config_dict = {}
-        # import ipdb ; ipdb.set_trace()
+
         self.logger.debug(
             "Received inputs in STAC format are =====>\n{0}".format(
                 self.inputs
@@ -135,7 +137,7 @@ class Common(Marmee):
             scale = EEImage(
                 collFiltered.first()
             ).projection().nominalScale().getInfo()
-        if size = 36:
+        if size is 36:
             
 
             componentColl = collFiltered.map(
@@ -247,12 +249,21 @@ which doesn't exist.".format(assetid)
                     "Task export definition has failed."
                 )
                 raise
-            
-
     
         else:
-            self.logger.error("Filtered Collection has size {0}".format(size))
-            raise click.Abort()
+            err_mesg = "Collection has size {0} while it should be 36".format(
+                size
+            )
+            self.logger.error(err_mesg)
+            n_errkey = str(len(self.errors) + 1)
+            self.errors.update(
+                {"{0}".format(n_errkey): "{0}".format(err_mesg)}
+            )
+            return dict(
+                tasks={},
+                outputs=self.outputs,
+                errors=self.errors
+            )
 
     # @delayed
     def _inputColl(self, collection_id):
