@@ -254,11 +254,12 @@ which doesn't exist.".format(assetid)
                 return dict(
                     tasks=dict(taskid=task.id),
                     outputs=self.outputs,
-                    errors={}
+                    errors=self.errors
                 )
-            except EEException as eee:
+            except (EEException, AttributeError) as e:
                 self.logger.debug(
-                    "Task export definition has failed."
+                    "Task export definition has failed with =====>\
+\n{0}".format(e)
                 )
                 raise
     
