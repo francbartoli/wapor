@@ -12,6 +12,7 @@ import dask
 import json
 import daiquiri
 import datetime
+import pendulum
 from dask.delayed import delayed
 
 
@@ -144,12 +145,17 @@ class Common(Marmee):
 
         # properties
         size = collFiltered.size().getInfo()
-            imagecrs = EEImage(collFiltered.first()).projection()
-            scale = EEImage(
-                collFiltered.first()
-            ).projection().nominalScale().getInfo()
         if size is 36:
-            
+            first_info = EEImage(collFiltered.first()).getInfo()
+            bands = first_info["bands"][0]
+            dimensions = (bands["dimensions"][0], bands["dimensions"][1],)
+            dekad_properties = first_info["properties"]
+
+            self.logger.debug(
+                "First image has following properties =====> \n{0}".format(
+                    json.dumps(dekad_properties)
+                )
+            )
 
             componentColl = collFiltered.map(
                 lambda img: img.addBands(img.metadata('n_days_extent'))
@@ -186,7 +192,7 @@ class Common(Marmee):
                 -9999
             ).int32()
             
-            bandNames = sum_component_annual.bandNames().getInfo()
+            bandNames = sum_component_annual_int.bandNames().getInfo()
             self.logger.debug(
                 "bandNames info is =====> \n{0}".format(
                     bandNames
@@ -212,12 +218,6 @@ class Common(Marmee):
                 )
             )
 
-            properties = sum_component_annual.propertyNames().getInfo()
-            self.logger.debug(
-                "Properties are =====>\n{0}".format(
-                    properties
-                )
-            )
             region = ee.Geometry.Polygon(
                 [[[-30, -40],[65, -30],[65, 40],[-30, 40]]]
             ).getInfo()['coordinates']
@@ -227,7 +227,23 @@ class Common(Marmee):
                     json.dumps(self.config)
                 )
             )
+
             assetid = self.config["assetid"]
+            asset_name = os.path.basename(assetid)
+
+            # annual_props for export
+            annual_props = self._setExportProperties(
+                self.year, asset_name, **dekad_properties
+            )
+            sum_component_annual_int = ee.Image.setMulti(
+                sum_component_annual_int, annual_props
+            )
+            properties = sum_component_annual_int.getInfo()
+            self.logger.debug(
+                "New properties are =====>\n{0}".format(
+                    json.dumps(properties)
+                )
+            )
 
             # check if the asset already exists and eventually delete it
             if ee.data.getInfo(assetid):
@@ -320,3 +336,43 @@ which doesn't exist.".format(assetid)
             }
         except (KeyError, EEException) as (err, exc):
             raise
+
+    def _setExportProperties(self, year, asset, **properties):
+        try:
+            for key,value in properties.items():
+                if key == "code":
+                    properties[key] = asset
+                if key == "time_extent":
+                    properties[key] = "from {0}-01-01 to {0}-12-31".format(
+                        year
+                    )
+                if key == "time_resolution":
+                    properties[key] = "{0}-DAYS".format(
+                        str(self._days_in_year(year))
+                    )
+                if key == "n_days_extent":
+                    properties[key] = "{0}.0".format(
+                        str(self._days_in_year(year))
+                    )
+                if key == "no_data_value":
+                    properties[key] = "-9999"
+                if key == "system:asset_size":
+                    properties.pop(key)
+                if key == "system:time_start":
+                    properties[key] = ee.Date("{0}-01-01".format(
+                        year
+                    )).millis().getInfo()
+                if key == "system:time_end":
+                    properties[key] = ee.Date("{0}-12-31".format(
+                        year
+                    )).millis().getInfo()
+            return properties
+        except KeyError as e:
+            raise
+        
+    def _days_in_year(self, y):
+        if pendulum.datetime(int(y), 1, 1).is_leap_year():
+            return 366
+        else:
+            return 365
+            
