@@ -242,13 +242,16 @@ which doesn't exist.".format(assetid)
             # launch the task and return taskid
             try:
                 task = ee.batch.Export.image.toAsset(
-                    image=sum_component_annual,
-                    description='L1_E_16',
+                    image=sum_component_annual_int,
+                    description=asset_name,
                     assetId=assetid,
-                    crs='EPSG:4326',
-                    scale=scale,
-                    region=region,
-                    maxPixels=9000000000
+                    crs=bands["crs"],
+                    dimensions="{0}x{1}".format(
+                        dimensions[0],
+                        dimensions[1]
+                    ),
+                    maxPixels=dimensions[0] * dimensions[1],
+                    crsTransform=str(bands["crs_transform"])
                 )
                 task.start()
                 return dict(
