@@ -43,9 +43,15 @@ class Common(Marmee):
             self._inputs = colls
         except (EEException, KeyError) as (eee, exc):
             if eee:
-                self.logger.error(eee.message)
+                self.logger.error(
+                    "Failed to handle Google Earth Engine object",
+                    exc_info=True
+                )
             elif exc:
-                self.logger.error(exc.message)
+                self.logger.error(
+                    "Fail to handle key from dictionary",
+                    exc_info=True
+                )
             raise
         
         # temporal filter for input component
@@ -57,7 +63,7 @@ class Common(Marmee):
                 assetid=kw["dst_asset"]
             )
         except KeyError as exc:
-            self.logger.error(exc.message)
+            self.logger.error("Error with dictionary key", exc_info=True)
             raise
 
         annualrule = self._inputAnnualTemporalRule(int(self.year))
@@ -96,6 +102,11 @@ class Common(Marmee):
                         )
                     )
                 except EEException as eee:
+                    self.logger.error(
+                        "Failed to create ImageCollection {0}".format(
+                            inpt.stacobject.id
+                        ), exc_info=True
+                    )
                     raise
                 
         # it works for just one filter with only one temporal rule
