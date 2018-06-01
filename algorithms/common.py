@@ -159,8 +159,10 @@ class Common(Marmee):
                     componentColl.getInfo()
                 )
             )
+            
+            # multiply for number of days for dekad
             component_annual = componentColl.map(
-                lambda img_a: img_a.select('b1').divide(10).multiply(
+                lambda img_a: img_a.select('b1').multiply(
                     img_a.select('n_days_extent')
                 )
             )
@@ -170,20 +172,19 @@ class Common(Marmee):
                 )
             )
 
-            sum_component_annual = component_annual.reduce(ee.Reducer.sum())
+            sum_component_annual = component_annual.reduce(
+                ee.Reducer.sum()
+            )
             self.logger.debug(
                 "sum_component_annual info is =====> \n{0}".format(
                     sum_component_annual.getInfo()
                 )
             )
 
-            # set properties of image to be exported:
-            # Int32, NoData = -9999, multiplier = 0.1
-            sum_component_annual_int = sum_component_annual.multiply(
-                10
-            ).int32().unmask(
+            # it doesn't multiply cause above doesn't divide
+            sum_component_annual_int = sum_component_annual.unmask(
                 -9999
-            ).getInfo()
+            ).int32()
             
             bandNames = sum_component_annual.bandNames().getInfo()
             self.logger.debug(
