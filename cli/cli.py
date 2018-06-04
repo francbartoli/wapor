@@ -401,7 +401,7 @@ def aet(ctx, year, season, temporal_resolution, input_component):
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component):
     """
-        example: wapor -l L1 aeti 2016 D ETI
+        example: wapor -l L1 aeti 2016 D AETI
     """
 
     Log("DEBUG").initialize()
@@ -418,13 +418,13 @@ def aeti(ctx, year, temporal_resolution, input_component):
     kwargs = {
         "year": year,
         "temporal_resolution": temporal_resolution,
-        "component": input_component #  ETI
+        "component": input_component #  AETI
     }
     context = ctx.obj.copy()
     context.update(kwargs)
 
     # Use class AETIName to express wapor name convention over GEE
-    src_image_coll = Name(**context).src_collection()
+    src_image_coll = AETIName(**context).src_collection()
     # L1_E_D, L1_T_D, L1_I_D
     logger.debug(
         "src_image_coll variable =====> {0}".format(src_image_coll)
@@ -450,26 +450,35 @@ def aeti(ctx, year, temporal_resolution, input_component):
     logger.debug(
         "dst_asset_ids variable =====> {0}".format(dst_asset_ids)
     )
-    if "ETI" in src_image_coll:
+    if "AETI" in dst_image_coll:
         if context["temporal_resolution"] in [
             tr.dekadal.value,
             tr.short_dekadal.value
         ]:
             # projects/fao_wapor/L1_E_D
             e = os.path.join(
-                        context["EE_WORKSPACE_WAPOR"], 
-                        src_image_coll.replace("ETI", "E")
-                    ) + "_" + tr.short_dekadal.value
+                os.path.join(
+                    context["EE_WORKSPACE_WAPOR"],
+                    context["level"]
+                ),
+                src_image_coll[0]
+            )
             # projects/fao_wapor/L1_T_D
             t = os.path.join(
-                        context["EE_WORKSPACE_WAPOR"], 
-                        src_image_coll.replace("ETI", "T")
-                    ) + "_" + tr.short_dekadal.value
+                os.path.join(
+                    context["EE_WORKSPACE_WAPOR"],
+                    context["level"]
+                ),
+                src_image_coll[1]
+            )
             # projects/fao_wapor/L1_I_D
             i = os.path.join(
+                os.path.join(
                     context["EE_WORKSPACE_WAPOR"],
-                    src_image_coll.replace("ETI", "I")
-                ) + "_" + tr.short_dekadal.value
+                    context["level"]
+                ),
+                src_image_coll[2]
+            )
 
             colls = {"collI": i, "collE": e, "collT": t}
 
