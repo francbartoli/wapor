@@ -8,7 +8,7 @@ import oauth2client
 from ee import EEException, Initialize, ServiceAccountCredentials
 from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
-from utils.helpers import Name, TIME_RESOLUTION as tr
+from utils.helpers import Name, AETIName, TIME_RESOLUTION as tr
 
 
 class ConfigSectionSchema(object):
@@ -423,37 +423,37 @@ def aeti(ctx, year, temporal_resolution, input_component):
     context = ctx.obj.copy()
     context.update(kwargs)
 
-    # Use class Name to express wapor name convention over GEE
+    # Use class AETIName to express wapor name convention over GEE
     src_image_coll = Name(**context).src_collection()
     # L1_E_D, L1_T_D, L1_I_D
     logger.debug(
         "src_image_coll variable =====> {0}".format(src_image_coll)
     )
-    dst_image_coll = Name(**context).dst_collection()
+    dst_image_coll = AETIName(**context).dst_collection()
     # L1_AETI_D
     logger.debug(
         "dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
-    dst_asset_coll = Name(**context).dst_assetcollection_id()
+    dst_asset_coll = AETIName(**context).dst_assetcollection_id()
     # projects/fao_wapor/L1_AETI_D
     logger.debug(
         "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
-    dst_asset_image = Name(**context).dst_image()
-    # AETI_1601
+    dst_asset_images = AETIName(**context).dst_images()
+    # [AETI_1601,...,AETI_1636]
     logger.debug(
-        "dst_asset_image variable =====> {0}".format(dst_asset_image)
+        "dst_asset_images variable =====> {0}".format(dst_asset_images)
     )
-    dst_asset_id = Name(**context).dst_asset_id()
-    # [projects/fao_wapor/L1_AETI_D/L1_AETI_1601,...
-    # ..., projects/fao_wapor/L1_AETI_D/L1_AETI_1636]
+    dst_asset_ids = AETIName(**context).dst_asset_ids()
+    # [projects/fao_wapor/L1_AETI_D/L1_AETI_1601,...,
+    # ,...,projects/fao_wapor/L1_AETI_D/L1_AETI_1636]
     logger.debug(
-        "dst_asset_id variable =====> {0}".format(dst_asset_id)
+        "dst_asset_ids variable =====> {0}".format(dst_asset_ids)
     )
     if "ETI" in src_image_coll:
         if context["temporal_resolution"] in [
-            tr.annual.value,
-            tr.short_annual.value
+            tr.dekadal.value,
+            tr.short_dekadal.value
         ]:
             # projects/fao_wapor/L1_E_D
             e = os.path.join(
@@ -470,30 +470,42 @@ def aeti(ctx, year, temporal_resolution, input_component):
                     context["EE_WORKSPACE_WAPOR"],
                     src_image_coll.replace("ETI", "I")
                 ) + "_" + tr.short_dekadal.value
+
+            colls = {"collI": i, "collE": e, "collT": t}
+
+            # Create Marmee object instance with specific inputs for AETI and filter
+            aeti = AETI(**colls)
+            self.logger.debug(
+                "Received inputs in STAC format are =====>\n{0}".format(
+                    self.inputs.json
+                )
+            )
+
+            # Run the process for dekadal
+            try:
+                aeti.process_dekadal()
+            except Exception as e:
+                raise
+        elif context["temporal_resolution"] in [
+            tr.annual.value,
+            tr.short_annual.value
+        ]:
+            pass
+            # Run the process for annual
+            try:
+                pass
+                aeti.process_annual()
+            except Exception as e:
+                raise
         else:
-            raise ValueError("Not implemented yet.")
+            raise ValueError("Not allowed for wapor annual or dekadal.")
     else:
         raise ValueError("Wrong value for algorithm not being AETI")
-    colls = {"collI": i, "collE": e, "collT": t}
     
-    # Create Marmee object instance with specific inputs for AETI and filter
-    aeti = AETI(**colls)
-    self.logger.debug(
-        "Received inputs in STAC format are =====>\n{0}".format(
-            self.inputs.json
-        )
-    )
 
-    # Run the process for annual
-    for context["temporal_resolution"] in [
-        tr.annual.value,
-        tr.short_annual.value
-    ]:
-        try:
-            pass
-            aeti.process_annual()
-        except Exception as e:
-            raise
+    
+
+    
 
 
 if __name__ == "__main__":
