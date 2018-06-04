@@ -399,9 +399,9 @@ def aet(ctx, year, season, temporal_resolution, input_component):
 @click.argument('temporal_resolution')
 @click.argument('input_component')
 @click.pass_context
-def eti(ctx, year, temporal_resolution, input_component):
+def aeti(ctx, year, temporal_resolution, input_component):
     """
-        wapor -l L1 eti 2016 D ETI
+        example: wapor -l L1 aeti 2016 D ETI
     """
 
     Log("DEBUG").initialize()
@@ -413,7 +413,7 @@ def eti(ctx, year, temporal_resolution, input_component):
         )
     )
 
-    from algorithms.eti import ETI
+    from algorithms.aeti import AETI
 
     kwargs = {
         "year": year,
@@ -425,27 +425,28 @@ def eti(ctx, year, temporal_resolution, input_component):
 
     # Use class Name to express wapor name convention over GEE
     src_image_coll = Name(**context).src_collection()
-    # L1_E, L1_T, L1_I
+    # L1_E_D, L1_T_D, L1_I_D
     logger.debug(
         "src_image_coll variable =====> {0}".format(src_image_coll)
     )
     dst_image_coll = Name(**context).dst_collection()
-    # L1_AET_A
+    # L1_AETI_D
     logger.debug(
         "dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
     dst_asset_coll = Name(**context).dst_assetcollection_id()
-    # projects/fao_wapor/L1_AET_A
+    # projects/fao_wapor/L1_AETI_D
     logger.debug(
         "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
     dst_asset_image = Name(**context).dst_image()
-    # AET_16
+    # AETI_1601
     logger.debug(
         "dst_asset_image variable =====> {0}".format(dst_asset_image)
     )
     dst_asset_id = Name(**context).dst_asset_id()
-    # projects/fao_wapor/L1_AET_A/L1_AET_16
+    # [projects/fao_wapor/L1_AETI_D/L1_AETI_1601,...
+    # ..., projects/fao_wapor/L1_AETI_D/L1_AETI_1636]
     logger.debug(
         "dst_asset_id variable =====> {0}".format(dst_asset_id)
     )
@@ -472,17 +473,16 @@ def eti(ctx, year, temporal_resolution, input_component):
         else:
             raise ValueError("Not implemented yet.")
     else:
-        raise ValueError("Wrong value for algorithm not being ETI")
+        raise ValueError("Wrong value for algorithm not being AETI")
     colls = {"collI": i, "collE": e, "collT": t}
     
-    # Create Marmee object instance with specific inputs for ETI and filter
-    eti = ETI(**colls)
+    # Create Marmee object instance with specific inputs for AETI and filter
+    aeti = AETI(**colls)
     self.logger.debug(
         "Received inputs in STAC format are =====>\n{0}".format(
             self.inputs.json
         )
     )
-    print eti.inputs.json
 
     # Run the process for annual
     for context["temporal_resolution"] in [
@@ -491,7 +491,7 @@ def eti(ctx, year, temporal_resolution, input_component):
     ]:
         try:
             pass
-            aet.process_annual()
+            aeti.process_annual()
         except Exception as e:
             raise
 
