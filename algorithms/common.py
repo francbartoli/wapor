@@ -304,8 +304,11 @@ which doesn't exist.".format(assetid)
             gee_stac_obj = Stac(collection_id).parse()
             return Input(stacobject=gee_stac_obj, reducers=[])
         except EEException as eee:
-            self.logger.debug(
-                "Exception creating Marmee object =====>\n{0}".format(eee.message)
+            self.logger.error(
+                "Exception creating Marmee object {0}".format(
+                    gee_stac_obj.id
+                ),
+                exc_info=True
             )
             raise
 
