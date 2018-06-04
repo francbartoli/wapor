@@ -54,9 +54,9 @@ class CredentialConfigFile(dict):
         """load a JSON Service Account file from disk"""
         with open(self.credential_file) as cf:
             try:
-                 return json.loads(
-                        cf.read()
-                    )
+                return json.loads(
+                    cf.read()
+                )
             except Exception as e:
                 raise click.Abort()
 
