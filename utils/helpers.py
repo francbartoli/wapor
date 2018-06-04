@@ -43,7 +43,10 @@ _" + self._input_temporal_resolution()
 
     def dst_assetcollection_id(self):
         return os.path.join(
-            self.ee_container,
+            os.path.join(
+                self.ee_container,
+                self.level
+            ),
             self.dst_collection()
         )
 
@@ -52,7 +55,10 @@ _" + self._input_temporal_resolution()
 
     def dst_asset_id(self):
         return os.path.join(
-            self.ee_container,
+            os.path.join(
+                self.ee_container,
+                self.level
+            ),
             os.path.join(
                 self.dst_collection(),
                 self.dst_image()
@@ -60,6 +66,7 @@ _" + self._input_temporal_resolution()
         )
 
     def _input_temporal_resolution(self):
+        # Any Dekadal to Annual
         if self.t_resolution == TIME_RESOLUTION.short_annual.value:
             return TIME_RESOLUTION.short_dekadal.value
 
