@@ -339,34 +339,42 @@ which doesn't exist.".format(assetid)
 
     def _setExportProperties(self, year, asset, **properties):
         try:
+            res_props = {}
+            self.logger.debug("Input properties are =====>\n{0}".format(
+                    json.dumps(properties)
+                )
+            )
             for key,value in properties.items():
                 if key == "code":
-                    properties[key] = asset
-                if key == "time_extent":
-                    properties[key] = "from {0}-01-01 to {0}-12-31".format(
+                    res_props[key] = asset
+                elif key == "time_extent":
+                    res_props[key] = "from {0}-01-01 to {0}-12-31".format(
                         year
                     )
-                if key == "time_resolution":
-                    properties[key] = "{0}-DAYS".format(
+                elif key == "time_resolution":
+                    res_props[key] = "{0}-DAYS".format(
                         str(self._days_in_year(year))
                     )
-                if key == "n_days_extent":
-                    properties[key] = "{0}.0".format(
+                elif key == "n_days_extent":
+                    res_props[key] = "{0}.0".format(
                         str(self._days_in_year(year))
                     )
-                if key == "no_data_value":
-                    properties[key] = "-9999"
-                if key == "system:asset_size":
-                    properties.pop(key)
-                if key == "system:time_start":
-                    properties[key] = ee.Date("{0}-01-01".format(
-                        year
-                    )).millis().getInfo()
-                if key == "system:time_end":
-                    properties[key] = ee.Date("{0}-12-31".format(
-                        year
-                    )).millis().getInfo()
-            return properties
+                elif key == "no_data_value":
+                    res_props[key] = "-9999"
+                elif key == "system:asset_size":
+                    pass
+                elif key == "system:time_start":
+                    res_props[key] = ee.Date.fromYMD(
+                        int(year),1,1
+                    ).millis().getInfo()
+                elif key == "system:time_end":
+                    res_props[key] = ee.Date.fromYMD(
+                        int(year),12,31
+                    ).millis().getInfo()
+                else:
+                    res_props[key] = properties[key]
+
+            return res_props
         except KeyError as e:
             raise
         
