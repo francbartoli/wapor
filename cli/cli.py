@@ -265,7 +265,9 @@ Please check the default Service Account file {0}".format(
 @click.pass_context 
 def common(ctx, year, temporal_resolution, input_component): 
     """
-        example: wapor -l L1 common 2016 D E
+        example annual: wapor -l L1 common 2016 A E
+
+        example dekadal: wapor -l L1 common 2016 D E
     """
 
     Log("DEBUG").initialize()
