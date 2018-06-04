@@ -481,9 +481,26 @@ def aeti(ctx, year, temporal_resolution, input_component):
             )
 
             colls = {"collI": i, "collE": e, "collT": t}
+            kwargs.update(colls)
+
+            kwargs.update(
+                {
+                    "dst_coll": dst_image_coll,
+                    "dst_asset_coll": dst_asset_coll,
+                    "dst_asset": dst_asset_ids,
+                    "to_asset": context["export"],
+                    "intermediate_outputs": context["outputs"]
+                }
+            )
+            logger.debug(
+                "Input kwargs dictionary for AETI process is =====> \n{0}".format(
+                    json.dumps(kwargs)
+                )
+            )
 
             # Create Marmee object instance with specific inputs for AETI and filter
-            aeti = AETI(**colls)
+            aeti = AETI(**kwargs)
+
             self.logger.debug(
                 "Received inputs in STAC format are =====>\n{0}".format(
                     self.inputs.json
