@@ -235,10 +235,10 @@ class Common(Marmee):
             annual_props = self._setExportProperties(
                 self.year, asset_name, **dekad_properties
             )
-            sum_component_annual_int = ee.Image.setMulti(
+            sum_component_annual_props = ee.Image.setMulti(
                 sum_component_annual_int, annual_props
             )
-            properties = sum_component_annual_int.getInfo()
+            properties = sum_component_annual_props.getInfo()
             self.logger.debug(
                 "New properties are =====>\n{0}".format(
                     json.dumps(properties)
@@ -258,7 +258,7 @@ which doesn't exist.".format(assetid)
             # launch the task and return taskid
             try:
                 task = ee.batch.Export.image.toAsset(
-                    image=sum_component_annual_int,
+                    image=sum_component_annual_props,
                     description=asset_name,
                     assetId=assetid,
                     crs=bands["crs"],
