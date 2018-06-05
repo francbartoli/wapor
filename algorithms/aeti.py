@@ -141,14 +141,13 @@ class AETI(Marmee):
         self.coll = inpt_dict
         self.filter = flt_dict
         self.config.update(config_dict)
-        print json.dumps(self.config)
-        # Use helper class to pre-calculate ETI Annual
-        # self.collETI = ETI(inpt_dict, flt_dict).getCollETI()
 
     def process_dekadal(self):
         """Calculate Dekadal AETI.
         """
-        pass
+        kwargs = self.coll
+        kwargs.update(self.filter)
+        collETI = ETI(**kwargs).getCollETI()
 
     @delayed
     def _inputColl(self, collection_id):
@@ -192,14 +191,3 @@ class AETI(Marmee):
             }
         except (KeyError, EEException) as (err, exc):
             raise
-        
-
-    def _n_days(image):
-        days = image.addBands(image.metadata('n_days_extent'))
-        return days
-
-    def _ETdk(image):
-        mmdk = image.select('b1').divide(10).multiply(
-            image.select('n_days_extent')
-        )
-        return mmdk
