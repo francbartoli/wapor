@@ -148,12 +148,14 @@ class AETI(Marmee):
         kwargs = self.coll
         kwargs.update(self.filter)
         collETI = ETI(**kwargs).getCollETI()
-        
 
+        if isinstance(collETI, dict):
+            self.errors.update(collETI["errors"])
+        else:
         return dict(
             tasks={},
             outputs=self.outputs,
-            errors={}
+            errors=self.errors
         )
 
     @delayed

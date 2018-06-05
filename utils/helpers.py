@@ -178,41 +178,82 @@ class ETI(object):
             end
         ).sort('system:time_start', True)
 
-        # Join E and T Collections
-        _joinFilteredET = self._joinFilteredET(collEFiltered, collTFiltered)
-        joinCollET = _joinFilteredET.map(
-            lambda image: image.rename('Eband', 'Tband')
-        )
-        # calculate ET and add it
-        collET = joinCollET.map(
-            lambda image: EEImage.cat(
-                image.select("Eband"),
-                image.select("Tband"),
-                image.select("Eband").add(
-                    image.select("Tband")
-                ).rename("ETband")
+        # sizes
+        size_err_dict = {}
+        sizeE = {
+            os.path.basename(
+                collEFiltered.getInfo()["id"]
+            ): 35 #collEFiltered.size().getInfo()
+        }
+        sizeT = {
+            os.path.basename(
+                collTFiltered.getInfo()["id"]
+            ): 34 #collTFiltered.size().getInfo()
+        }
+        sizeI = {
+            os.path.basename(
+                collIFiltered.getInfo()["id"]
+            ): collIFiltered.size().getInfo()
+        }
+
+        for size in (sizeE, sizeI, sizeT):
+            for k,v in size.items():
+                if v is 36:
+                    pass
+                else:
+                    err_mesg = "Collection {0} has size {1} while it should be 36".format(
+                        k,
+                        v
+                    )
+                    n_errkey = str(len(size_err_dict) + 1)
+                    size_err_dict.update(
+                        {"{0}".format(n_errkey): "{0}".format(err_mesg)}
+                    )
+        if not size_err_dict.keys():
+            # Join E and T Collections
+            _joinFilteredET = self._joinFilteredET(
+                collEFiltered, collTFiltered
             )
-        )
+            joinCollET = _joinFilteredET.map(
+                lambda image: image.rename('Eband', 'Tband')
+            )
+            # calculate ET and add it
+            collET = joinCollET.map(
+                lambda image: EEImage.cat(
+                    image.select("Eband"),
+                    image.select("Tband"),
+                    image.select("Eband").add(
+                        image.select("Tband")
+                    ).rename("ETband")
+                )
+            )
 
-        # Join ET and I Collections
-        _joinFilteredETI = self._joinFilteredETI(collET, collIFiltered)
-        joinCollETI = _joinFilteredETI.map(
-            lambda image: image.rename('Eband', 'Tband', 'ETband', 'Iband')
-        )
-        # calculate ETI and add it
-        collETI = joinCollETI.map(
-            lambda image: EEImage.cat(
-                image.select("Eband"),
-                image.select("ETband").add(
+            # Join ET and I Collections
+            _joinFilteredETI = self._joinFilteredETI(
+                collET, collIFiltered
+            )
+            joinCollETI = _joinFilteredETI.map(
+                lambda image: image.rename(
+                    'Eband', 'Tband', 'ETband', 'Iband'
+                )
+            )
+            # calculate ETI and add it
+            collETI = joinCollETI.map(
+                lambda image: EEImage.cat(
+                    image.select("Eband"),
+                    image.select("ETband").add(
+                        image.select("Iband")
+                    ).rename("AETIband"),
+                    image.select("Tband"),
+                    image.select("ETband"),
                     image.select("Iband")
-                ).rename("AETIband"),
-                image.select("Tband"),
-                image.select("ETband"),
-                image.select("Iband")
-            ).select("AETIband") # it only returns AETI band in result
-        )
+                ).select("AETIband") # it only returns AETI band in result
+            )
 
-        return collETI
+            return collETI
+
+        else:
+            return dict(errors=size_err_dict)
 
     def _joinFilteredET(self, e, t):
         time_filter = EEFilter.equals(
