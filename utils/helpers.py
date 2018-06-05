@@ -181,16 +181,10 @@ class ETI(object):
         # Join E and T Collections
         _joinFilteredET = self._joinFilteredET(collEFiltered, collTFiltered)
         joinCollET = _joinFilteredET.map(
-            # lambda image: image.addBands(image.get('match'))
-            # self._rename_ET_bands(
-            #     _joinFilteredET
-            # )
-            # lamdba element: EEImage.cat(element.get('primary'), element.get('secondary'))
             lambda image: image.rename('Eband', 'Tband')
         )
         # calculate ET and add it
         collET = joinCollET.map(
-            # self._getET(joinCollET)
             lambda image: EEImage.cat(
                 image.select("Eband"),
                 image.select("Tband"),
@@ -204,13 +198,9 @@ class ETI(object):
         _joinFilteredETI = self._joinFilteredETI(collET, collIFiltered)
         joinCollETI = _joinFilteredETI.map(
             lambda image: image.rename('Eband', 'Tband', 'ETband', 'Iband')
-            # self._rename_ETI_bands(
-            #     _joinFilteredETI
-            # )
         )
         # calculate ETI and add it
         collETI = joinCollETI.map(
-            # self._getETI(joinCollETI)
             lambda image: EEImage.cat(
                 image.select("Eband"),
                 image.select("ETband").add(
@@ -225,11 +215,6 @@ class ETI(object):
         return collETI
 
     def _joinFilteredET(self, e, t):
-
-        # time_filter = EEFilter.equals({
-        #     'leftField': 'system:time_start',
-        #     'rightField': 'system:time_start'
-        # })
         time_filter = EEFilter.equals(
             leftField="system:time_start",
             rightField="system:time_start"
@@ -246,17 +231,8 @@ class ETI(object):
                 element.get('secondary')
             )
         ).sort('system:time_start')
-        # //no lambda
-        # return joinCollET.map(
-        #     self._cat_primary_secondary(joinCollET)
-        # ).sort('system:time_start')
 
     def _joinFilteredETI(self, et, i):
-    
-        # time_filter = EEFilter.equals({
-        #     'leftField': 'system:time_start',
-        #     'rightField': 'system:time_start'
-        # })
         time_filter = EEFilter.equals(
             leftField="system:time_start",
             rightField="system:time_start"
@@ -273,49 +249,3 @@ class ETI(object):
                 element.get('secondary')
             )
         ).sort('system:time_start')
-        # //no lambda
-        # return joinCollETI.map(
-        #     self._cat_primary_secondary(joinCollETI)
-        # ).sort('system:time_start')
-
-    # def _rename_ET_bands(image):
-    #     renamed = image.rename('Eband', 'Tband')
-    #     return renamed
-
-    # def _rename_ETI_bands(image):
-    #     renamed = image.rename('Eband', 'Tband', 'ETband', 'Iband')
-    #     return renamed
-
-    # def _cat_primary_secondary(elem):
-    #     return EEImage.cat(
-    #         elem.get(
-    #             'primary'
-    #         ),
-    #         elem.get(
-    #             'secondary'
-    #         )
-    #     )
-
-    # def _getET(self, image):
-    #     try:
-    #         Eimage = image.select("Eband")
-    #         Timage = image.select("Tband")
-    #         ETimage = Eimage.add(Timage)
-    #         ET_D = EEImage.cat(Eimage, Timage, ETimage.rename("ETband"))
-    #         return ET_D
-    #     except EEException as eee:
-    #         raise
-
-    # def _getETI(self, image):
-    #     try:
-    #         Eimage = image.select("Eband")
-    #         Timage = image.select("Tband")
-    #         ETimage = image.select("ETband")
-    #         Iimage = image.select("Iband")
-    #         ETIimage = ETimage.add(Iimage)
-    #         ETI_D = EEImage.cat(
-    #             Eimage, Timage, ETimage, Iimage, ETIimage.rename("ETIband")
-    #         )
-    #         return ETI_D
-    #     except EEException as eee:
-    #         raise
