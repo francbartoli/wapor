@@ -503,17 +503,24 @@ def aeti(ctx, year, temporal_resolution, input_component):
             # Create Marmee object instance with specific inputs for AETI and filter
             aeti = AETI(**kwargs)
 
-            self.logger.debug(
-                "Received inputs in STAC format are =====>\n{0}".format(
-                    self.inputs.json
-                )
-            )
-
             # Run the process for dekadal
             try:
-                aeti.process_dekadal()
+                # run the process and return the task id
+                result = aeti.process_dekadal()
+
+                if result["errors"]:
+                    raise click.ClickException(
+                        "Commad execution has produced:\n{0}".format(
+                            json.dumps(result)
+                        )
+                    )
+                else:
+                    click.echo(
+                        json.dumps(result)
+                    )
             except Exception as e:
                 raise
+
         elif context["temporal_resolution"] in [
             tr.annual.value,
             tr.short_annual.value

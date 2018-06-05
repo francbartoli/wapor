@@ -148,6 +148,13 @@ class AETI(Marmee):
         kwargs = self.coll
         kwargs.update(self.filter)
         collETI = ETI(**kwargs).getCollETI()
+        
+
+        return dict(
+            tasks={},
+            outputs=self.outputs,
+            errors={}
+        )
 
     @delayed
     def _inputColl(self, collection_id):
