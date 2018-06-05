@@ -109,7 +109,7 @@ _" + self._input_temporal_resolution())
     ) == TIME_RESOLUTION.short_dekadal.value:
             for dekad in range(1, 37):
                 imgs.append(
-                    self.dst_image() + str(dekad)
+                    self.dst_image() + "%.2d" % dekad
                 )
             return imgs
 
