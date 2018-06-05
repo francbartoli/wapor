@@ -183,12 +183,12 @@ class ETI(object):
         sizeE = {
             os.path.basename(
                 collEFiltered.getInfo()["id"]
-            ): 35 #collEFiltered.size().getInfo()
+            ): collEFiltered.size().getInfo()
         }
         sizeT = {
             os.path.basename(
                 collTFiltered.getInfo()["id"]
-            ): 34 #collTFiltered.size().getInfo()
+            ): collTFiltered.size().getInfo()
         }
         sizeI = {
             os.path.basename(
