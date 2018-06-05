@@ -142,3 +142,180 @@ class TIME_RESOLUTION(Enum):
     short_everyday = "E"
     seasonal = "SEASONAL"
     short_seasonal = "S"
+
+class ETI(object):
+    def __init__(self, **kwargs):
+        try:
+            if isinstance(kwargs["cE"], EEImageCollection):
+                self.ce = kwargs["cE"]
+            if isinstance(kwargs["cT"], EEImageCollection):
+                self.ct = kwargs["cT"]
+            if isinstance(kwargs["cI"], EEImageCollection):
+                self.ci = kwargs["cI"]
+            self.tfilter = kwargs["temporal_filter"]
+        except KeyError as exc:
+            raise KeyError("A key element {0} for ETI is missing".format(
+                exc.args[0]
+            ))
+        except EEException as eee:
+            raise
+
+    def getCollETI(self):
+        """Generate ETI collection.
+        """
+        start = self.tfilter['start']
+        end = self.tfilter['end']
+        collEFiltered = self.ce.filterDate(
+            start,
+            end
+        ).sort('system:time_start',True)
+        collTFiltered = self.ct.filterDate(
+            start,
+            end
+        ).sort('system:time_start', True)
+        collIFiltered = self.ci.filterDate(
+            start,
+            end
+        ).sort('system:time_start', True)
+
+        # Join E and T Collections
+        _joinFilteredET = self._joinFilteredET(collEFiltered, collTFiltered)
+        joinCollET = _joinFilteredET.map(
+            # lambda image: image.addBands(image.get('match'))
+            # self._rename_ET_bands(
+            #     _joinFilteredET
+            # )
+            # lamdba element: EEImage.cat(element.get('primary'), element.get('secondary'))
+            lambda image: image.rename('Eband', 'Tband')
+        )
+        # calculate ET and add it
+        collET = joinCollET.map(
+            # self._getET(joinCollET)
+            lambda image: EEImage.cat(
+                image.select("Eband"),
+                image.select("Tband"),
+                image.select("Eband").add(
+                    image.select("Tband")
+                ).rename("ETband")
+            )
+        )
+
+        # Join ET and I Collections
+        _joinFilteredETI = self._joinFilteredETI(collET, collIFiltered)
+        joinCollETI = _joinFilteredETI.map(
+            lambda image: image.rename('Eband', 'Tband', 'ETband', 'Iband')
+            # self._rename_ETI_bands(
+            #     _joinFilteredETI
+            # )
+        )
+        # calculate ETI and add it
+        collETI = joinCollETI.map(
+            # self._getETI(joinCollETI)
+            lambda image: EEImage.cat(
+                image.select("Eband"),
+                image.select("ETband").add(
+                    image.select("Iband")
+                ).rename("AETIband"),
+                image.select("Tband"),
+                image.select("ETband"),
+                image.select("Iband")
+            ).select("AETIband") # it only returns AETI band in result
+        )
+
+        return collETI
+
+    def _joinFilteredET(self, e, t):
+
+        # time_filter = EEFilter.equals({
+        #     'leftField': 'system:time_start',
+        #     'rightField': 'system:time_start'
+        # })
+        time_filter = EEFilter.equals(
+            leftField="system:time_start",
+            rightField="system:time_start"
+        )
+        join = ee.Join.inner()
+        joinCollET = EEImageCollection(
+            join.apply(
+                e, t, time_filter
+            )
+        )
+        return joinCollET.map(
+            lambda element: EEImage.cat(
+                element.get('primary'),
+                element.get('secondary')
+            )
+        ).sort('system:time_start')
+        # //no lambda
+        # return joinCollET.map(
+        #     self._cat_primary_secondary(joinCollET)
+        # ).sort('system:time_start')
+
+    def _joinFilteredETI(self, et, i):
+    
+        # time_filter = EEFilter.equals({
+        #     'leftField': 'system:time_start',
+        #     'rightField': 'system:time_start'
+        # })
+        time_filter = EEFilter.equals(
+            leftField="system:time_start",
+            rightField="system:time_start"
+        )
+        join = ee.Join.inner()
+        joinCollETI = EEImageCollection(
+            join.apply(
+                et, i, time_filter
+            )
+        )
+        return joinCollETI.map(
+            lambda element: EEImage.cat(
+                element.get('primary'),
+                element.get('secondary')
+            )
+        ).sort('system:time_start')
+        # //no lambda
+        # return joinCollETI.map(
+        #     self._cat_primary_secondary(joinCollETI)
+        # ).sort('system:time_start')
+
+    # def _rename_ET_bands(image):
+    #     renamed = image.rename('Eband', 'Tband')
+    #     return renamed
+
+    # def _rename_ETI_bands(image):
+    #     renamed = image.rename('Eband', 'Tband', 'ETband', 'Iband')
+    #     return renamed
+
+    # def _cat_primary_secondary(elem):
+    #     return EEImage.cat(
+    #         elem.get(
+    #             'primary'
+    #         ),
+    #         elem.get(
+    #             'secondary'
+    #         )
+    #     )
+
+    # def _getET(self, image):
+    #     try:
+    #         Eimage = image.select("Eband")
+    #         Timage = image.select("Tband")
+    #         ETimage = Eimage.add(Timage)
+    #         ET_D = EEImage.cat(Eimage, Timage, ETimage.rename("ETband"))
+    #         return ET_D
+    #     except EEException as eee:
+    #         raise
+
+    # def _getETI(self, image):
+    #     try:
+    #         Eimage = image.select("Eband")
+    #         Timage = image.select("Tband")
+    #         ETimage = image.select("ETband")
+    #         Iimage = image.select("Iband")
+    #         ETIimage = ETimage.add(Iimage)
+    #         ETI_D = EEImage.cat(
+    #             Eimage, Timage, ETimage, Iimage, ETIimage.rename("ETIband")
+    #         )
+    #         return ETI_D
+    #     except EEException as eee:
+    #         raise
