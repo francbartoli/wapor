@@ -169,7 +169,7 @@ class AETI(Marmee):
                     assetid = assetids[0]
                     export_img = EEImage(collETI.sort(
                         'system:index', True).toList(
-                            1, int(os.path.basename(assetid)[-2:])
+                            1, int(os.path.basename(assetid)[-2:]) - 1
                         ).get(0)
                     )
                 else:
