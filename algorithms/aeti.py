@@ -300,6 +300,10 @@ which doesn't exist.".format(assetid)
                     res_props[key] = asset
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
+                elif key == "data_type":
+                    res_props[key] = "{0}bit Unsigned Integer".format(
+                        "16"
+                    )
                 elif key == "system:asset_size":
                     pass
                 else:

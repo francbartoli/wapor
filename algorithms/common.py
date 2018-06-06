@@ -364,6 +364,10 @@ which doesn't exist.".format(assetid)
                     )
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
+                elif key == "data_type":
+                    res_props[key] = "{0}bit Unsigned Integer".format(
+                        "32"
+                    )
                 elif key == "system:asset_size":
                     pass
                 elif key == "system:time_start":
