@@ -193,7 +193,7 @@ class AETI(Marmee):
                     asset_name, **dekad_properties
                 )
                 export_img_props = ee.Image.setMulti(
-                    export_img..unmask(
+                    export_img.unmask(
                         -9999
                     ).int16(), dekadal_props
                 )
