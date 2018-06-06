@@ -176,7 +176,8 @@ class AETI(Marmee):
                     export_img = EEImage(collETI.sort(
                         'system:index', True).toList(1, i).get(0)
                     )
-                    assetid = export_img.getInfo()["id"]
+                    assetid = assetids[i]
+                
                 self.logger.debug(
                     "Information for exported image =====> {0}".format(
                         json.dumps(export_img.getInfo())
