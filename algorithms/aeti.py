@@ -294,6 +294,8 @@ which doesn't exist.".format(assetid)
             for key, value in properties.items():
                 if key == "code":
                     res_props[key] = asset
+                elif key == "system:index":
+                    res_props[key] = asset
                 # elif key == "time_extent":
                 #     res_props[key] = value
                 # elif key == "time_resolution":
