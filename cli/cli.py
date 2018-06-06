@@ -491,7 +491,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
                 {
                     "dst_coll": dst_image_coll,
                     "dst_asset_coll": dst_asset_coll,
-                    "dst_asset": dst_asset_ids,
+                    "dst_assets": dst_asset_ids,
                     "to_asset": context["export"],
                     "intermediate_outputs": context["outputs"]
                 }
