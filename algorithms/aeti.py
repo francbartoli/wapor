@@ -193,7 +193,9 @@ class AETI(Marmee):
                     asset_name, **dekad_properties
                 )
                 export_img_props = ee.Image.setMulti(
-                    export_img, dekadal_props
+                    export_img..unmask(
+                        -9999
+                    ).int16(), dekadal_props
                 )
                 properties = export_img_props.getInfo()
                 self.logger.debug(
@@ -296,20 +298,10 @@ which doesn't exist.".format(assetid)
                     res_props[key] = asset
                 elif key == "system:index":
                     res_props[key] = asset
-                # elif key == "time_extent":
-                #     res_props[key] = value
-                # elif key == "time_resolution":
-                #     res_props[key] = value
-                # elif key == "n_days_extent":
-                #     res_props[key] = value
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
                 elif key == "system:asset_size":
                     pass
-                # elif key == "system:time_start":
-                #     res_props[key] = value
-                # elif key == "system:time_end":
-                #     res_props[key] = value
                 else:
                     res_props[key] = value
 
