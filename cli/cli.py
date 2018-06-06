@@ -400,8 +400,9 @@ def aet(ctx, year, season, temporal_resolution, input_component):
 @click.argument('year')
 @click.argument('temporal_resolution')
 @click.argument('input_component')
+@click.argument('dekad')
 @click.pass_context
-def aeti(ctx, year, temporal_resolution, input_component):
+def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
         example: wapor -l L1 aeti 2016 D AETI
     """
@@ -420,7 +421,8 @@ def aeti(ctx, year, temporal_resolution, input_component):
     kwargs = {
         "year": year,
         "temporal_resolution": temporal_resolution,
-        "component": input_component #  AETI
+        "component": input_component, #  AETI
+        "dekad": dekad
     }
     context = ctx.obj.copy()
     context.update(kwargs)
@@ -537,11 +539,6 @@ def aeti(ctx, year, temporal_resolution, input_component):
     else:
         raise ValueError("Wrong value for algorithm not being AETI")
     
-
-    
-
-    
-
 
 if __name__ == "__main__":
     main()

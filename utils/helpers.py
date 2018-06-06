@@ -90,6 +90,15 @@ class AETIName(Name):
             temporal_resolution: D
     """
 
+    def __init__(self, **kwargs):
+        if kwargs.has_key("dekad"):
+            self.single_dekad = kwargs["dekad"]
+        self.year = kwargs['year']
+        self.component = kwargs['component']
+        self.t_resolution = kwargs['temporal_resolution']
+        self.level = kwargs['level']
+        self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
+
     def src_collection(self):
         res = []
         eti = self.component.strip("A")
@@ -107,10 +116,15 @@ _" + self._input_temporal_resolution())
         imgs = []
         if self._input_temporal_resolution(
     ) == TIME_RESOLUTION.short_dekadal.value:
-            for dekad in range(1, 37):
+            if self.single_dekad:
                 imgs.append(
-                    self.dst_image() + "%.2d" % dekad
+                    self.dst_image() + "%.2d" % int(self.single_dekad)
                 )
+            else:
+                for dekad in range(1, 37):
+                    imgs.append(
+                        self.dst_image() + "%.2d" % dekad
+                    )
             return imgs
 
     def dst_asset_ids(self):
