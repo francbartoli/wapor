@@ -355,7 +355,7 @@ which doesn't exist.".format(assetid)
                         year
                     )
                 elif key == "time_resolution":
-                    res_props[key] = "{0}-DAYS".format(
+                    res_props[key] = "YEAR".format(
                         str(self._days_in_year(year))
                     )
                 elif key == "n_days_extent":
