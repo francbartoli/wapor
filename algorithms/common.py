@@ -198,29 +198,6 @@ class Common(Marmee):
                     bandNames
                 )
             )
-            
-            b1proj = sum_component_annual.select(
-                'b1_sum'
-            ).projection().getInfo()
-            self.logger.debug(
-                "b1proj info is =====> \n{0}".format(
-                    b1proj
-                )
-            )
-            
-            # get scale(in meters) information from band 1.
-            b1sum_scale = sum_component_annual.select(
-                'b1_sum'
-            ).projection().nominalScale().getInfo()
-            self.logger.debug(
-                "b1sum_scale info is =====> \n{0}".format(
-                    b1sum_scale
-                )
-            )
-
-            region = ee.Geometry.Polygon(
-                [[[-30, -40],[65, -30],[65, 40],[-30, 40]]]
-            ).getInfo()['coordinates']
 
             self.logger.debug(
                 "Config dictionary =====> {0}".format(
