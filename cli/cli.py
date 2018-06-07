@@ -404,6 +404,11 @@ def aet(ctx, year, season, temporal_resolution, input_component):
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
+        YEAR 2009|2010|2011|2012|2013|2014|2015|2016|2017\n
+        TEMPORAL_RESOLUTION A|D\n
+        INPUT_COMPONENT AETI\n
+        DEKAD: 01|02|...|36\n
+
         example: wapor -l L1 aeti 2016 D AETI
     """
 
