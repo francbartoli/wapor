@@ -257,11 +257,11 @@ class ETI(object):
                     image.select("Eband"),
                     image.select("ETband").add(
                         image.select("Iband")
-                    ).rename("AETIband"),
+                    ).rename("b1"),
                     image.select("Tband"),
                     image.select("ETband"),
                     image.select("Iband")
-                ).select("AETIband") # it only returns AETI band in result
+                ).select("b1") # it only returns b1 band in result
             )
 
             return collETI
