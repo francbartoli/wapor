@@ -229,7 +229,13 @@ which doesn't exist.".format(assetid)
                         crsTransform=str(bands["crs_transform"])
                     )
                     task.start()
-                    self._tasks.update(dict(taskid=task.id))
+                    self._tasks.update(
+                        {
+                            "{0}".format(assetid): {
+                                "taskid": task.id
+                            }
+                        }
+                    )
 
                 except (EEException, AttributeError) as e:
                     self.logger.error(
