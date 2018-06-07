@@ -299,6 +299,8 @@ which doesn't exist.".format(assetid)
                     res_props[key] = asset
                 elif key == "system:index":
                     res_props[key] = asset
+                elif key == "id":
+                    res_props[key] = asset
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
                 elif key == "data_type":
