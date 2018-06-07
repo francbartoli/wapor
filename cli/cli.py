@@ -400,7 +400,7 @@ def aet(ctx, year, season, temporal_resolution, input_component):
 @click.argument('year')
 @click.argument('temporal_resolution')
 @click.argument('input_component')
-@click.argument('dekad')
+@click.argument('dekad', required=0)
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
