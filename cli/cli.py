@@ -362,7 +362,7 @@ def common(ctx, year, temporal_resolution, input_component):
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
-        YEAR 2009|2010|2011|2012|2013|2014|2015|2016|2017\n
+        YEAR 2009|2010|...|2017\n
         TEMPORAL_RESOLUTION A|D\n
         INPUT_COMPONENT AETI\n
         DEKAD: 01|02|...|36\n
@@ -371,7 +371,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
 
     Log("DEBUG").initialize()
-    logger = daiquiri.getLogger(ctx.command.name, subsystem="ETI")
+    logger = daiquiri.getLogger(ctx.command.name, subsystem="AETI")
     logger.info(
         "================ {0} {1} calculation =================".format(
             ctx.command.name,
