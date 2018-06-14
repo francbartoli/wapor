@@ -501,7 +501,102 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
             raise ValueError("Not allowed for wapor annual or dekadal.")
     else:
         raise ValueError("Wrong value for algorithm not being AETI")
-    
+
+
+@main.command()
+@click.argument('year', type=click.Choice(
+    [
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ]
+))
+@click.argument('temporal_resolution', type=click.Choice(["A"]))
+@click.argument('input_component', type=click.Choice(["NPP"]), required=0)
+@click.pass_context
+def AGBP(ctx, year, temporal_resolution, input_component):
+    """
+        YEAR 2009|2010|...|2017\n
+        TEMPORAL_RESOLUTION A (ANNUAL)\n
+        INPUT_COMPONENT NPP\n
+
+        example annual: wapor -l L1 agbp 2016 A NPP
+    """
+
+    Log("DEBUG").initialize()
+    logger = daiquiri.getLogger(ctx.command.name, subsystem="AGBP")
+    logger.info(
+        "================ {0} {1} calculation =================".format(
+            ctx.command.name,
+            temporal_resolution
+        )
+    )
+
+    # from algorithms.agbp import AGBP
+
+    kwargs = {
+        "year": year,
+        "temporal_resolution": temporal_resolution,
+        "component": input_component
+    }
+    context = ctx.obj.copy()
+    context.update(kwargs)
+
+    # Use class Name to express wapor name convention over GEE
+    src_image_coll = Name(**context).src_collection()
+    # L1_NPP_D
+    logger.debug(
+        "src_image_coll variable =====> {0}".format(src_image_coll)
+    )
+    dst_image_coll = Name(**context).dst_collection()
+    # L1_AGBP_A
+    logger.debug(
+        "dst_image_coll variable =====> {0}".format(dst_image_coll)
+    )
+    dst_asset_coll = Name(**context).dst_assetcollection_id()
+    # projects/fao_wapor/L1_AGBP_A
+    logger.debug(
+        "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
+    )
+    dst_asset_image = Name(**context).dst_image()
+    # L1_AGBP_16
+    logger.debug(
+        "dst_asset_image variable =====> {0}".format(dst_asset_image)
+    )
+    dst_asset_id = Name(**context).dst_asset_id()
+    # projects/fao_wapor/L1_AGBP_A/L1_AGBP_16
+    logger.debug(
+        "dst_asset_id variable =====> {0}".format(dst_asset_id)
+    )
+
+    kwargs.update(
+        {
+            "src_coll": os.path.join(
+                os.path.join(
+                    context["EE_WORKSPACE_WAPOR"],
+                    context["level"]
+                ),
+                src_image_coll
+            ),
+            "dst_coll": dst_image_coll,
+            "dst_asset_coll": dst_asset_coll,
+            "dst_asset": dst_asset_id,
+            "to_asset": context["export"],
+            "intermediate_outputs": context["outputs"]
+        }
+    )
+    logger.debug(
+        "Input kwargs dictionary for AGBP process is =====> \n{0}".format(
+            json.dumps(kwargs)
+        )
+    )
 
 if __name__ == "__main__":
     main()
