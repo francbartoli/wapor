@@ -179,18 +179,33 @@ class ETI(object):
         """
         start = self.tfilter['start']
         end = self.tfilter['end']
+        # Additional mask for pixel value > 250
         collEFiltered = self.ce.filterDate(
             start,
             end
-        ).sort('system:time_start',True)
+        ).sort('system:time_start', True).map(
+            lambda image: image.mask(
+                image.select('b1').lte(250)
+            )
+        )
+        # Additional mask for pixel value > 250
         collTFiltered = self.ct.filterDate(
             start,
             end
-        ).sort('system:time_start', True)
+        ).sort('system:time_start', True).map(
+            lambda image: image.mask(
+                image.select('b1').lte(250)
+            )
+        )
+        # Additional mask for pixel value > 250
         collIFiltered = self.ci.filterDate(
             start,
             end
-        ).sort('system:time_start', True)
+        ).sort('system:time_start', True).map(
+            lambda image: image.mask(
+                image.select('b1').lte(250)
+            )
+        )
 
         # sizes
         size_err_dict = {}
