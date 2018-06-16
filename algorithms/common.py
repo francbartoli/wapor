@@ -132,7 +132,15 @@ class Common(Marmee):
     def process_annual(self):
         """Calculate Annual image.
         """
-        
+
+        self.logger.debug(
+            "Config dictionary =====> {0}".format(
+                json.dumps(self.config)
+            )
+        )
+
+        self._tasks = {}
+
         # Filtered collection
         self.logger.debug(
             "temporal_filter GEE object value is ======> {0}".format(
@@ -262,8 +270,15 @@ which doesn't exist.".format(assetid)
                     crsTransform=str(bands["crs_transform"])
                 )
                 task.start()
+                self._tasks.update(
+                    {
+                        "{0}".format(assetid): {
+                            "taskid": task.id
+                        }
+                    }
+                )
                 return dict(
-                    tasks=dict(taskid=task.id),
+                    tasks=self._tasks,
                     outputs=self.outputs,
                     errors=self.errors
                 )
@@ -275,6 +290,7 @@ which doesn't exist.".format(assetid)
                 raise
     
         else:
+            # @TODO 36(dekad_days) should be a configuration from config file
             err_mesg = "Collection has size {0} while it should be 36".format(
                 size
             )
@@ -382,4 +398,3 @@ which doesn't exist.".format(assetid)
             return 366
         else:
             return 365
-            
