@@ -259,9 +259,24 @@ Please check the default Service Account file {0}".format(
 
 
 @main.command() 
-@click.argument('year') 
-@click.argument('temporal_resolution') 
-@click.argument('input_component') 
+@click.argument('year', type=click.Choice(
+    [
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ]
+))
+@click.argument('temporal_resolution', type=click.Choice(["A", "D"]))
+@click.argument('input_component', type=click.Choice(
+    ["E", "T", "I", "AETI", "NPP"]
+))
 @click.pass_context 
 def common(ctx, year, temporal_resolution, input_component): 
     """
@@ -288,7 +303,7 @@ def common(ctx, year, temporal_resolution, input_component):
     } 
     context = ctx.obj.copy() 
     context.update(kwargs) 
- 
+
     # Use class Name to express wapor name convention over GEE
     src_image_coll = Name(**context).src_collection()
     # L1_E_D, L1_T_D, L1_I_D
@@ -355,10 +370,30 @@ def common(ctx, year, temporal_resolution, input_component):
         )
 
 @main.command()
-@click.argument('year')
-@click.argument('temporal_resolution')
-@click.argument('input_component')
-@click.argument('dekad', required=0)
+@click.argument('year', type=click.Choice(
+    [
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ]
+))
+@click.argument('temporal_resolution', type=click.Choice(["D"]))
+@click.argument('input_component', type=click.Choice(["AETI"]))
+@click.argument('dekad', type=click.Choice(
+    [
+        "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+        "31", "32", "33", "34", "35", "36"
+    ]
+), required=0)
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
@@ -368,6 +403,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
         DEKAD: 01|02|...|36\n
 
         example: wapor -l L1 aeti 2016 D AETI
+        example: wapor -l L1 aeti 2016 D AETI 01
     """
 
     Log("DEBUG").initialize()
