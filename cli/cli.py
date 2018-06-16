@@ -277,12 +277,16 @@ Please check the default Service Account file {0}".format(
 @click.argument('input_component', type=click.Choice(
     ["E", "T", "I", "AETI", "NPP"]
 ))
+@click.argument('nodatavalue', type=click.Choice(
+    ["255", "-9999"]
+), required=0)
 @click.pass_context 
-def common(ctx, year, temporal_resolution, input_component): 
+def common(ctx, year, temporal_resolution, input_component, nodatavalue): 
     """
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A|D\n
         INPUT_COMPONENT E|T|I|AETI|NPP\n
+        NODATAVALUE: 255|-9999\n
 
         example annual: wapor -l L1 common 2016 A E (255)
         example dekadal: wapor -l L1 common 2016 D E
@@ -302,7 +306,8 @@ def common(ctx, year, temporal_resolution, input_component):
     kwargs = { 
         "year": year,  
         "temporal_resolution": temporal_resolution, 
-        "component": input_component 
+        "component": input_component,
+        "nodatavalue": nodatavalue
     } 
     context = ctx.obj.copy() 
     context.update(kwargs) 
