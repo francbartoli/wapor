@@ -280,8 +280,11 @@ Please check the default Service Account file {0}".format(
 @click.pass_context 
 def common(ctx, year, temporal_resolution, input_component): 
     """
-        example annual: wapor -l L1 common 2016 A E
+        YEAR 2009|2010|...|2017|2018\n
+        TEMPORAL_RESOLUTION A|D\n
+        INPUT_COMPONENT E|T|I|AETI|NPP\n
 
+        example annual: wapor -l L1 common 2016 A E (255)
         example dekadal: wapor -l L1 common 2016 D E
     """
 
@@ -397,8 +400,8 @@ def common(ctx, year, temporal_resolution, input_component):
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, dekad):
     """
-        YEAR 2009|2010|...|2017\n
-        TEMPORAL_RESOLUTION A|D\n
+        YEAR 2009|2010|...|2017|2018\n
+        TEMPORAL_RESOLUTION A (ANNUAL)|D (DEKADAL)\n
         INPUT_COMPONENT AETI\n
         DEKAD: 01|02|...|36\n
 
@@ -559,7 +562,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
 @click.pass_context
 def AGBP(ctx, year, temporal_resolution, input_component):
     """
-        YEAR 2009|2010|...|2017\n
+        YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A (ANNUAL)\n
         INPUT_COMPONENT NPP\n
 
