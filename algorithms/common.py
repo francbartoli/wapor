@@ -61,7 +61,8 @@ class Common(Marmee):
             self.config = dict(
                 export=kw["to_asset"],
                 intermediate=kw["intermediate_outputs"],
-                assetid=kw["dst_asset"]
+                assetid=kw["dst_asset"],
+                ndvalue=kw["nodatavalue"]
             )
         except KeyError as exc:
             self.logger.error("Error with dictionary key", exc_info=True)
@@ -142,6 +143,20 @@ class Common(Marmee):
             self.filter["temporal_filter"]['start'],
             self.filter["temporal_filter"]['end']
         ).sort('system:time_start', True)
+        # nodatavalue 255: consider only lte 250
+        if self.config["ndvalue"] in "255":
+            collFiltered = collFiltered.map(
+                lambda image: image.mask(
+                    image.select('b1').lte(250)
+                )
+            )
+        # nodatavalue -9999: consider only gte 0
+        elif self.config["ndvalue"] in "-9999":
+            collFiltered = collFiltered.map(
+                lambda image: image.mask(
+                    image.select('b1').gte(0)
+                )
+            )
 
         # properties
         size = collFiltered.size().getInfo()
