@@ -288,8 +288,8 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
         INPUT_COMPONENT E|T|I|AETI|NPP\n
         NODATAVALUE: 255|-9999\n
 
-        example annual: wapor -l L1 common 2016 A E (255)
-        example dekadal: wapor -l L1 common 2016 D E
+        example annual: wapor -l L1 common -- 2016 A E (255)
+        example dekadal: wapor -l L1 common -- 2016 D E
     """
 
     Log("DEBUG").initialize()
@@ -410,8 +410,8 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
         INPUT_COMPONENT AETI\n
         DEKAD: 01|02|...|36\n
 
-        example: wapor -l L1 aeti 2016 D AETI
-        example: wapor -l L1 aeti 2016 D AETI 01
+        example: wapor -l L1 aeti -- 2016 D AETI
+        example: wapor -l L1 aeti -- 2016 D AETI 01
     """
 
     Log("DEBUG").initialize()
@@ -572,6 +572,7 @@ def AGBP(ctx, year, temporal_resolution, input_component):
         INPUT_COMPONENT NPP\n
 
         example annual: wapor -l L1 agbp 2016 A NPP
+        example annual: wapor -l L1 agbp -- 2016 A NPP (-9999)
     """
 
     Log("DEBUG").initialize()
