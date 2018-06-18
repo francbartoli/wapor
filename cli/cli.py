@@ -588,7 +588,7 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
         )
     )
 
-    # from algorithms.agbp import AGBP
+    from algorithms.agbp import AGBP
 
     kwargs = {
         "year": year,
@@ -647,6 +647,22 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
             json.dumps(kwargs)
         )
     )
+
+    # create the instance of the agbp script class
+    proc = AGBP(**kwargs)
+    # run the process and return the task id
+    result = proc.process_annual()
+
+    if result["errors"]:
+        raise click.ClickException(
+            "Commad execution has produced:\n{0}".format(
+                json.dumps(result)
+            )
+        )
+    else:
+        click.echo(
+            json.dumps(result)
+        )
 
 if __name__ == "__main__":
     main()
