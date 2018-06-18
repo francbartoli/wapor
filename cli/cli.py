@@ -1,5 +1,6 @@
 from click_configfile import ConfigFileReader, Param, SectionSchema
 from click_configfile import matches_section
+from click import BOOL
 import click
 import os
 import json
@@ -8,7 +9,7 @@ import oauth2client
 from ee import EEException, Initialize, ServiceAccountCredentials
 from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
-from utils.helpers import Name, AETIName, TIME_RESOLUTION as tr
+from utils.helpers import Name, AETIName, AGBPName, TIME_RESOLUTION as tr
 
 
 class ConfigSectionSchema(object):
@@ -564,14 +565,17 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A"]))
 @click.argument('input_component', type=click.Choice(["NPP"]), required=0)
+@click.argument('nodatavalue', type=click.Choice(
+    ["-9999"]
+), required=0)
 @click.pass_context
-def AGBP(ctx, year, temporal_resolution, input_component):
+def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
     """
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A (ANNUAL)\n
         INPUT_COMPONENT NPP\n
+        NODATAVALUE -9999\n
 
-        example annual: wapor -l L1 agbp 2016 A NPP
         example annual: wapor -l L1 agbp -- 2016 A NPP (-9999)
     """
 
@@ -589,36 +593,37 @@ def AGBP(ctx, year, temporal_resolution, input_component):
     kwargs = {
         "year": year,
         "temporal_resolution": temporal_resolution,
-        "component": input_component
+        "component": input_component,
+        "nodatavalue": nodatavalue
     }
     context = ctx.obj.copy()
     context.update(kwargs)
 
     # Use class Name to express wapor name convention over GEE
-    src_image_coll = Name(**context).src_collection()
+    src_image_coll = AGBPName(**context).src_collection()
     # L1_NPP_D
     logger.debug(
-        "src_image_coll variable =====> {0}".format(src_image_coll)
+        "AGBP src_image_coll variable =====> {0}".format(src_image_coll)
     )
-    dst_image_coll = Name(**context).dst_collection()
+    dst_image_coll = AGBPName(**context).dst_collection()
     # L1_AGBP_A
     logger.debug(
-        "dst_image_coll variable =====> {0}".format(dst_image_coll)
+        "AGBP dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
-    dst_asset_coll = Name(**context).dst_assetcollection_id()
+    dst_asset_coll = AGBPName(**context).dst_assetcollection_id()
     # projects/fao_wapor/L1_AGBP_A
     logger.debug(
-        "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
+        "AGBP dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
-    dst_asset_image = Name(**context).dst_image()
+    dst_asset_image = AGBPName(**context).dst_image()
     # L1_AGBP_16
     logger.debug(
-        "dst_asset_image variable =====> {0}".format(dst_asset_image)
+        "AGBP dst_asset_image variable =====> {0}".format(dst_asset_image)
     )
-    dst_asset_id = Name(**context).dst_asset_id()
+    dst_asset_id = AGBPName(**context).dst_asset_id()
     # projects/fao_wapor/L1_AGBP_A/L1_AGBP_16
     logger.debug(
-        "dst_asset_id variable =====> {0}".format(dst_asset_id)
+        "AGBP dst_asset_id variable =====> {0}".format(dst_asset_id)
     )
 
     kwargs.update(

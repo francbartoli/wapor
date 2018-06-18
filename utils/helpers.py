@@ -71,6 +71,42 @@ _" + self._input_temporal_resolution()
             return TIME_RESOLUTION.short_dekadal.value
 
 
+class AGBPName(Name):
+    """ Manage AGBP name convention on GEE.
+
+        Example dataset: NPP 
+        
+        input:
+            {L1_NPP_D,}
+            year: 2017
+            level: L1
+            component: NPP
+            temporal_resolution: D
+        
+        output:
+            {L1_AGBP_A/L1_AGBP_17}
+            level: L1
+            component: AGBP
+            temporal_resolution: A
+    """
+
+    def __init__(self, **kwargs):
+        self.year = kwargs['year']
+        self.component = kwargs['component']
+        self.t_resolution = kwargs['temporal_resolution']
+        self.level = kwargs['level']
+        self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
+
+    def __repr__(self):
+    		return '<AGBPName(={self.!r})>'.format(self=self)
+
+    def dst_collection(self):
+        return self.level + "_" + "AGBP" + "_" + self.t_resolution
+
+    def dst_image(self):
+        return self.level + "_" + "AGBP" + "_" + self.year[2:]
+
+
 class AETIName(Name):
     """ Manage AETI name convention on GEE.
 
