@@ -263,10 +263,11 @@ class ETI(object):
 
         for size in (sizeE, sizeI, sizeT):
             for k,v in size.items():
-                if v is 36:
+                if v > 0:
                     pass
                 else:
-                    err_mesg = "Collection {0} has size {1} while it should be 36".format(
+                    err_mesg = "Collection {0} has size {1} while\
+it should be greater than 0".format(
                         k,
                         v
                     )
