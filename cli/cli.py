@@ -9,7 +9,11 @@ import oauth2client
 from ee import EEException, Initialize, ServiceAccountCredentials
 from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
-from utils.helpers import Name, AETIName, AGBPName, TIME_RESOLUTION as tr
+from utils.helpers import (
+    Name, AETIName,
+    AGBPName, NBWPName,
+    TIME_RESOLUTION as tr
+)
 
 
 class ConfigSectionSchema(object):
@@ -650,6 +654,123 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
 
     # create the instance of the agbp script class
     proc = AGBP(**kwargs)
+    # run the process and return the task id
+    result = proc.process_annual()
+
+    if result["errors"]:
+        raise click.ClickException(
+            "Commad execution has produced:\n{0}".format(
+                json.dumps(result)
+            )
+        )
+    else:
+        click.echo(
+            json.dumps(result)
+        )
+
+
+@main.command()
+@click.argument('year', type=click.Choice(
+    [
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+    ]
+))
+@click.argument('temporal_resolution', type=click.Choice(["A"]))
+@click.argument('input_component', type=click.Choice(["AGBP"]), required=0)
+@click.argument('nodatavalue', type=click.Choice(
+    ["-9999"]
+), required=0)
+@click.pass_context
+def NBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
+    """
+        YEAR 2009|2010|...|2017|2018\n
+        TEMPORAL_RESOLUTION A (ANNUAL)\n
+        INPUT_COMPONENT AGBP\n
+        NODATAVALUE -9999\n
+
+        example annual: wapor -l L1 nbwp -- 2016 A AGBP (-9999)
+    """
+
+    Log("DEBUG").initialize()
+    logger = daiquiri.getLogger(ctx.command.name, subsystem="NBWP")
+    logger.info(
+        "================ {0} {1} calculation =================".format(
+            ctx.command.name,
+            temporal_resolution
+        )
+    )
+
+    # from algorithms.nbwp import NBWP
+
+    kwargs = {
+        "year": year,
+        "temporal_resolution": temporal_resolution,
+        "component": input_component,
+        "nodatavalue": nodatavalue
+    }
+    context = ctx.obj.copy()
+    context.update(kwargs)
+
+    # Use class Name to express wapor name convention over GEE
+    src_image_coll = NBWPName(**context).src_collection()
+    # L1_AGBP_A
+    logger.debug(
+        "NBWP src_image_coll variable =====> {0}".format(src_image_coll)
+    )
+    dst_image_coll = NBWPName(**context).dst_collection()
+    # L1_NBWP_A
+    logger.debug(
+        "NBWP dst_image_coll variable =====> {0}".format(dst_image_coll)
+    )
+    dst_asset_coll = NBWPName(**context).dst_assetcollection_id()
+    # projects/fao_wapor/L1_NBWP_A
+    logger.debug(
+        "NBWP dst_asset_coll variable =====> {0}".format(dst_asset_coll)
+    )
+    dst_asset_image = NBWPName(**context).dst_image()
+    # L1_NBWP_16
+    logger.debug(
+        "NBWP dst_asset_image variable =====> {0}".format(dst_asset_image)
+    )
+    dst_asset_id = NBWPName(**context).dst_asset_id()
+    # projects/fao_wapor/L1_NBWP_A/L1_NBWP_16
+    logger.debug(
+        "NBWP dst_asset_id variable =====> {0}".format(dst_asset_id)
+    )
+
+    kwargs.update(
+        {
+            "src_coll": os.path.join(
+                os.path.join(
+                    context["EE_WORKSPACE_WAPOR"],
+                    context["level"]
+                ),
+                src_image_coll
+            ),
+            "dst_coll": dst_image_coll,
+            "dst_asset_coll": dst_asset_coll,
+            "dst_asset": dst_asset_id,
+            "to_asset": context["export"],
+            "intermediate_outputs": context["outputs"]
+        }
+    )
+    logger.debug(
+        "Input kwargs dictionary for NBWP process is =====> \n{0}".format(
+            json.dumps(kwargs)
+        )
+    )
+
+    # create the instance of the nbwp script class
+    proc = NBWP(**kwargs)
     # run the process and return the task id
     result = proc.process_annual()
 
