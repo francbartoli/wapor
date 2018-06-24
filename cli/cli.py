@@ -709,7 +709,7 @@ def NBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
         )
     )
 
-    # from algorithms.nbwp import NBWP
+    from algorithms.nbwp import NBWP
 
     kwargs = {
         "year": year,
