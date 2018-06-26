@@ -147,6 +147,46 @@ _" + self.t_resolution
         return self.level + "_" + "NBWP" + "_" + self.year[2:]
 
 
+class GBWPName(Name):
+    """ Manage GBWP name convention on GEE.
+
+        Example dataset: AGBP 
+        
+        input:
+            {L1_AGBP_A,}
+            year: 2017
+            level: L1
+            component: AGBP
+            temporal_resolution: A
+        
+        output:
+            {L1_GBWP_A/L1_GBWP_17}
+            level: L1
+            component: GBWP
+            temporal_resolution: A
+    """
+
+    def __init__(self, **kwargs):
+        self.year = kwargs['year']
+        self.component = kwargs['component']
+        self.t_resolution = kwargs['temporal_resolution']
+        self.level = kwargs['level']
+        self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
+
+    def __repr__(self):
+    		return '<GBWPName(={self.!r})>'.format(self=self)
+
+    def src_collection(self):
+        return self.level + "_" + self.component + "\
+_" + self.t_resolution
+
+    def dst_collection(self):
+        return self.level + "_" + "GBWP" + "_" + self.t_resolution
+
+    def dst_image(self):
+        return self.level + "_" + "GBWP" + "_" + self.year[2:]
+
+
 class AETIName(Name):
     """ Manage AETI name convention on GEE.
 
