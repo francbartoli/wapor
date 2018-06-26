@@ -214,7 +214,6 @@ class NBWP(Marmee):
                 )
             )
 
-            # it doesn't multiply cause above doesn't divide
             WPnb_annual_int = WPnb_annual.unmask(
                 -9999
             )
@@ -271,7 +270,8 @@ which doesn't exist.".format(assetid)
                         dimensions[1]
                     ),
                     maxPixels=dimensions[0] * dimensions[1],
-                    crsTransform=str(bands["crs_transform"])
+                    crsTransform=str(bands["crs_transform"])  # ,
+                    # pyramidingPolicy="mode"
                 )
                 task.start()
                 self._tasks.update(

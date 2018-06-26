@@ -164,7 +164,7 @@ class AETI(Marmee):
             self._tasks = {}
 
             for i in range(len(assetids)):
-                # Case just one dekad has been asked from cli
+                # Case of just one dekad asked from cli
                 if len(assetids) == 1:
                     assetid = assetids[0]
                     export_img = EEImage(collETI.sort(
@@ -226,7 +226,8 @@ which doesn't exist.".format(assetid)
                             dimensions[1]
                         ),
                         maxPixels=dimensions[0] * dimensions[1],
-                        crsTransform=str(bands["crs_transform"])
+                        crsTransform=str(bands["crs_transform"]),
+                        pyramidingPolicy="mode"
                     )
                     task.start()
                     self._tasks.update(
