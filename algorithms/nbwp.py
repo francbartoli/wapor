@@ -207,7 +207,7 @@ class NBWP(Marmee):
 
             # no need to multiply T by 10 (to get metercubes)
             # because we should also divide by 10 to apply multiplier
-            WPnb_annual = first_agbp.divide(first_t)
+            WPnb_annual = first_agbp.divide(first_t).multiply(1000)
             self.logger.debug(
                 "WPnb_annual info is =====> \n{0}".format(
                     WPnb_annual.getInfo()
@@ -216,7 +216,7 @@ class NBWP(Marmee):
 
             WPnb_annual_int = WPnb_annual.unmask(
                 -9999
-            )
+            ).int32()
 
             bandNames = WPnb_annual_int.bandNames().getInfo()
             self.logger.debug(
@@ -373,12 +373,16 @@ which doesn't exist.".format(assetid)
                     res_props[key] = "{0}.0".format(
                         str(self._days_in_year(year))
                     )
+                elif key == "multiplier":
+                    res_props[key] = 0.001
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
                 elif key == "data_type":
                     res_props[key] = "{0}bit Unsigned Integer".format(
                         "32"
                     )
+                elif key == "unit":
+                    res_props[key] = "kgDM/" + u"m\u00b3"
                 elif key == "system:asset_size":
                     pass
                 elif key == "system:time_start":
