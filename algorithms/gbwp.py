@@ -22,7 +22,7 @@ class GBWP(Marmee):
 
         logger = daiquiri.getLogger(__name__, subsystem="algorithms")
         self.logger = logger
-        
+
         try:
             self.coll_aeti_y = EEImageCollection(
                 kw["src_coll"].replace("AGBP", "AETI")
@@ -207,7 +207,7 @@ class GBWP(Marmee):
 
             # no need to multiply AETI by 10 (to get metercubes)
             # because we should also divide by 10 to apply multiplier
-            GBWP_annual = first_agbp.divide(first_aeti)
+            GBWP_annual = first_agbp.divide(first_aeti).multiply(1000)
             self.logger.debug(
                 "GBWP_annual info is =====> \n{0}".format(
                     GBWP_annual.getInfo()
@@ -216,7 +216,7 @@ class GBWP(Marmee):
 
             GBWP_annual_int = GBWP_annual.unmask(
                 -9999
-            )
+            ).int32()
 
             bandNames = GBWP_annual_int.bandNames().getInfo()
             self.logger.debug(
@@ -372,12 +372,16 @@ which doesn't exist.".format(assetid)
                     res_props[key] = "{0}.0".format(
                         str(self._days_in_year(year))
                     )
+                elif key == "multiplier":
+                    res_props[key] = 0.001
                 elif key == "no_data_value":
                     res_props[key] = "-9999"
                 elif key == "data_type":
                     res_props[key] = "{0}bit Unsigned Integer".format(
                         "32"
                     )
+                elif key == "unit":
+                    res_props[key] = "kgDM/" + u"m\u00b3"
                 elif key == "system:asset_size":
                     pass
                 elif key == "system:time_start":
