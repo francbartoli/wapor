@@ -12,6 +12,7 @@ ipython = "*"
 ipdb = "*"
 "flake8" = "*"
 "doc8" = "*"
+pytest = "*"
 
 [packages]
 earthengine-api = "*"
@@ -34,3 +35,4 @@ daiquiri = "*"
 click-configfile = "*"
 marmee = "*"
 pendulum = "*"
+pytest = "*"
