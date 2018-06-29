@@ -34,7 +34,7 @@ class ConfigSectionSchema(object):
     @matches_section("wapor")
     class Wapor(SectionSchema):
         gee_workspace_base = Param(type=str)
-        gee_workspace_project = Param(type=str) 
+        gee_workspace_project = Param(type=str)
 
     @matches_section("google.*")
     class Google(SectionSchema):
@@ -127,8 +127,19 @@ class Logging(click.ParamType):
     name = 'verbose'
 
     def convert(self, value, param, ctx):
-        # @TODO convert to possible logging values
-        return value
+        if value in [
+            "INFO",
+            "WARNING",
+            "CRITICAL",
+            "ERROR",
+            "FATAL",
+            "DEBUG"
+        ]:
+            return value
+        else:
+            self.fail(
+                "Wrong logging level: one of INFO, WARNING, CRITICAL, ERROR, FATAL, DEBUG"
+            )
 
 
 CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
@@ -258,12 +269,13 @@ Please check the default Service Account file {0}".format(
             ee_workspace_wapor
         ),
         'level': level,
+        'verbose': verbose,
         'export': export,
         'outputs': outputs
     }
 
 
-@main.command() 
+@main.command()
 @click.argument('year', type=click.Choice(
     [
         "2009",
@@ -285,7 +297,7 @@ Please check the default Service Account file {0}".format(
 @click.argument('nodatavalue', type=click.Choice(
     ["255", "-9999"]
 ), required=0)
-@click.pass_context 
+@click.pass_context
 def common(ctx, year, temporal_resolution, input_component, nodatavalue): 
     """
         YEAR 2009|2010|...|2017|2018\n
@@ -297,7 +309,7 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
         example dekadal: wapor -l L1 common -- 2016 D E
     """
 
-    Log("DEBUG").initialize()
+    Log(ctx.obj["verbose"]).initialize()
     logger = daiquiri.getLogger(ctx.command.name, subsystem="COMMON")
     logger.info(
         "================ {0} {1} calculation =================".format(
@@ -308,14 +320,14 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
 
     from algorithms.common import Common
 
-    kwargs = { 
-        "year": year,  
-        "temporal_resolution": temporal_resolution, 
+    kwargs = {
+        "year": year,
+        "temporal_resolution": temporal_resolution,
         "component": input_component,
         "nodatavalue": nodatavalue
-    } 
-    context = ctx.obj.copy() 
-    context.update(kwargs) 
+    }
+    context = ctx.obj.copy()
+    context.update(kwargs)
 
     # Use class Name to express wapor name convention over GEE
     src_image_coll = Name(**context).src_collection()
@@ -342,7 +354,7 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
     # projects/fao_wapor/L1_E_A/L1_E_16
     logger.debug(
         "dst_asset_id variable =====> {0}".format(dst_asset_id)
-    ) 
+    )
 
     kwargs.update(
         {
@@ -419,7 +431,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
         example: wapor -l L1 aeti -- 2016 D AETI 01
     """
 
-    Log("DEBUG").initialize()
+    Log(ctx.obj["verbose"]).initialize()
     logger = daiquiri.getLogger(ctx.command.name, subsystem="AETI")
     logger.info(
         "================ {0} {1} calculation =================".format(
@@ -583,7 +595,7 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
         example annual: wapor -l L1 agbp -- 2016 A NPP (-9999)
     """
 
-    Log("DEBUG").initialize()
+    Log(ctx.obj["verbose"]).initialize()
     logger = daiquiri.getLogger(ctx.command.name, subsystem="AGBP")
     logger.info(
         "================ {0} {1} calculation =================".format(
@@ -700,7 +712,7 @@ def NBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
         example annual: wapor -l L1 nbwp -- 2016 A AGBP (-9999)
     """
 
-    Log("DEBUG").initialize()
+    Log(ctx.obj["verbose"]).initialize()
     logger = daiquiri.getLogger(ctx.command.name, subsystem="NBWP")
     logger.info(
         "================ {0} {1} calculation =================".format(
@@ -817,7 +829,7 @@ def GBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
         example annual: wapor -l L1 gbwp -- 2016 A AGBP (-9999)
     """
 
-    Log("DEBUG").initialize()
+    Log(ctx.obj["verbose"]).initialize()
     logger = daiquiri.getLogger(ctx.command.name, subsystem="GBWP")
     logger.info(
         "================ {0} {1} calculation =================".format(

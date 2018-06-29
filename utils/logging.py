@@ -1,6 +1,7 @@
 import daiquiri
 import logging
 import sys
+import os
 
 
 class Log():
@@ -10,12 +11,14 @@ class Log():
         self._level = level
 
     def initialize(self):
-        
+        log_dir = "/tmp/wapor"
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
         daiquiri.setup(
                 level=self.level,
                 outputs=(
                     daiquiri.output.File(
-                        directory="/tmp/wapor",
+                        directory=log_dir,
                         level=self.level
                     ),
                     daiquiri.output.Stream(
@@ -32,5 +35,11 @@ class Log():
             return 10
         elif self._level in "INFO":
             return 20
+        elif self._level in "WARNING":
+            return 30
+        elif self._level in "ERROR":
+            return 40
+        elif self._level in ["CRITICAL", "FATAL"]:
+            return 50
         else:
-            return 20
+            return 0
