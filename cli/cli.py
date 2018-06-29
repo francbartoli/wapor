@@ -99,7 +99,12 @@ class Level(click.ParamType):
     name = 'level'
 
     def convert(self, value, param, ctx):
-        return value
+        if value in ["L1", "L2", "L3"]:
+            return value
+        else:
+            self.fail(
+                "Level of the data is required and must be one of L1, L2, L3"
+            )
 
 
 class ApiKey(click.ParamType):
