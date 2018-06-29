@@ -28,7 +28,7 @@ class ConfigSectionSchema(object):
         scope = https://www.googleapis.com/auth/fusiontables
         [google.earthengine]
         scope = https://www.googleapis.com/auth/earthengine
-        
+
     """
 
     @matches_section("wapor")
@@ -47,7 +47,7 @@ class ConfigFileProcessor(ConfigFileReader):
     config_searchpath = [".", os.path.expanduser("~/.wapor")]
     config_section_schemas = [
         ConfigSectionSchema.Wapor,     # PRIMARY SCHEMA
-        ConfigSectionSchema.Google,    
+        ConfigSectionSchema.Google,
     ]
 
 
@@ -88,7 +88,7 @@ class CredentialConfigFile(dict):
 
 
 class CredentialFile(click.ParamType):
-    name = 'credential-file'
+    name = 'service-account'
 
     def convert(self, value, param, ctx):
         if value:
@@ -146,7 +146,7 @@ CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
     help='your API authentication token for Earth Engine API',
 )
 @click.option(
-    '--credential-file', '-c',
+    '--service-account', '-s',
     type=click.Path(),
     default='~/.wapor/serviceaccount.json',
 )
