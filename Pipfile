@@ -12,7 +12,6 @@ ipython = "*"
 ipdb = "*"
 "flake8" = "*"
 "doc8" = "*"
-pytest = "*"
 
 [packages]
 earthengine-api = "*"
@@ -28,11 +27,10 @@ requests-oauthlib = "*"
 google-auth-oauthlib = "*"
 click = "*"
 "e1839a8" = {path = ".", editable = true}
-marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "1.0.6"}
+marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "master"}
 "autopep8" = "*"
 dask = {extras = ["complete"]}
 daiquiri = "*"
 click-configfile = "*"
-marmee = "*"
 pendulum = "*"
-pytest = "*"
+marmee = "*"
