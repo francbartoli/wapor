@@ -245,7 +245,14 @@ class AGBP(Marmee):
                     json.dumps(properties)
                 )
             )
-
+            pyramid_policy = json.dumps({"{0}".format(
+                properties["bands"][0]["id"]
+            ): "mode"})
+            self.logger.debug(
+                "PyramidingPolicy is =====>\n{0}".format(
+                    pyramid_policy
+                )
+            )
             # check if the asset already exists and eventually delete it
             if ee.data.getInfo(assetid):
                 try:
@@ -269,7 +276,7 @@ which doesn't exist.".format(assetid)
                     ),
                     maxPixels=dimensions[0] * dimensions[1],
                     crsTransform=str(bands["crs_transform"]),
-                    pyramidingPolicy="mode"
+                    pyramidingPolicy=pyramid_policy
                 )
                 task.start()
                 self._tasks.update(
