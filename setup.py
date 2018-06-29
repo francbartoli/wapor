@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="wapor",
-    version='0.1',
+    version='0.2',
     py_modules=['cli'],
     install_requires=[
         'Click',
