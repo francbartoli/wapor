@@ -174,7 +174,7 @@ CONTEXT_SETTINGS = dict(default_map=ConfigFileProcessor.read_config())
 )
 @click.pass_context
 def main(
-    ctx, verbose, api_key, credential_file,
+    ctx, verbose, api_key, service_account,
     config_file, level, export, outputs
 ):
     """
@@ -225,7 +225,7 @@ def main(
             ee_workspace_wapor = ctx.default_map[wapor_data_key]
     logger.debug("Scopes =====> {0}".format(scopes))
     # --credential-file
-    credentials = os.path.expanduser(credential_file)
+    credentials = os.path.expanduser(service_account)
     logger.debug(
         "Credential file =====> {0}".format(credentials)
     )
