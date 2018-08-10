@@ -150,24 +150,46 @@ _" + self.t_resolution
 class GBWPName(Name):
     """ Manage GBWP name convention on GEE.
 
-        Example dataset: AGBP 
-        
+        Examples
+        --------
+        dataset: AGBP A
+
         input:
             {L1_AGBP_A,}
             year: 2017
             level: L1
             component: AGBP
             temporal_resolution: A
-        
+
         output:
             {L1_GBWP_A/L1_GBWP_17}
             level: L1
             component: GBWP
             temporal_resolution: A
+
+        dataset: AGBP S
+
+        input:
+            {L2_AGBP_S, L2_AETI_A}
+            year: 2017
+            level: L2
+            component: AGBP
+            temporal_resolution: S
+            season: 1
+
+        output:
+            {L2_GBWP_A/L2_GBWP_17s1}
+            year: 2017
+            level: L2
+            component: GBWP
+            temporal_resolution: S
+            season: 1
     """
 
     def __init__(self, **kwargs):
         self.year = kwargs['year']
+        if kwargs.has_key("season"):
+            self.season = kwargs["season"]
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
         self.level = kwargs['level']
@@ -177,28 +199,42 @@ class GBWPName(Name):
     		return '<GBWPName(={self.!r})>'.format(self=self)
 
     def src_collection(self):
-        return self.level + "_" + self.component + "\
-_" + self.t_resolution
+        return "{0}_{1}_{2}".format(
+            self.level, self.component, self.t_resolution
+        )
 
     def dst_collection(self):
-        return self.level + "_" + "GBWP" + "_" + self.t_resolution
+        return "{0}_GBWP_{1}".format(
+            self.level, self.t_resolution
+        )
 
     def dst_image(self):
-        return self.level + "_" + "GBWP" + "_" + self.year[2:]
+        dstimg = "{0}_GBWP_{1}".format(
+            self.level, self.year[2:]
+        )
+        try:
+            if self.season:
+                return "{0}s{1}".format(
+                dstimg, self.season
+            )
+            else:
+                return dstimg
+        except AttributeError as e:
+            raise
 
 
 class AETIName(Name):
     """ Manage AETI name convention on GEE.
 
-        Example dataset: ETI 
-        
+        Example dataset: ETI
+
         input:
             {L1_E_D,L1_T_D,L1_I_D}
             year: 2017
             level: L1
             component: E,T,I
             temporal_resolution: D
-        
+
         output:
             {L1_AETI_D/L1_AETI_1706}
             level: L1

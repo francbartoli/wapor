@@ -818,20 +818,24 @@ def NBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
         "2018"
     ]
 ))
-@click.argument('temporal_resolution', type=click.Choice(["A"]))
-@click.argument('input_component', type=click.Choice(["AGBP"]), required=0)
+@click.argument('temporal_resolution', type=click.Choice(["A", "S"]))
+@click.argument('season', type=click.Choice(["1", "2"]), required=0)
+@click.argument('input_component', type=click.Choice(
+    ["AGBP", "AGBP-AETI"]), required=0)
 @click.argument('nodatavalue', type=click.Choice(
     ["-9999"]
 ), required=0)
 @click.pass_context
-def GBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
+def GBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
     """
         YEAR 2009|2010|...|2017|2018\n
-        TEMPORAL_RESOLUTION A (ANNUAL)\n
+        TEMPORAL_RESOLUTION A (ANNUAL) S (SEASONAL)\n
+        SEASON 1|2
         INPUT_COMPONENT AGBP\n
         NODATAVALUE -9999\n
 
         example annual: wapor -l L1 gbwp -- 2016 A AGBP (-9999)
+        example seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP (-9999)
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -847,6 +851,7 @@ def GBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
     kwargs = {
         "year": year,
         "temporal_resolution": temporal_resolution,
+        "season": season,
         "component": input_component,
         "nodatavalue": nodatavalue
     }
@@ -855,27 +860,28 @@ def GBWP(ctx, year, temporal_resolution, input_component, nodatavalue):
 
     # Use class Name to express wapor name convention over GEE
     src_image_coll = GBWPName(**context).src_collection()
-    # L1_AGBP_A
+    # L1_AGBP_A | L2_AGBP_S
     logger.debug(
         "GBWP src_image_coll variable =====> {0}".format(src_image_coll)
     )
     dst_image_coll = GBWPName(**context).dst_collection()
-    # L1_GBWP_A
+    # L1_GBWP_A | L2_GBWP_S
     logger.debug(
         "GBWP dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
     dst_asset_coll = GBWPName(**context).dst_assetcollection_id()
-    # projects/fao_wapor/L1_GBWP_A
+    # projects/fao_wapor/L1/L1_GBWP_A | projects/fao_wapor/L2/L2_GBWP_S
     logger.debug(
         "GBWP dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
     dst_asset_image = GBWPName(**context).dst_image()
-    # L1_GBWP_16
+    # L1_GBWP_16 | L2_GBWP_16s1
     logger.debug(
         "GBWP dst_asset_image variable =====> {0}".format(dst_asset_image)
     )
     dst_asset_id = GBWPName(**context).dst_asset_id()
-    # projects/fao_wapor/L1_GBWP_A/L1_GBWP_16
+    # projects/fao_wapor/L1/L1_GBWP_A/L1_GBWP_16 |
+    # projects/fao_wapor/L2/L2_GBWP_S/L2_GBWP_16s1
     logger.debug(
         "GBWP dst_asset_id variable =====> {0}".format(dst_asset_id)
     )
