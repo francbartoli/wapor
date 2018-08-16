@@ -911,7 +911,10 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
     # create the instance of the gbwp script class
     proc = GBWP(**kwargs)
     # run the process and return the task id
-    result = proc.process_annual()
+    if proc.config.has_key("season"):
+        result = proc.process_seasonal()
+    else:
+        result = proc.process_annual()
 
     if result["errors"]:
         raise click.ClickException(
