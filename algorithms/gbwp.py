@@ -5,7 +5,9 @@ from marmee.model.rule import Range, ExtentSchema, TemporalRule, Rule
 from marmee.utils.parser import Stac
 from ee import ImageCollection as EEImageCollection
 from ee import Image as EEImage
+from ee import Filter as EEFilter
 from ee import Date as EEDate, EEException
+from gee_pheno.gee_pheno import Phenology
 import ee
 import os
 import dask
@@ -22,11 +24,21 @@ class GBWP(Marmee):
 
         logger = daiquiri.getLogger(__name__, subsystem="algorithms")
         self.logger = logger
+        self._name = "GBWP"
 
         try:
-            self.coll_aeti_y = EEImageCollection(
-                kw["src_coll"].replace("AGBP", "AETI")
-            )
+            if not kw.has_key("season"):
+                self.coll_aeti_y = EEImageCollection(
+                    kw["src_coll"].replace("AGBP", "AETI")
+                )
+            else:
+                self.season = kw["season"]
+                self.coll_aeti_y = EEImageCollection(
+                    kw["src_coll"].replace("AGBP_S", "AETI_D")
+                )
+                self.coll_agbp_s = EEImageCollection(
+                    kw["src_coll"]
+                )
         except EEException as e:
             self.logger.error(
                 "Failed to handle Google Earth Engine object",
@@ -50,7 +62,6 @@ class GBWP(Marmee):
             #     coll_id
             # ) for coll_id in [kw["src_coll"]]]
             # dask.compute(colls)
-            # import ipdb; ipdb.set_trace()
             colls = [self._inputColl(kw["src_coll"])]
             self._inputs = colls
         except (EEException, KeyError) as (eee, exc):
@@ -75,6 +86,8 @@ class GBWP(Marmee):
                 assetid=kw["dst_asset"],
                 ndvalue=kw["nodatavalue"]
             )
+            if self.season:
+                self.config.update(season=self.season)
         except KeyError as exc:
             self.logger.error("Error with dictionary key", exc_info=True)
             raise
