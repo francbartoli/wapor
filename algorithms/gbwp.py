@@ -328,6 +328,210 @@ which doesn't exist.".format(assetid)
                 errors=self.errors
             )
 
+    def process_seasonal(self):
+        """Calculate Seasonal GBWP image.
+        """
+
+        self.logger.debug(
+            "Config dictionary =====> {0}".format(
+                json.dumps(self.config)
+            )
+        )
+
+        self._tasks = {}
+        # Filtered collection
+        self.logger.debug(
+            "temporal_filter GEE object value is ======> {0}".format(
+                self.filter["temporal_filter"]
+            )
+        )
+        # AGBP collection
+        collAGBP = self.coll["collection"].sort(
+            'system:time_start', True
+        )
+        # nodatavalue -9999: consider only gte 0
+        if self.config["ndvalue"] and "-9999" in self.config["ndvalue"]:
+            collAGBP = collAGBP.map(
+                lambda image: image.mask(
+                    image.select('b1').gte(0)
+                )
+            )
+        else:
+            pass
+
+        collAETIFiltered = self.coll_aeti_y.filterDate(
+            self.filter["temporal_filter"]['start'],
+            self.filter["temporal_filter"]['end']
+        ).sort('system:time_start', True)
+
+        # lambda to filter: pixel >=0 over the AGBP collection
+        AGBPf = collAGBP.map(
+            lambda image: image.updateMask(
+                image.gte(0)
+            )
+        )
+        # same annual plus season, be careful of gee number type
+        AGBPs_Im = AGBPf.filter(
+            EEFilter.eq('season', float(self.season))
+        ).filterDate(
+            self.filter["temporal_filter"]['start'],
+            self.filter["temporal_filter"]['end']
+        )
+        # first element
+        first_agbpsim = AGBPs_Im.first()
+
+        # properties
+        first_agbpsim_info = first_agbpsim.getInfo()
+        bands = first_agbpsim_info["bands"][0]
+        dimensions = (bands["dimensions"][0], bands["dimensions"][1],)
+        seasonal_properties = first_agbpsim_info["properties"]
+
+        # Set an instance of phenology collection
+        phen = Phenology(
+            # static configuration from file
+            phe_coll="projects/fao-wapor/L2/L2_PHE_S",
+            year=self.year,
+            season=int(self.season)
+        )
+        # get phes_s image
+        phes_s = phen.PHEsos_img
+        # get phes_e image
+        phes_e = phen.PHEeos_img
+        # get phestart image
+        phestart = phen.PHEstart
+        # get pheend image
+        pheend = phen.PHEend
+        # get season_s image
+        season_s = phen.season_s
+        # get season_e image
+        season_e = phen.season_e
+
+        # calculate lenght of season in days
+        season_days = season_e.subtract(season_s).divide(86400000)
+
+        # adds band with own date to AETI Collection
+        AETIColl_date = collAETIFiltered.map(
+            lambda image: image.addBands(
+                image.metadata('system:time_start')
+            )
+        )
+
+        # filter AETI between PHEs and PHEe dates
+        AETI_season = AETIColl_date.map(
+            lambda image, seas=season_s, seae=season_e: image.updateMask(
+                image.select(['system:time_start']).gte(seas).And(
+                    image.select(['system:time_start']).lte(seae)
+                )
+            )
+        )
+
+        # get total ETa in m3/ha = (ETa_mm*10000)/1000)
+        AETI_season_m3 = AETI_season.sum().multiply(10)
+        # calculate GBWP
+        GBWPSeason = first_agbpsim.divide(AETI_season_m3)
+
+        # multiplier
+        GBWP_seasonal = GBWPSeason.multiply(1000)
+        self.logger.debug(
+            "GBWP_seasonal info is =====> \n{0}".format(
+                GBWP_seasonal.getInfo()
+            )
+        )
+
+        GBWP_seasonal_int = GBWP_seasonal.select("b1").unmask(
+            -9999
+        ).int32()
+
+        self.logger.debug(
+            "Config dictionary =====> {0}".format(
+                json.dumps(self.config)
+            )
+        )
+
+        assetid = self.config["assetid"]
+        asset_name = os.path.basename(assetid)
+
+        # seasonal_props for export
+        seasonal_props = self._setExportProperties(
+            self.year, asset_name, **seasonal_properties
+        )
+        GBWP_seasonal_props = ee.Image.setMulti(
+            GBWP_seasonal_int, seasonal_props
+        )
+        properties = GBWP_seasonal_props.getInfo()
+        self.logger.debug(
+            "New properties are =====>\n{0}".format(
+                json.dumps(properties)
+            )
+        )
+        pyramid_policy = json.dumps({"{0}".format(
+            properties["bands"][0]["id"]
+        ): "mode"})
+        self.logger.debug(
+            "PyramidingPolicy is =====>\n{0}".format(
+                pyramid_policy
+            )
+        )
+        # check if the asset already exists and eventually delete it
+        if ee.data.getInfo(assetid):
+            try:
+                ee.data.deleteAsset(assetid)
+            except EEException as eee:
+                self.logger.debug(
+                    "Trying to delete an assetId {0} \
+which doesn't exist.".format(assetid)
+                )
+                raise
+        # launch the task and return taskid
+        try:
+            task = ee.batch.Export.image.toAsset(
+                image=GBWP_seasonal_props,
+                description=asset_name,
+                assetId=assetid,
+                crs=bands["crs"],
+                dimensions="{0}x{1}".format(
+                    dimensions[0],
+                    dimensions[1]
+                ),
+                maxPixels=dimensions[0] * dimensions[1],
+                crsTransform=str(bands["crs_transform"]),
+                pyramidingPolicy=pyramid_policy
+            )
+            task.start()
+            self._tasks.update(
+                {
+                    "{0}".format(assetid): {
+                        "taskid": task.id
+                    }
+                }
+            )
+            return dict(
+                tasks=self._tasks,
+                outputs=self.outputs,
+                errors=self.errors
+            )
+        except (EEException, AttributeError) as e:
+            self.logger.debug(
+                "Task export definition has failed with =====>\
+\n{0}".format(e)
+            )
+            raise
+
+#         else:
+#             err_mesg = "Collection AGBP has size {0} while it should be 1".format(
+#                 size_agbp
+#             )
+#             self.logger.error(err_mesg)
+#             n_errkey = str(len(self.errors) + 1)
+#             self.errors.update(
+#                 {"{0}".format(n_errkey): "{0}".format(err_mesg)}
+#             )
+#             return dict(
+#                 tasks={},
+#                 outputs=self.outputs,
+#                 errors=self.errors
+#             )
+
     # @delayed
     def _inputColl(self, collection_id):
         self.logger.debug("collection_id is =====> {0}".format(collection_id))
