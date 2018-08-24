@@ -28,11 +28,11 @@ requests-oauthlib = "*"
 google-auth-oauthlib = "*"
 click = "*"
 "e1839a8" = {path = ".", editable = true}
-marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "master"}
 "autopep8" = "*"
+marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "1.0.7"}
 dask = {extras = ["complete"]}
 daiquiri = "*"
 click-configfile = "*"
 pendulum = "*"
-marmee = "*"
 gee-pheno = "*"
+marmee = "*"
