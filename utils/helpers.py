@@ -110,24 +110,46 @@ class AGBPName(Name):
 class NBWPName(Name):
     """ Manage NBWP name convention on GEE.
 
-        Example dataset: AGBP 
-        
+        Examples
+        --------
+        dataset: AGBP A
+
         input:
             {L1_AGBP_A,}
             year: 2017
             level: L1
             component: AGBP
             temporal_resolution: A
-        
+
         output:
             {L1_NBWP_A/L1_NBWP_17}
             level: L1
             component: NBWP
             temporal_resolution: A
+
+        dataset: AGBP S
+
+        input:
+            {L2_AGBP_S, L2_AETI_A}
+            year: 2017
+            level: L2
+            component: AGBP
+            temporal_resolution: S
+            season: 1
+
+        output:
+            {L2_NBWP_S/L2_NBWP_17s1}
+            year: 2017
+            level: L2
+            component: NBWP
+            temporal_resolution: S
+            season: 1
     """
 
     def __init__(self, **kwargs):
         self.year = kwargs['year']
+        if kwargs.has_key("season"):
+            self.season = kwargs["season"]
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
         self.level = kwargs['level']
@@ -137,14 +159,28 @@ class NBWPName(Name):
     		return '<NBWPName(={self.!r})>'.format(self=self)
 
     def src_collection(self):
-        return self.level + "_" + self.component + "\
-_" + self.t_resolution
+        return "{0}_{1}_{2}".format(
+            self.level, self.component, self.t_resolution
+        )
 
     def dst_collection(self):
-        return self.level + "_" + "NBWP" + "_" + self.t_resolution
+        return "{0}_NBWP_{1}".format(
+            self.level, self.t_resolution
+        )
 
     def dst_image(self):
-        return self.level + "_" + "NBWP" + "_" + self.year[2:]
+        dstimg = "{0}_NBWP_{1}".format(
+            self.level, self.year[2:]
+        )
+        try:
+            if self.season:
+                return "{0}s{1}".format(
+                    dstimg, self.season
+                )
+            else:
+                return dstimg
+        except AttributeError as e:
+            raise
 
 
 class GBWPName(Name):
