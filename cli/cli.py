@@ -418,7 +418,7 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
 @click.argument('input_component', type=click.Choice(["AETI"]))
 @click.argument(
     'area_code',
-    type=click.Choice(["NA", "BKA", "AWA", "KOG"]),
+    type=click.Choice(["NA", "BKA", "AWA", "KOG", "ODN", "ZAN"]),
     required=0
 )
 @click.argument('dekad', type=click.Choice(
