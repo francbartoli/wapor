@@ -11,19 +11,19 @@ class Name(object):
     """ Manage name convention on GEE.
 
         Example dataset: E (Evaporation)
-        
+
         input:
             year: 2017
             level: L1
             component: E
             temporal_resolution: D
-        
+
         output:
             level: L1
             component: E
             temporal_resolution: A
     """
-    
+
     def __init__(self, **kwargs):
         self.year = kwargs['year']
         self.component = kwargs['component']
@@ -33,7 +33,7 @@ class Name(object):
 
 	def __repr__(self):
 		return '<Name(={self.!r})>'.format(self=self)
-    
+
     def src_collection(self):
         return self.level + "_" + self.component + "\
 _" + self._input_temporal_resolution() 
@@ -74,15 +74,15 @@ _" + self._input_temporal_resolution()
 class AGBPName(Name):
     """ Manage AGBP name convention on GEE.
 
-        Example dataset: NPP 
-        
+        Example dataset: NPP
+
         input:
             {L1_NPP_D,}
             year: 2017
             level: L1
             component: NPP
             temporal_resolution: D
-        
+
         output:
             {L1_AGBP_A/L1_AGBP_17}
             level: L1
@@ -267,7 +267,7 @@ class AETIName(Name):
         input:
             {L1_E_D,L1_T_D,L1_I_D}
             year: 2017
-            level: L1
+            level: L1,L2,L3
             component: E,T,I
             temporal_resolution: D
 
@@ -281,6 +281,12 @@ class AETIName(Name):
     def __init__(self, **kwargs):
         if kwargs.has_key("dekad"):
             self.single_dekad = kwargs["dekad"]
+        if kwargs.has_key("area_code") and not (
+            kwargs["area_code"] == "NA"
+        ):
+            self.area = kwargs["area_code"]
+        else:
+            self.area = None
         self.year = kwargs['year']
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
@@ -313,7 +319,11 @@ _" + self._input_temporal_resolution())
                     imgs.append(
                         self.dst_image() + "%.2d" % dekad
                     )
-            return imgs
+
+        if self.area:
+            imgs = ["{0}_{1}".format(img, self.area) for img in imgs]
+
+        return imgs
 
     def dst_asset_ids(self):
         asset_ids = []
@@ -355,6 +365,8 @@ class ETI(object):
             if isinstance(kwargs["cI"], EEImageCollection):
                 self.ci = kwargs["cI"]
             self.tfilter = kwargs["temporal_filter"]
+            if kwargs.has_key("area"):
+                self.filter_area = kwargs["area"]
         except KeyError as exc:
             raise KeyError("A key element {0} for ETI is missing".format(
                 exc.args[0]
@@ -394,6 +406,12 @@ class ETI(object):
                 image.select('b1').lte(250)
             )
         )
+        # Additional filter area for L3
+        farea = ee.Filter.eq('area_code', self.filter_area)
+        if self.filter_area:
+            collEFiltered = collEFiltered.filter(farea)
+            collTFiltered = collTFiltered.filter(farea)
+            collIFiltered = collIFiltered.filter(farea)
 
         # sizes
         size_err_dict = {}

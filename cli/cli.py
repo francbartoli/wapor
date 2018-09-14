@@ -416,6 +416,11 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
 ))
 @click.argument('temporal_resolution', type=click.Choice(["D"]))
 @click.argument('input_component', type=click.Choice(["AETI"]))
+@click.argument(
+    'area_code',
+    type=click.Choice(["NA", "BKA", "AWA", "KOG"]),
+    required=0
+)
 @click.argument('dekad', type=click.Choice(
     [
         "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
@@ -425,15 +430,18 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
     ]
 ), required=0)
 @click.pass_context
-def aeti(ctx, year, temporal_resolution, input_component, dekad):
+def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
     """
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A (ANNUAL)|D (DEKADAL)\n
         INPUT_COMPONENT AETI\n
+        AREA_CODE: NA|BKA\n
         DEKAD: 01|02|...|36\n
 
-        example: wapor -l L1 aeti -- 2016 D AETI
-        example: wapor -l L1 aeti -- 2016 D AETI 01
+        example whole dekads: wapor -l L1 aeti -- 2016 D AETI
+        example single dekad: wapor -l L1 aeti -- 2016 D AETI NA 01
+        example area code whole dekads: wapor -l L3 aeti -- 2016 D AETI BKA
+        example area code single dekad: wapor -l L3 aeti -- 2016 D AETI BKA 01
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -451,6 +459,7 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
         "year": year,
         "temporal_resolution": temporal_resolution,
         "component": input_component, #  AETI
+        "area_code": area_code,
         "dekad": dekad
     }
     context = ctx.obj.copy()
@@ -473,13 +482,16 @@ def aeti(ctx, year, temporal_resolution, input_component, dekad):
         "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
     dst_asset_images = AETIName(**context).dst_images()
-    # [AETI_1601,...,AETI_1636]
+    # [L1_AETI_1601,...,L1_AETI_1636]
+    # [L3_AETI_1601_BKA,...,L3_AETI_1636_BKA]
     logger.debug(
         "dst_asset_images variable =====> {0}".format(dst_asset_images)
     )
     dst_asset_ids = AETIName(**context).dst_asset_ids()
     # [projects/fao_wapor/L1_AETI_D/L1_AETI_1601,...,
     # ,...,projects/fao_wapor/L1_AETI_D/L1_AETI_1636]
+    # [projects/fao_wapor/L3_AETI_D/L3_AETI_1601_BKA,...,
+    # ,...,projects/fao_wapor/L3_AETI_D/L3_AETI_1636_BKA]
     logger.debug(
         "dst_asset_ids variable =====> {0}".format(dst_asset_ids)
     )

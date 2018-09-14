@@ -23,6 +23,7 @@ class AETI(Marmee):
 
         logger = daiquiri.getLogger(__name__, subsystem="algorithms")
         self.logger = logger
+        self._name = "AETI"
 
         # parallelize items computation for ETI inputs
         try:
@@ -31,7 +32,6 @@ class AETI(Marmee):
                 "Named arguments kw =====> {0}".format(kw)
             )
             colls = [self._inputColl(
-                self,
                 coll_id
             ).compute() for coll_id in [kw["collE"], kw["collT"], kw["collI"]]]
             self._inputs = colls
@@ -47,10 +47,12 @@ class AETI(Marmee):
                     exc_info=True
                 )
             raise
-        
+
         # temporal filter for AETI
         try:
             self.year = kw["year"]
+            if kw["area_code"] and (not kw["area_code"] == "NA"):
+                self.area = kw["area_code"]
             self.config = dict(
                 export=kw["to_asset"],
                 intermediate=kw["intermediate_outputs"],
@@ -148,6 +150,8 @@ class AETI(Marmee):
         """Calculate Dekadal AETI.
         """
         kwargs = self.coll
+        if self.area:
+            self.filter.update(dict(area=self.area))
         kwargs.update(self.filter)
         collETI = ETI(**kwargs).getCollETI()
 
@@ -169,7 +173,7 @@ class AETI(Marmee):
                     assetid = assetids[0]
                     export_img = EEImage(collETI.sort(
                         'system:index', True).toList(
-                            1, int(os.path.basename(assetid)[-2:]) - 1
+                            1, int(assetid.split(self.year[2:])[1][:2]) - 1
                         ).get(0)
                     )
                 else:
@@ -177,7 +181,7 @@ class AETI(Marmee):
                         'system:index', True).toList(1, i).get(0)
                     )
                     assetid = assetids[i]
-                
+
                 self.logger.debug(
                     "Information for exported image =====> {0}".format(
                         json.dumps(export_img.getInfo())
@@ -188,7 +192,7 @@ class AETI(Marmee):
                 bands = export_img.getInfo()["bands"][0]
                 dimensions = (bands["dimensions"][0], bands["dimensions"][1],)
                 dekad_properties = export_img.getInfo()["properties"]
-                
+
                 # Set dekadal_props for export
                 dekadal_props = self._setExportProperties(
                     asset_name, **dekad_properties
