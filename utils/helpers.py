@@ -36,7 +36,7 @@ class Name(object):
 
     def src_collection(self):
         return self.level + "_" + self.component + "\
-_" + self._input_temporal_resolution() 
+_" + self._input_temporal_resolution()
 
     def dst_collection(self):
         return self.level + "_" + self.component + "_" + self.t_resolution
@@ -69,6 +69,52 @@ _" + self._input_temporal_resolution()
         # Any Dekadal to Annual
         if self.t_resolution == TIME_RESOLUTION.short_annual.value:
             return TIME_RESOLUTION.short_dekadal.value
+
+
+class CommonName(Name):
+    """ Manage Common name convention on GEE.
+
+        Examples
+        --------
+        dataset: E (Evaporation)
+
+        input:
+            {L1_E_D,}
+            year: 2017
+            level: L1,L2,L3
+            component: E,T,I
+            temporal_resolution: D
+
+        output:
+            {L1_E_A/L1_E_17}
+            level: L1
+            component: E
+            temporal_resolution: A
+    """
+
+    def __init__(self, **kwargs):
+        if kwargs.has_key("area_code") and not (
+            kwargs["area_code"] == "NA"
+        ):
+            self.area = kwargs["area_code"]
+        else:
+            self.area = None
+        self.year = kwargs['year']
+        self.component = kwargs['component']
+        self.t_resolution = kwargs['temporal_resolution']
+        self.level = kwargs['level']
+        self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
+
+    def dst_image(self):
+        img = "{0}_{1}_{2}".format(
+            self.level,
+            self.component,
+            self.year[2:]
+        )
+        if self.area:
+            return "{0}_{1}".format(img, self.area)
+        else:
+            return img
 
 
 class AGBPName(Name):

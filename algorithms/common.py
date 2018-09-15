@@ -22,6 +22,7 @@ class Common(Marmee):
 
         logger = daiquiri.getLogger(__name__, subsystem="algorithms")
         self.logger = logger
+        self._name = "COMMON"
 
         # parallelize items computation for input component
         try:
@@ -54,10 +55,12 @@ class Common(Marmee):
                     exc_info=True
                 )
             raise
-        
+
         # temporal filter for input component
         try:
             self.year = kw["year"]
+            if kw["area_code"] and (not kw["area_code"] == "NA"):
+                self.area = kw["area_code"]
             self.config = dict(
                 export=kw["to_asset"],
                 intermediate=kw["intermediate_outputs"],
@@ -110,7 +113,7 @@ class Common(Marmee):
                         ), exc_info=True
                     )
                     raise
-                
+
         # it works for just one filter with only one temporal rule
         self.logger.debug(
             "Received filters are =====>\n{0}".format(
@@ -124,7 +127,7 @@ class Common(Marmee):
                     flt_dict['temporal_filter'] = self._eeDaterangeObj(
                         **date_range
                     )
-        
+
         self.coll = inpt_dict
         self.filter = flt_dict
         self.config.update(config_dict)
@@ -142,6 +145,9 @@ class Common(Marmee):
         self._tasks = {}
 
         # Filtered collection
+        if self.area:
+            self.filter.update(dict(area=self.area))
+
         self.logger.debug(
             "temporal_filter GEE object value is ======> {0}".format(
                 self.filter["temporal_filter"]
@@ -166,6 +172,11 @@ class Common(Marmee):
                 )
             )
 
+        # Additional filter area for L3
+        if self.filter.has_key("area"):
+            farea = ee.Filter.eq('area_code', self.filter["area"])
+            collFiltered = collFiltered.filter(farea)
+
         # properties
         size = collFiltered.size().getInfo()
         if size is 36:
@@ -188,7 +199,7 @@ class Common(Marmee):
                     componentColl.getInfo()
                 )
             )
-            
+
             # multiply for number of days for dekad
             component_annual = componentColl.map(
                 lambda img_a: img_a.select('b1').multiply(
@@ -296,7 +307,7 @@ which doesn't exist.".format(assetid)
 \n{0}".format(e)
                 )
                 raise
-    
+
         else:
             # @TODO 36(dekad_days) should be a configuration from config file
             err_mesg = "Collection has size {0} while it should be 36".format(

@@ -10,7 +10,7 @@ from ee import EEException, Initialize, ServiceAccountCredentials
 from ee.oauth import CLIENT_ID, CLIENT_SECRET
 from utils.logging import Log
 from utils.helpers import (
-    Name, AETIName,
+    CommonName, AETIName,
     AGBPName, NBWPName, GBWPName,
     TIME_RESOLUTION as tr
 )
@@ -299,19 +299,27 @@ Please check the default Service Account file {0}".format(
 @click.argument('input_component', type=click.Choice(
     ["E", "T", "I", "AETI", "NPP"]
 ))
+@click.argument(
+    'area_code',
+    type=click.Choice(["NA", "BKA", "AWA", "KOG", "ODN", "ZAN"]),
+    required=0
+)
 @click.argument('nodatavalue', type=click.Choice(
     ["255", "-9999"]
 ), required=0)
 @click.pass_context
-def common(ctx, year, temporal_resolution, input_component, nodatavalue): 
+def common(ctx, year, temporal_resolution, input_component, area_code, nodatavalue):
     """
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A|D\n
         INPUT_COMPONENT E|T|I|AETI|NPP\n
+        AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE: 255|-9999\n
 
         example annual: wapor -l L1 common -- 2016 A E (255)
         example dekadal: wapor -l L1 common -- 2016 D E
+        example area code annual: wapor -l L3 common -- 2016 A E BKA (255)
+        example area code dekadal: wapor -l L3 common -- 2016 D E BKA
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -329,34 +337,40 @@ def common(ctx, year, temporal_resolution, input_component, nodatavalue):
         "year": year,
         "temporal_resolution": temporal_resolution,
         "component": input_component,
+        "area_code": area_code,
         "nodatavalue": nodatavalue
     }
     context = ctx.obj.copy()
     context.update(kwargs)
 
     # Use class Name to express wapor name convention over GEE
-    src_image_coll = Name(**context).src_collection()
+    src_image_coll = CommonName(**context).src_collection()
     # L1_E_D, L1_T_D, L1_I_D
+    # L3_E_D, L3_T_D, L3_I_D
     logger.debug(
         "src_image_coll variable =====> {0}".format(src_image_coll)
     )
-    dst_image_coll = Name(**context).dst_collection()
+    dst_image_coll = CommonName(**context).dst_collection()
     # L1_E_A, L1_T_A, L1_I_A
+    # L3_E_A, L3_T_A, L3_I_A
     logger.debug(
         "dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
-    dst_asset_coll = Name(**context).dst_assetcollection_id()
+    dst_asset_coll = CommonName(**context).dst_assetcollection_id()
     # projects/fao_wapor/L1_E_A
+    # projects/fao_wapor/L3_E_A
     logger.debug(
         "dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
-    dst_asset_image = Name(**context).dst_image()
+    dst_asset_image = CommonName(**context).dst_image()
     # L1_E_16
+    # L3_E_16_BKA
     logger.debug(
         "dst_asset_image variable =====> {0}".format(dst_asset_image)
     )
-    dst_asset_id = Name(**context).dst_asset_id()
+    dst_asset_id = CommonName(**context).dst_asset_id()
     # projects/fao_wapor/L1_E_A/L1_E_16
+    # projects/fao_wapor/L3_E_A/L3_E_16_BKA
     logger.debug(
         "dst_asset_id variable =====> {0}".format(dst_asset_id)
     )
@@ -435,7 +449,7 @@ def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A (ANNUAL)|D (DEKADAL)\n
         INPUT_COMPONENT AETI\n
-        AREA_CODE: NA|BKA\n
+        AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         DEKAD: 01|02|...|36\n
 
         example whole dekads: wapor -l L1 aeti -- 2016 D AETI
