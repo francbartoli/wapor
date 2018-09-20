@@ -413,6 +413,8 @@ class ETI(object):
             self.tfilter = kwargs["temporal_filter"]
             if kwargs.has_key("area"):
                 self.filter_area = kwargs["area"]
+            else:
+                self.filter_area = None
         except KeyError as exc:
             raise KeyError("A key element {0} for ETI is missing".format(
                 exc.args[0]

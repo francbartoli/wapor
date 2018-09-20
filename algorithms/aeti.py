@@ -53,6 +53,8 @@ class AETI(Marmee):
             self.year = kw["year"]
             if kw["area_code"] and (not kw["area_code"] == "NA"):
                 self.area = kw["area_code"]
+            else:
+                self.area = None
             self.config = dict(
                 export=kw["to_asset"],
                 intermediate=kw["intermediate_outputs"],
