@@ -295,7 +295,7 @@ Please check the default Service Account file {0}".format(
         "2018"
     ]
 ))
-@click.argument('temporal_resolution', type=click.Choice(["A", "D"]))
+@click.argument('temporal_resolution', type=click.Choice(["A"]))
 @click.argument('input_component', type=click.Choice(
     ["E", "T", "I", "AETI", "NPP"]
 ))
@@ -311,15 +311,15 @@ Please check the default Service Account file {0}".format(
 def common(ctx, year, temporal_resolution, input_component, area_code, nodatavalue):
     """
         YEAR 2009|2010|...|2017|2018\n
-        TEMPORAL_RESOLUTION A|D\n
+        TEMPORAL_RESOLUTION A\n
         INPUT_COMPONENT E|T|I|AETI|NPP\n
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE: 255|-9999\n
 
-        example annual: wapor -l L1 common -- 2016 A E (255)
-        example dekadal: wapor -l L1 common -- 2016 D E
-        example area code annual: wapor -l L3 common -- 2016 A E BKA (255)
-        example area code dekadal: wapor -l L3 common -- 2016 D E BKA
+        example general annual: wapor -l L1 common -- 2016 A E (255)
+        example area code general annual: wapor -l L3 common -- 2016 A E BKA (255)
+        example AETI annual: wapor -l L1 common -- 2016 A AETI (-9999)
+        example area code AETI annual: wapor -l L3 common -- 2016 A AETI BKA (-9999)
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -447,7 +447,7 @@ def common(ctx, year, temporal_resolution, input_component, area_code, nodataval
 def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
     """
         YEAR 2009|2010|...|2017|2018\n
-        TEMPORAL_RESOLUTION A (ANNUAL)|D (DEKADAL)\n
+        TEMPORAL_RESOLUTION D (DEKADAL)\n
         INPUT_COMPONENT AETI\n
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         DEKAD: 01|02|...|36\n
