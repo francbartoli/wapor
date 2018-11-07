@@ -16,23 +16,15 @@ pytest = "*"
 
 [packages]
 earthengine-api = "*"
-service-identity = "*"
-geojson = "*"
-gdal = "==2.1.3"
-"beautifulsoup4" = "*"
-retrying = "*"
-simplejson = "*"
-scandir = "*"
-google-auth = "*"
 requests-oauthlib = "*"
 google-auth-oauthlib = "*"
 click = "*"
-"e1839a8" = {path = ".", editable = true}
-"autopep8" = "*"
 marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "1.0.7"}
-dask = {extras = ["complete"]}
+dask = {extras = ["complete"], version = "*"}
 daiquiri = "*"
 click-configfile = "*"
 pendulum = "*"
 gee-pheno = "*"
 marmee = "*"
+"oauth2client" = "*"
+toolz = "*"
