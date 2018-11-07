@@ -6,9 +6,7 @@
 .cache
 .pytest_cache/
 
-wapor_algorithms/gee_sa_files/*.json
-!wapor_algorithms/gee_sa_files/ServiceAccount-template.json
-wapor_algorithms/image_test
-wapor_algorithms/log_files
-wapor_algorithms/ancillary/wpCalc.uml
+build
+dist
 *.egg-info
+*.eggs
