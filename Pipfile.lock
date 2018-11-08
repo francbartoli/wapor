@@ -294,11 +294,11 @@
         },
         "marmee": {
             "hashes": [
-                "sha256:3c7719c1514cbb1e685f4bf08f972301a42a17cb1ca773247520de19123c7115",
-                "sha256:ad1e09bf5937ad3a5ba0644d1a732fd74ec2d9d654588ee79c4b0879f34fbb9b"
+                "sha256:118d18ac5c8025a06bdadb3f93813d3e4f63d410a85caf7376c7a9ef38292489",
+                "sha256:d6137db03b100701b8bf892e7b23862f17248e1b794e49d5810e9c72420e1eb3"
             ],
             "index": "pypi",
-            "version": "==0.2.3"
+            "version": "==0.2.4"
         },
         "marshmallow": {
             "hashes": [
@@ -446,10 +446,10 @@
         },
         "py-stac": {
             "hashes": [
-                "sha256:10aca96b2868732f2c6bccf439f1db9447de28313f9f6a68626b849c2a7ea09f",
-                "sha256:b20a781ac0052aaa509f36126c49952c846da6da152b918a0372c0e1746ee0ea"
+                "sha256:339a7aabbc3d779e64b4cb1dca6fe196c89b8292f8c4ebf16b2cd1aa7d94c4a5",
+                "sha256:5a58b8b9ada2eb5272c40c3efd3d60f34857301c43e781a51624b075bfcf4470"
             ],
-            "version": "==0.2.3"
+            "version": "==0.2.6"
         },
         "pyasn1": {
             "hashes": [
@@ -614,7 +614,7 @@
                 "sha256:63a8255fe7c6269916baa440eb9b6a67139b0b97a01af632e7bd2842e1e02f15",
                 "sha256:d514bd84b284dd3e844f0305ac07511f097e325171f6cc4a20878d11ad771849"
             ],
-            "markers": "python_version <= '3.6'",
+            "markers": "python_version < '3.5'",
             "version": "==3.6.2"
         },
         "uritemplate": {
@@ -1083,7 +1083,7 @@
                 "sha256:63a8255fe7c6269916baa440eb9b6a67139b0b97a01af632e7bd2842e1e02f15",
                 "sha256:d514bd84b284dd3e844f0305ac07511f097e325171f6cc4a20878d11ad771849"
             ],
-            "markers": "python_version <= '3.6'",
+            "markers": "python_version < '3.5'",
             "version": "==3.6.2"
         },
         "urllib3": {
