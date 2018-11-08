@@ -63,6 +63,28 @@ Any warning can be safely ignored and finally you can exit from this shell::
 
     exit
 
+The tool is ready to be configured for the authentication with your
+Google Earth Engine service account.
+
+Usage
+-----
+
+Pip
+^^^
+
+In case you have installed it systemwide you don't need to activate any
+virtual environment otherwise you have to as preliminary step::
+
+    wapor --help
+
+Pipenv
+^^^^^^
+
+If you are using pipenv the only requirement to run the wapor command is
+to go to the directory where you have executed the installation steps and run::
+
+    pipenv run wapor --help
+
 Credits
 -------
 
