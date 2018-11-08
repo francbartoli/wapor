@@ -20,7 +20,6 @@ earthengine-api = "*"
 requests-oauthlib = "*"
 google-auth-oauthlib = "*"
 click = "*"
-marshmallow-oneofschema = {git = "https://github.com/francbartoli/marshmallow-oneofschema.git", editable = true, ref = "1.0.7"}
 dask = {extras = ["complete"], version = "*"}
 daiquiri = "*"
 click-configfile = "*"

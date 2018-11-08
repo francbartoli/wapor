@@ -22,7 +22,6 @@ requirements = [
     'click',
     'dask[complete]',
     'click-configfile',
-    'marshmallow-oneofschema==1.0.7',
     'pendulum',
     'gee-pheno',
     'marmee',
@@ -30,13 +29,12 @@ requirements = [
     'toolz'
 ]
 
-dependency_links=['git+https://github.com/francbartoli/marshmallow-oneofschema.git@1.0.7#egg=marshmallow-oneofschema-1.0.7']
+dependency_links=[]
 
 setup_requirements = [
     'pytest-runner', 'earthengine-api', 'daiquiri', 'requests-oauthlib',
     'google-auth-oauthlib', 'click', 'dask[complete]', 'click-configfile',
-    'marshmallow-oneofschema==1.0.7', 'pendulum', 'gee-pheno', 'marmee',
-    'oauth2client', 'toolz'
+    'pendulum', 'gee-pheno', 'marmee', 'oauth2client', 'toolz'
 ]
 
 test_requirements = ['pytest', 'sphinx', 'ipython', 'ipdb', 'flake8', 'doc8']
