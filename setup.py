@@ -37,7 +37,9 @@ setup_requirements = [
     'pendulum', 'gee-pheno', 'marmee', 'oauth2client', 'toolz'
 ]
 
-test_requirements = ['pytest', 'sphinx', 'ipython', 'ipdb', 'flake8', 'doc8']
+test_requirements = [
+    'pytest', 'sphinx', 'ipython', 'ipdb', 'flake8', 'doc8', 'twine'
+]
 
 setup(
     name="wapor",
@@ -56,7 +58,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     description="Wapor algorithms",
-    version='0.2',
+    version='0.2.1',
     packages=find_packages(),
     py_modules=[splitext(basename(path))[0] for path in glob('wapor/*.py')],
     install_requires=requirements,
