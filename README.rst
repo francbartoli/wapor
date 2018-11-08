@@ -38,10 +38,30 @@ Features
 
 Install
 -------
-Using pip tool::
+
+Using pip
+^^^^^^^^^
+
+Assuming you have already created a python virtual environment, activate it and
+then install the tool::
 
     pip install wapor --process-dependency-links
 
+Using pipenv
+^^^^^^^^^^^^
+
+Choose a directory where you want to spawne the python virtual environment and
+install the tool with pipenv, then from there::
+
+    pipenv shell --two
+
+You will be led to a new shell where you can execute::
+
+    pipenv install wapor
+
+Any warning can be safely ignored and finally you can exit from this shell::
+
+    exit
 
 Credits
 -------
