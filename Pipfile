@@ -28,4 +28,3 @@ gee-pheno = "*"
 marmee = "*"
 "oauth2client" = "*"
 toolz = "*"
-"e1839a8" = {editable = true, path = "."}
