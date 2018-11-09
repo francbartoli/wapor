@@ -27,7 +27,7 @@ class GBWP(Marmee):
         self._name = "GBWP"
 
         try:
-            if not kw.has_key("season"):
+            if "season" not in kw:
                 self.coll_aeti_y = EEImageCollection(
                     kw["src_coll"].replace("AGBP", "AETI")
                 )
@@ -39,6 +39,10 @@ class GBWP(Marmee):
                 self.coll_agbp_s = EEImageCollection(
                     kw["src_coll"]
                 )
+            if "level" in kw:
+                self.level = kw["level"]
+            else:
+                self.level = None
         except EEException as e:
             self.logger.error(
                 "Failed to handle Google Earth Engine object",
@@ -88,6 +92,8 @@ class GBWP(Marmee):
             )
             if self.season:
                 self.config.update(season=self.season)
+            if self.level:
+                self.config.update(level=self.level)
         except KeyError as exc:
             self.logger.error("Error with dictionary key", exc_info=True)
             raise
@@ -275,7 +281,7 @@ class GBWP(Marmee):
                 except EEException as eee:
                     self.logger.debug(
                         "Trying to delete an assetId {0} \
-which doesn't exist.".format(assetid)
+which doesn't exist."                     .format(assetid)
                     )
                     raise
             # launch the task and return taskid
@@ -309,7 +315,7 @@ which doesn't exist.".format(assetid)
             except (EEException, AttributeError) as e:
                 self.logger.debug(
                     "Task export definition has failed with =====>\
-\n{0}".format(e)
+\n{0}"      .format(e)
                 )
                 raise
 
@@ -387,12 +393,20 @@ which doesn't exist.".format(assetid)
         seasonal_properties = first_agbpsim_info["properties"]
 
         # Set an instance of phenology collection
-        phen = Phenology(
-            # static configuration from file
-            phe_coll="projects/fao-wapor/L2/L2_PHE_S",
-            year=self.year,
-            season=int(self.season)
-        )
+        # TODO: handle the level for filter area_code
+        if self.level and self.level == "L3":
+            phen = Phenology(
+                # static configuration from file
+                phe_coll="projects/fao-wapor/L3/L3_PHE_S",
+                year=self.year,
+                season=int(self.season))
+        else:
+            phen = Phenology(
+                # static configuration from file
+                phe_coll="projects/fao-wapor/L2/L2_PHE_S",
+                year=self.year,
+                season=int(self.season)
+            )
         # get phes_s image
         phes_s = phen.PHEsos_img
         # get phes_e image
