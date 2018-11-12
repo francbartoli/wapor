@@ -53,7 +53,7 @@ class ConfigFileProcessor(ConfigFileReader):
 
 class CredentialConfigFile(dict):
     def __init__(self, credential_file):
-            self.credential_file = credential_file
+        self.credential_file = credential_file
 
     def load(self):
         """load a JSON Service Account file from disk"""
@@ -808,7 +808,8 @@ def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
             "dst_asset_coll": dst_asset_coll,
             "dst_asset": dst_asset_id,
             "to_asset": context["export"],
-            "intermediate_outputs": context["outputs"]
+            "intermediate_outputs": context["outputs"],
+            "level": context["level"]
         }
     )
     logger.debug(
@@ -933,7 +934,8 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
             "dst_asset_coll": dst_asset_coll,
             "dst_asset": dst_asset_id,
             "to_asset": context["export"],
-            "intermediate_outputs": context["outputs"]
+            "intermediate_outputs": context["outputs"],
+            "level": context["level"]
         }
     )
     logger.debug(
