@@ -281,7 +281,7 @@ class GBWP(Marmee):
                 except EEException as eee:
                     self.logger.debug(
                         "Trying to delete an assetId {0} \
-which doesn't exist."                     .format(assetid)
+which doesn't exist.".format(assetid)
                     )
                     raise
             # launch the task and return taskid
@@ -315,7 +315,7 @@ which doesn't exist."                     .format(assetid)
             except (EEException, AttributeError) as e:
                 self.logger.debug(
                     "Task export definition has failed with =====>\
-\n{0}"      .format(e)
+\n{0}".format(e)
                 )
                 raise
 
