@@ -41,8 +41,6 @@ class GBWP(Marmee):
                 )
             if "level" in kw:
                 self.level = kw["level"]
-            else:
-                self.level = None
         except EEException as e:
             self.logger.error(
                 "Failed to handle Google Earth Engine object",
@@ -94,6 +92,15 @@ class GBWP(Marmee):
                 self.config.update(season=self.season)
             if self.level:
                 self.config.update(level=self.level)
+            if self.level == "L3":
+                try:
+                    if kw["area_code"] and (not kw["area_code"] == "NA"):
+                        self.area = kw["area_code"]
+                    else:
+                        self.area = None
+                except KeyError:
+                    raise Exception("You have to provide an area code!")
+                self.config.update(area=self.area)
         except KeyError as exc:
             self.logger.error("Error with dictionary key", exc_info=True)
             raise
@@ -399,7 +406,8 @@ which doesn't exist.".format(assetid)
                 # static configuration from file
                 phe_coll="projects/fao-wapor/L3/L3_PHE_S",
                 year=self.year,
-                season=int(self.season))
+                season=int(self.season),
+                area_code=self.area)
         else:
             phen = Phenology(
                 # static configuration from file
