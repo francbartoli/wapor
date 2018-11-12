@@ -857,20 +857,26 @@ def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
 @click.argument('season', type=click.Choice(["1", "2"]), required=0)
 @click.argument('input_component', type=click.Choice(
     ["AGBP", "AGBP-AETI"]), required=0)
+@click.argument(
+    'area_code',
+    type=click.Choice(["NA", "BKA", "AWA", "KOG", "ODN", "ZAN"]),
+    required=0)
 @click.argument('nodatavalue', type=click.Choice(
     ["-9999"]
 ), required=0)
 @click.pass_context
-def GBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
+def GBWP(ctx, year, temporal_resolution, season, input_component, area_code, nodatavalue):
     """
         YEAR 2009|2010|...|2017|2018\n
         TEMPORAL_RESOLUTION A (ANNUAL) S (SEASONAL)\n
         SEASON 1|2
         INPUT_COMPONENT AGBP\n
+        AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE -9999\n
 
-        example annual: wapor -l L1 gbwp -- 2016 A AGBP (-9999)
-        example seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP (-9999)
+        example L1 annual: wapor -l L1 gbwp -- 2016 A AGBP NA (-9999)
+        example L2 seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP NA (-9999)
+        example L3 seasonal: wapor -l L3 gbwp -- 2016 S 1 AGBP AWA (-9999)
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -888,6 +894,7 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
         "temporal_resolution": temporal_resolution,
         "season": season,
         "component": input_component,
+        "area_code": area_code,
         "nodatavalue": nodatavalue
     }
     context = ctx.obj.copy()
