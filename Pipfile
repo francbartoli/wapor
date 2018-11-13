@@ -24,7 +24,7 @@ dask = {extras = ["complete"], version = "*"}
 daiquiri = "*"
 click-configfile = "*"
 pendulum = "*"
-gee-pheno = "*"
 marmee = "*"
 "oauth2client" = "*"
 toolz = "*"
+gee-pheno = "==0.1.8b2"
