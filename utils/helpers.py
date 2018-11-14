@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 import ee
+import click
 from ee import Filter as EEFilter
 from ee import ImageCollection as EEImageCollection
 from ee import Image as EEImage
@@ -251,21 +252,41 @@ class GBWPName(Name):
 
         dataset: AGBP S
 
-        input:
-            {L2_AGBP_S, L2_AETI_A}
-            year: 2017
-            level: L2
-            component: AGBP
-            temporal_resolution: S
-            season: 1
+        L2:
+            input:
+                {L2_AGBP_S, L2_AETI_A}
+                year: 2017
+                level: L2
+                component: AGBP
+                temporal_resolution: S
+                season: 1
 
-        output:
-            {L2_GBWP_A/L2_GBWP_17s1}
-            year: 2017
-            level: L2
-            component: GBWP
-            temporal_resolution: S
-            season: 1
+            output:
+                {L2_GBWP_A/L2_GBWP_17s1}
+                year: 2017
+                level: L2
+                component: GBWP
+                temporal_resolution: S
+                season: 1
+
+        L3:
+            input:
+                {L3_AGBP_S, L3_AETI_A}
+                year: 2017
+                level: L3
+                component: AGBP
+                temporal_resolution: S
+                season: 1
+                area: AWA
+
+            output:
+                {L3_GBWP_S/L3_GBWP_17s1_AWA}
+                year: 2017
+                level: L3
+                component: GBWP
+                temporal_resolution: S
+                season: 1
+                area: AWA
     """
 
     def __init__(self, **kwargs):
@@ -275,6 +296,7 @@ class GBWPName(Name):
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
         self.level = kwargs['level']
+        self.area = kwargs['area_code']
         self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
 
     def __repr__(self):
@@ -296,11 +318,19 @@ class GBWPName(Name):
         )
         try:
             if self.season:
-                return "{0}s{1}".format(
-                dstimg, self.season
-            )
-            else:
-                return dstimg
+                dstimg = "{0}s{1}".format(
+                    dstimg, self.season
+                )
+            if self.level == "L3":
+                if not self.area == "NA":
+                    dstimg = "{0}_{1}".format(
+                        dstimg, self.area
+                    )
+                else:
+                    raise click.Abort(
+                        "An area code different from NA is required for L3 GBWP"
+                    )
+            return dstimg
         except AttributeError as e:
             raise
 

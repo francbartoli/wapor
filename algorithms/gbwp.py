@@ -27,7 +27,7 @@ class GBWP(Marmee):
         self._name = "GBWP"
 
         try:
-            if not kw.has_key("season"):
+            if "season" not in kw:
                 self.coll_aeti_y = EEImageCollection(
                     kw["src_coll"].replace("AGBP", "AETI")
                 )
@@ -39,6 +39,8 @@ class GBWP(Marmee):
                 self.coll_agbp_s = EEImageCollection(
                     kw["src_coll"]
                 )
+            if "level" in kw:
+                self.level = kw["level"]
         except EEException as e:
             self.logger.error(
                 "Failed to handle Google Earth Engine object",
@@ -88,6 +90,17 @@ class GBWP(Marmee):
             )
             if self.season:
                 self.config.update(season=self.season)
+            if self.level:
+                self.config.update(level=self.level)
+            if self.level == "L3":
+                try:
+                    if kw["area_code"] and (not kw["area_code"] == "NA"):
+                        self.area = kw["area_code"]
+                    else:
+                        self.area = None
+                except KeyError:
+                    raise Exception("You have to provide an area code!")
+                self.config.update(area=self.area)
         except KeyError as exc:
             self.logger.error("Error with dictionary key", exc_info=True)
             raise
@@ -387,12 +400,21 @@ which doesn't exist.".format(assetid)
         seasonal_properties = first_agbpsim_info["properties"]
 
         # Set an instance of phenology collection
-        phen = Phenology(
-            # static configuration from file
-            phe_coll="projects/fao-wapor/L2/L2_PHE_S",
-            year=self.year,
-            season=int(self.season)
-        )
+        # TODO: handle the level for filter area_code
+        if self.level and self.level == "L3":
+            phen = Phenology(
+                # static configuration from file
+                phe_coll="projects/fao-wapor/L3/L3_PHE_S",
+                year=self.year,
+                season=int(self.season),
+                area_code=self.area)
+        else:
+            phen = Phenology(
+                # static configuration from file
+                phe_coll="projects/fao-wapor/L2/L2_PHE_S",
+                year=self.year,
+                season=int(self.season)
+            )
         # get phes_s image
         phes_s = phen.PHEsos_img
         # get phes_e image
