@@ -902,28 +902,30 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, area_code, nod
 
     # Use class Name to express wapor name convention over GEE
     src_image_coll = GBWPName(**context).src_collection()
-    # L1_AGBP_A | L2_AGBP_S
+    # L1_AGBP_A | L2_AGBP_S | L3_AGBP_S
     logger.debug(
         "GBWP src_image_coll variable =====> {0}".format(src_image_coll)
     )
     dst_image_coll = GBWPName(**context).dst_collection()
-    # L1_GBWP_A | L2_GBWP_S
+    # L1_GBWP_A | L2_GBWP_S | L3_GBWP_S
     logger.debug(
         "GBWP dst_image_coll variable =====> {0}".format(dst_image_coll)
     )
     dst_asset_coll = GBWPName(**context).dst_assetcollection_id()
     # projects/fao-wapor/L1/L1_GBWP_A | projects/fao-wapor/L2/L2_GBWP_S
+    # | projects/fao-wapor/L3/L3_GBWP_S
     logger.debug(
         "GBWP dst_asset_coll variable =====> {0}".format(dst_asset_coll)
     )
     dst_asset_image = GBWPName(**context).dst_image()
-    # L1_GBWP_16 | L2_GBWP_16s1
+    # L1_GBWP_16 | L2_GBWP_16s1 | L3_GBWP_16s1_AWA
     logger.debug(
         "GBWP dst_asset_image variable =====> {0}".format(dst_asset_image)
     )
     dst_asset_id = GBWPName(**context).dst_asset_id()
     # projects/fao-wapor/L1/L1_GBWP_A/L1_GBWP_16 |
-    # projects/fao-wapor/L2/L2_GBWP_S/L2_GBWP_16s1
+    # projects/fao-wapor/L2/L2_GBWP_S/L2_GBWP_16s1 |
+    # projects/fao-wapor/L3/L3_GBWP_S/L3_GBWP_16s1_AWA
     logger.debug(
         "GBWP dst_asset_id variable =====> {0}".format(dst_asset_id)
     )
