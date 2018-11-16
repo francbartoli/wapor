@@ -31,6 +31,7 @@ class GBWP(Marmee):
                 self.coll_aeti_y = EEImageCollection(
                     kw["src_coll"].replace("AGBP", "AETI")
                 )
+                self.season = None
             else:
                 self.season = kw["season"]
                 self.coll_aeti_y = EEImageCollection(
