@@ -31,6 +31,7 @@ class GBWP(Marmee):
                 self.coll_aeti_y = EEImageCollection(
                     kw["src_coll"].replace("AGBP", "AETI")
                 )
+                self.season = None
             else:
                 self.season = kw["season"]
                 self.coll_aeti_y = EEImageCollection(
@@ -358,8 +359,16 @@ which doesn't exist.".format(assetid)
                 self.filter["temporal_filter"]
             )
         )
+        f = list()
+        if self.season:
+            f.append(ee.Filter.eq('season', float(self.season)))
+        if self.area:
+            f.append(ee.Filter.eq('area_code', self.area))
+        if f:
+            self.coll_agbp_s = self.coll_agbp_s.filter(f)
+        #import ipdb; ipdb.set_trace()
         # AGBP collection
-        collAGBP = self.coll["collection"].sort(
+        collAGBP = self.coll_agbp_s.sort(
             'system:time_start', True
         )
         # nodatavalue -9999: consider only gte 0
@@ -372,6 +381,10 @@ which doesn't exist.".format(assetid)
         else:
             pass
 
+        if self.area:
+            self.coll_aeti_y = self.coll_aeti_y.filter(
+                [ee.Filter.eq('area_code', self.area)]
+            )
         collAETIFiltered = self.coll_aeti_y.filterDate(
             self.filter["temporal_filter"]['start'],
             self.filter["temporal_filter"]['end']
@@ -384,9 +397,7 @@ which doesn't exist.".format(assetid)
             )
         )
         # same annual plus season, be careful of gee number type
-        AGBPs_Im = AGBPf.filter(
-            EEFilter.eq('season', float(self.season))
-        ).filterDate(
+        AGBPs_Im = AGBPf.filterDate(
             self.filter["temporal_filter"]['start'],
             self.filter["temporal_filter"]['end']
         )
