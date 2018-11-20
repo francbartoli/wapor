@@ -359,15 +359,40 @@ which doesn't exist.".format(assetid)
                 self.filter["temporal_filter"]
             )
         )
+
         f = list()
         if self.season:
             f.append(ee.Filter.eq('season', float(self.season)))
         if self.area:
             f.append(ee.Filter.eq('area_code', self.area))
+
+        # AETI collection
+        start_time = str(json.loads(
+            self.filter["temporal_filter"]['start'].serialize()
+        )["arguments"]["value"])
+        end_time = str(json.loads(
+            self.filter["temporal_filter"]['end'].serialize()
+        )["arguments"]["value"])
+        start_dt = datetime.datetime.strptime(start_time, '%Y-%m-%d')
+        end_dt = datetime.datetime.strptime(end_time, '%Y-%m-%d')
+        if self.area:
+            self.coll_aeti_y = self.coll_aeti_y.filter(
+                [ee.Filter.eq('area_code', self.area)]
+            )
+        collAETIFiltered = self.coll_aeti_y.filterDate(
+            ee.Date.fromYMD(start_dt.year - 1, start_dt.month, start_dt.day),
+            ee.Date.fromYMD(end_dt.year + 1, end_dt.month, end_dt.day)
+        ).sort('system:time_start', True)
+        # lambda to filter: pixel >=0 and <254 over the AETIcollection
+        collAETIFiltered = collAETIFiltered.map(
+            lambda image, lt_val=254, gte_val=0: image.updateMask(
+                image.lt(lt_val).And(image.gte(gte_val))
+            )
+        )
+
+        # AGBP collection
         if f:
             self.coll_agbp_s = self.coll_agbp_s.filter(f)
-        #import ipdb; ipdb.set_trace()
-        # AGBP collection
         collAGBP = self.coll_agbp_s.sort(
             'system:time_start', True
         )
@@ -380,15 +405,6 @@ which doesn't exist.".format(assetid)
             )
         else:
             pass
-
-        if self.area:
-            self.coll_aeti_y = self.coll_aeti_y.filter(
-                [ee.Filter.eq('area_code', self.area)]
-            )
-        collAETIFiltered = self.coll_aeti_y.filterDate(
-            self.filter["temporal_filter"]['start'],
-            self.filter["temporal_filter"]['end']
-        ).sort('system:time_start', True)
 
         # lambda to filter: pixel >=0 over the AGBP collection
         AGBPf = collAGBP.map(
@@ -411,7 +427,7 @@ which doesn't exist.".format(assetid)
         seasonal_properties = first_agbpsim_info["properties"]
 
         # Set an instance of phenology collection
-        # TODO: handle the level for filter area_code
+        # TODO: handle collection ids for phenology from configuration
         if self.level and self.level == "L3":
             phen = Phenology(
                 # static configuration from file
