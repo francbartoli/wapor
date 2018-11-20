@@ -427,7 +427,7 @@ which doesn't exist.".format(assetid)
         seasonal_properties = first_agbpsim_info["properties"]
 
         # Set an instance of phenology collection
-        # TODO: handle the level for filter area_code
+        # TODO: handle collection ids for phenology from configuration
         if self.level and self.level == "L3":
             phen = Phenology(
                 # static configuration from file
