@@ -389,6 +389,12 @@ which doesn't exist.".format(assetid)
                 image.lt(lt_val).And(image.gte(gte_val))
             )
         )
+        # lambda to add band: days in dekad
+        collAETIFiltered = collAETIFiltered.map(
+            lambda image, prop='n_days_extent': image.addBands(
+                image.metadata(prop)
+            )
+        )
 
         # AGBP collection
         if f:
@@ -462,8 +468,8 @@ which doesn't exist.".format(assetid)
 
         # adds band with own date to AETI Collection
         AETIColl_date = collAETIFiltered.map(
-            lambda image: image.addBands(
-                image.metadata('system:time_start')
+            lambda image, prop='system:time_start': image.addBands(
+                image.metadata(prop)
             )
         )
 
