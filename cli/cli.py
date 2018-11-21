@@ -854,7 +854,7 @@ def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A", "S"]))
-@click.argument('season', type=click.Choice(["1", "2"]), required=0)
+@click.argument('season', type=click.Choice(["1", "2", "-1"]), required=0)
 @click.argument('input_component', type=click.Choice(
     ["AGBP", "AGBP-AETI"]), required=0)
 @click.argument(
@@ -874,7 +874,7 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, area_code, nod
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE -9999\n
 
-        example L1 annual: wapor -l L1 gbwp -- 2016 A AGBP NA (-9999)
+        example L1 annual: wapor -l L1 gbwp -- 2016 A -1 AGBP NA (-9999)
         example L2 seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP NA (-9999)
         example L3 seasonal: wapor -l L3 gbwp -- 2016 S 1 AGBP AWA (-9999)
     """
@@ -956,10 +956,10 @@ def GBWP(ctx, year, temporal_resolution, season, input_component, area_code, nod
     # create the instance of the gbwp script class
     proc = GBWP(**kwargs)
     # run the process and return the task id
-    if proc.config.has_key("season"):
-        result = proc.process_seasonal()
-    else:
+    if proc.config["season"] == '-1':
         result = proc.process_annual()
+    else:
+        result = proc.process_seasonal()
 
     if result["errors"]:
         raise click.ClickException(
