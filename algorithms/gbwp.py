@@ -434,13 +434,15 @@ which doesn't exist.".format(assetid)
                 phe_coll="projects/fao-wapor/L3/L3_PHE_S",
                 year=self.year,
                 season=int(self.season),
-                area_code=self.area)
+                area_code=self.area
+            )
         else:
             phen = Phenology(
                 # static configuration from file
                 phe_coll="projects/fao-wapor/L2/L2_PHE_S",
                 year=self.year,
-                season=int(self.season)
+                season=int(self.season),
+                area_code=self.area
             )
         # get phes_s image
         phes_s = phen.PHEsos_img
