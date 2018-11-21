@@ -194,7 +194,7 @@ class GBWP(Marmee):
             self.filter["temporal_filter"]['end']
         ).sort('system:time_start', True)
         # nodatavalue -9999: consider only gte 0
-        if self.config["ndvalue"] in "-9999":
+        if self.config["ndvalue"] and self.config["ndvalue"] in "-9999":
             collAGBPFiltered = collAGBPFiltered.map(
                 lambda image: image.mask(
                     image.select('b1_sum').gte(0)
