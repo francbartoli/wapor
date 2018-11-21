@@ -93,7 +93,7 @@ class GBWP(Marmee):
                 self.config.update(season=self.season)
             if self.level:
                 self.config.update(level=self.level)
-            if self.level == "L3":
+            if self.level in ["L2", "L3"]:
                 try:
                     if kw["area_code"] and (not kw["area_code"] == "NA"):
                         self.area = kw["area_code"]
@@ -194,7 +194,7 @@ class GBWP(Marmee):
             self.filter["temporal_filter"]['end']
         ).sort('system:time_start', True)
         # nodatavalue -9999: consider only gte 0
-        if self.config["ndvalue"] in "-9999":
+        if self.config["ndvalue"] and self.config["ndvalue"] in "-9999":
             collAGBPFiltered = collAGBPFiltered.map(
                 lambda image: image.mask(
                     image.select('b1_sum').gte(0)
@@ -434,13 +434,15 @@ which doesn't exist.".format(assetid)
                 phe_coll="projects/fao-wapor/L3/L3_PHE_S",
                 year=self.year,
                 season=int(self.season),
-                area_code=self.area)
+                area_code=self.area
+            )
         else:
             phen = Phenology(
                 # static configuration from file
                 phe_coll="projects/fao-wapor/L2/L2_PHE_S",
                 year=self.year,
-                season=int(self.season)
+                season=int(self.season),
+                area_code=self.area
             )
         # get phes_s image
         phes_s = phen.PHEsos_img
