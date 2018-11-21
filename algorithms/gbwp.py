@@ -93,7 +93,7 @@ class GBWP(Marmee):
                 self.config.update(season=self.season)
             if self.level:
                 self.config.update(level=self.level)
-            if self.level == "L3":
+            if self.level in ["L2", "L3"]:
                 try:
                     if kw["area_code"] and (not kw["area_code"] == "NA"):
                         self.area = kw["area_code"]
