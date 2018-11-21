@@ -32,8 +32,8 @@ class Name(object):
         self.level = kwargs['level']
         self.ee_container = kwargs['EE_WORKSPACE_WAPOR']
 
-	def __repr__(self):
-		return '<Name(={self.!r})>'.format(self=self)
+    def __repr__(self):
+        return '<Name(={self.!r})>'.format(self=self)
 
     def src_collection(self):
         return self.level + "_" + self.component + "\
@@ -94,7 +94,7 @@ class CommonName(Name):
     """
 
     def __init__(self, **kwargs):
-        if kwargs.has_key("area_code") and not (
+        if "area_code" in kwargs and not (
             kwargs["area_code"] == "NA"
         ):
             self.area = kwargs["area_code"]
@@ -195,7 +195,7 @@ class NBWPName(Name):
 
     def __init__(self, **kwargs):
         self.year = kwargs['year']
-        if kwargs.has_key("season"):
+        if "season" in kwargs:
             self.season = kwargs["season"]
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
@@ -292,7 +292,7 @@ class GBWPName(Name):
 
     def __init__(self, **kwargs):
         self.year = kwargs['year']
-        if kwargs.has_key("season"):
+        if "season" in kwargs:
             self.season = kwargs["season"]
         self.component = kwargs['component']
         self.t_resolution = kwargs['temporal_resolution']
@@ -356,9 +356,9 @@ class AETIName(Name):
     """
 
     def __init__(self, **kwargs):
-        if kwargs.has_key("dekad"):
+        if "dekad" in kwargs:
             self.single_dekad = kwargs["dekad"]
-        if kwargs.has_key("area_code") and not (
+        if "area_code" in kwargs and not (
             kwargs["area_code"] == "NA"
         ):
             self.area = kwargs["area_code"]
@@ -408,7 +408,7 @@ _" + self._input_temporal_resolution())
         ) == TIME_RESOLUTION.short_dekadal.value:
             for dst_image in self.dst_images():
                 asset_ids.append(
-                        os.path.join(
+                    os.path.join(
                         os.path.join(
                             self.ee_container,
                             self.level
@@ -431,6 +431,7 @@ class TIME_RESOLUTION(Enum):
     short_everyday = "E"
     seasonal = "SEASONAL"
     short_seasonal = "S"
+
 
 class ETI(object):
     def __init__(self, **kwargs):
@@ -511,7 +512,7 @@ class ETI(object):
         }
 
         for size in (sizeE, sizeI, sizeT):
-            for k,v in size.items():
+            for k, v in size.items():
                 if v > 0:
                     pass
                 else:
