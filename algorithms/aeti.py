@@ -9,6 +9,7 @@ from ee import Date as EEDate, EEException
 import os
 import ee
 import dask
+import click
 import json
 import daiquiri
 import datetime
@@ -173,12 +174,12 @@ class AETI(Marmee):
                 # Case of just one dekad asked from cli
                 if len(assetids) == 1:
                     assetid = assetids[0]
-                    if assetid[-4:][:2] == self.year[2:]:
-                        asset_idx = int(assetid[-4:][:2]) - 1
+                    if assetid[-8:][:2] == self.year[2:]:
+                        asset_idx = int(assetid[-8:][:2]) - 1
                     else:
                         raise click.Abort()
-                    export_img = EEImage(collETI.sort(
-                        'system:index', True).toList(
+                    export_img = EEImage(
+                        collETI.sort('system:index', True).toList(
                             1, asset_idx
                         ).get(0)
                     )
