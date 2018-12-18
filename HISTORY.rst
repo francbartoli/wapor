@@ -11,3 +11,8 @@ History
 ------------------
 
 * Update readme.
+
+0.2.3 (2018-12-18)
+------------------
+
+* Fix bug on AETI dekadal

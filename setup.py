@@ -58,7 +58,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     description="Wapor algorithms",
-    version='0.2.2',
+    version='0.2.3',
     packages=find_packages(),
     py_modules=[splitext(basename(path))[0] for path in glob('wapor/*.py')],
     install_requires=requirements,

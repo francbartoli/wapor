@@ -20,7 +20,7 @@ __uri__ = "https://github.com/francbartoli/wapor"
 __author__ = """Francesco Bartoli"""
 __email__ = 'francesco.bartoli@geobeyond.it'
 
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 
 __license__ = "GNU GENERAL PUBLIC LICENSE, Version 3"
 __copyright__ = "Francesco Bartoli"
