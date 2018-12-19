@@ -292,7 +292,8 @@ Please check the default Service Account file {0}".format(
         "2015",
         "2016",
         "2017",
-        "2018"
+        "2018",
+        "2019"
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A"]))
@@ -310,16 +311,16 @@ Please check the default Service Account file {0}".format(
 @click.pass_context
 def common(ctx, year, temporal_resolution, input_component, area_code, nodatavalue):
     """
-        YEAR 2009|2010|...|2017|2018\n
+        YEAR 2009|2010|...|2018|2019\n
         TEMPORAL_RESOLUTION A\n
         INPUT_COMPONENT E|T|I|AETI|NPP\n
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE: 255|-9999\n
 
-        example general annual: wapor -l L1 common -- 2016 A E (255)
-        example area code general annual: wapor -l L3 common -- 2016 A E BKA (255)
-        example AETI annual: wapor -l L1 common -- 2016 A AETI (-9999)
-        example area code AETI annual: wapor -l L3 common -- 2016 A AETI BKA (-9999)
+        example general annual: wapor -l L1 common -- 2016 A E (255)\n
+        example area code general annual: wapor -l L3 common -- 2016 A E BKA (255)\n
+        example AETI annual: wapor -l L1 common -- 2016 A AETI (-9999)\n
+        example area code AETI annual: wapor -l L3 common -- 2016 A AETI BKA (-9999)\n
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -425,7 +426,8 @@ def common(ctx, year, temporal_resolution, input_component, area_code, nodataval
         "2015",
         "2016",
         "2017",
-        "2018"
+        "2018",
+        "2019"
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["D"]))
@@ -446,16 +448,16 @@ def common(ctx, year, temporal_resolution, input_component, area_code, nodataval
 @click.pass_context
 def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
     """
-        YEAR 2009|2010|...|2017|2018\n
+        YEAR 2009|2010|...|2018|2019\n
         TEMPORAL_RESOLUTION D (DEKADAL)\n
         INPUT_COMPONENT AETI\n
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         DEKAD: 01|02|...|36\n
 
-        example whole dekads: wapor -l L1 aeti -- 2016 D AETI
-        example single dekad: wapor -l L1 aeti -- 2016 D AETI NA 01
-        example area code whole dekads: wapor -l L3 aeti -- 2016 D AETI BKA
-        example area code single dekad: wapor -l L3 aeti -- 2016 D AETI BKA 01
+        example whole dekads: wapor -l L1 aeti -- 2016 D AETI\n
+        example single dekad: wapor -l L1 aeti -- 2016 D AETI NA 01\n
+        example area code whole dekads: wapor -l L3 aeti -- 2016 D AETI BKA\n
+        example area code single dekad: wapor -l L3 aeti -- 2016 D AETI BKA 01\n
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -607,7 +609,8 @@ def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
         "2015",
         "2016",
         "2017",
-        "2018"
+        "2018",
+        "2019"
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A"]))
@@ -618,12 +621,12 @@ def aeti(ctx, year, temporal_resolution, input_component, area_code, dekad):
 @click.pass_context
 def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
     """
-        YEAR 2009|2010|...|2017|2018\n
+        YEAR 2009|2010|...|2018|2019\n
         TEMPORAL_RESOLUTION A (ANNUAL)\n
         INPUT_COMPONENT NPP\n
         NODATAVALUE -9999\n
 
-        example annual: wapor -l L1 agbp -- 2016 A NPP (-9999)
+        example annual: wapor -l L1 agbp -- 2016 A NPP (-9999)\n
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -724,7 +727,8 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
         "2015",
         "2016",
         "2017",
-        "2018"
+        "2018",
+        "2019"
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A", "S"]))
@@ -736,14 +740,14 @@ def AGBP(ctx, year, temporal_resolution, input_component, nodatavalue):
 @click.pass_context
 def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
     """
-        YEAR 2009|2010|...|2017|2018\n
+        YEAR 2009|2010|...|2018|2019\n
         TEMPORAL_RESOLUTION A (ANNUAL) S (SEASONAL)\n
-        SEASON 1|2
+        SEASON 1|2\n
         INPUT_COMPONENT AGBP\n
         NODATAVALUE -9999\n
 
-        example annual: wapor -l L1 nbwp -- 2016 A AGBP (-9999)
-        example seasonal: wapor -l L2 nbwp -- 2016 S 1 AGBP (-9999)
+        example annual: wapor -l L1 nbwp -- 2016 A AGBP (-9999)\n
+        example seasonal: wapor -l L2 nbwp -- 2016 S 1 AGBP (-9999)\n
     """
 
     Log(ctx.obj["verbose"]).initialize()
@@ -850,7 +854,8 @@ def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
         "2015",
         "2016",
         "2017",
-        "2018"
+        "2018",
+        "2019"
     ]
 ))
 @click.argument('temporal_resolution', type=click.Choice(["A", "S"]))
@@ -867,16 +872,16 @@ def NBWP(ctx, year, temporal_resolution, season, input_component, nodatavalue):
 @click.pass_context
 def GBWP(ctx, year, temporal_resolution, season, input_component, area_code, nodatavalue):
     """
-        YEAR 2009|2010|...|2017|2018\n
+        YEAR 2009|2010|...|2018|2019\n
         TEMPORAL_RESOLUTION A (ANNUAL) S (SEASONAL)\n
-        SEASON 1|2
+        SEASON 1|2\n
         INPUT_COMPONENT AGBP\n
         AREA_CODE: NA|BKA|AWA|KOG|ODN|ZAN\n
         NODATAVALUE -9999\n
 
-        example L1 annual: wapor -l L1 gbwp -- 2016 A -1 AGBP NA (-9999)
-        example L2 seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP NA (-9999)
-        example L3 seasonal: wapor -l L3 gbwp -- 2016 S 1 AGBP AWA (-9999)
+        example L1 annual: wapor -l L1 gbwp -- 2016 A -1 AGBP NA (-9999)\n
+        example L2 seasonal: wapor -l L2 gbwp -- 2016 S 1 AGBP NA (-9999)\n
+        example L3 seasonal: wapor -l L3 gbwp -- 2016 S 1 AGBP AWA (-9999)\n
     """
 
     Log(ctx.obj["verbose"]).initialize()
