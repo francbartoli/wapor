@@ -174,8 +174,9 @@ class AETI(Marmee):
                 # Case of just one dekad asked from cli
                 if len(assetids) == 1:
                     assetid = assetids[0]
-                    if assetid[-8:][:2] == self.year[2:]:
-                        asset_idx = int(assetid[-8:][:2]) - 1
+                    y = os.path.basename(assetid)[8:][:2]
+                    if y == self.year[2:]:
+                        asset_idx = int(y) - 1
                     else:
                         raise click.Abort()
                     export_img = EEImage(
