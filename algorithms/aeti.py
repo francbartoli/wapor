@@ -175,13 +175,13 @@ class AETI(Marmee):
                 if len(assetids) == 1:
                     assetid = assetids[0]
                     y = os.path.basename(assetid)[8:][:2]
-                    idx = os.path.basename(assetid)[8:][2:]
+                    idx = os.path.basename(assetid)[8:][2:][:2]
                     if y == self.year[2:]:
                         asset_idx = int(idx) - 1
                     else:
                         self.logger.debug(
                             "Retrieved year {} from asset and requested {} \
-" .format(y, self.year[2:])
+".format(y, self.year[2:])
                         )
                         raise click.Abort()
                     colleti_sorted_list = collETI.sort(
