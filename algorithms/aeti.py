@@ -180,8 +180,8 @@ class AETI(Marmee):
                         asset_idx = int(idx) - 1
                     else:
                         self.logger.debug(
-                            "Retrieved year {} from asset and requested {} \
-".format(y, self.year[2:])
+                            "Retrieved year {} from asset while requested is \
+{}".format(y, self.year[2:])
                         )
                         raise click.Abort()
                     colleti_sorted_list = collETI.sort(
