@@ -175,15 +175,28 @@ class AETI(Marmee):
                 if len(assetids) == 1:
                     assetid = assetids[0]
                     y = os.path.basename(assetid)[8:][:2]
+                    idx = os.path.basename(assetid)[8:][2:]
                     if y == self.year[2:]:
-                        asset_idx = int(y) - 1
+                        asset_idx = int(idx) - 1
                     else:
+                        self.logger.debug(
+                            "Retrieved year {} from asset and requested {} \
+" .format(y, self.year[2:])
+                        )
                         raise click.Abort()
-                    export_img = EEImage(
-                        collETI.sort('system:index', True).toList(
-                            1, asset_idx
-                        ).get(0)
+                    colleti_sorted_list = collETI.sort(
+                        'system:index', True
+                    ).toList(1, asset_idx)
+                    self.logger.debug(
+                        "Retrieved list has size {}".format(
+                            json.dumps(colleti_sorted_list.size().getInfo())
+                        )
                     )
+                    if colleti_sorted_list.getInfo():
+                        export_img = EEImage(colleti_sorted_list.get(0))
+                    else:
+                        click.echo("This asset cannot be generated!")
+                        raise click.Abort()
                 else:
                     export_img = EEImage(collETI.sort(
                         'system:index', True).toList(1, i).get(0)
