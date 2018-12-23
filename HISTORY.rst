@@ -16,3 +16,8 @@ History
 ------------------
 
 * Fix bug on AETI dekadal
+
+0.2.4 (2018-12-21)
+------------------
+
+* Fix bug on missing inputs for AETI dekad
